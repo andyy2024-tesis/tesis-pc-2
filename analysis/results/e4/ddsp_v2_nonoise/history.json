@@ -1,0 +1,30 @@
+[
+ {
+  "step": 1000,
+  "train_loss": 6.516066372394562,
+  "test_loss": 7.023060978160185,
+  "n_windows": 85,
+  "share_strings_db": 4.3433309093538334e-12
+ },
+ {
+  "step": 2000,
+  "train_loss": 6.9773337841033936,
+  "test_loss": 6.876686881570255,
+  "n_windows": 85,
+  "share_strings_db": 4.3433309093538334e-12
+ },
+ {
+  "step": 3000,
+  "train_loss": 6.7887983322143555,
+  "test_loss": 6.707605244131649,
+  "n_windows": 85,
+  "share_strings_db": 4.3433309093538334e-12
+ },
+ {
+  "step": 4000,
+  "train_loss": 6.371899425983429,
+  "test_loss": 6.629113556356991,
+  "n_windows": 85,
+  "share_strings_db": 4.3433309093538334e-12
+ }
+]

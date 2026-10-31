@@ -1,0 +1,263 @@
+<title>Audios DDSP para guitarra</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:wght@600&display=swap">
+<style>
+/* Layout: one column of experiment sections; each holds a recordings × versions grid of play buttons; a sticky player bar at the bottom. */
+:root {
+  --bg: #F5F3EE; --surface: #FFFDF8; --line: #E2DED4; --fg: #1B1F27; --muted: #5A6170;
+  --accent: #A9531A; --accent-soft: #F3E3D6; --play: #2F5E8C; --play-soft: #DCE6F0; --on-play: #FFFFFF;
+  --serif: 'Source Serif 4', Georgia, serif; --sans: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #14181F; --surface: #1D232C; --line: #2E3542; --fg: #F0EDE6; --muted: #A8AEB8;
+  --accent: #E9943A; --accent-soft: #3A2A1B; --play: #8DB8E3; --play-soft: #24364A; --on-play: #14181F; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #14181F; --surface: #1D232C; --line: #2E3542; --fg: #F0EDE6; --muted: #A8AEB8;
+  --accent: #E9943A; --accent-soft: #3A2A1B; --play: #8DB8E3; --play-soft: #24364A; --on-play: #14181F; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 40px 140px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 48px; }
+header { display: flex; flex-direction: column; gap: 12px; max-width: 68ch; }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+h1 { font-family: var(--serif); font-size: clamp(32px, 5vw, 48px); line-height: 1.1; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--serif); font-size: 26px; line-height: 1.2; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.lede { color: var(--muted); font-size: 17px; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 15px; color: var(--muted); }
+.opts label { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+kbd { font-family: var(--mono); font-size: 13px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--surface); color: var(--fg); }
+nav { display: flex; flex-wrap: wrap; gap: 8px; }
+nav a { font-size: 14px; color: var(--fg); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; background: var(--surface); }
+nav a:hover, nav a:focus-visible { border-color: var(--accent); color: var(--accent); }
+section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 24px; }
+.sec-head { display: flex; flex-direction: column; gap: 6px; max-width: 72ch; }
+.sec-num { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.note { color: var(--muted); }
+.heard { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 10px 14px; border-radius: 0 8px 8px 0; max-width: 72ch; }
+.heard b { font-weight: 600; }
+.grid-scroll { overflow-x: auto; }
+table { border-collapse: separate; border-spacing: 6px; margin: -6px; }
+th { font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; vertical-align: bottom; padding: 0 4px 2px; min-width: 104px; }
+th.rec { text-align: left; min-width: 56px; }
+td.rec { font-family: var(--mono); font-weight: 500; font-size: 15px; padding-right: 6px; }
+button.cell { position: relative; overflow: hidden; width: 100%; min-width: 104px; height: 44px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--surface); color: var(--fg); font: 500 14px var(--sans); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+button.cell:hover { border-color: var(--play); }
+button.cell:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; }
+button.cell .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--play-soft); }
+button.cell .lbl { position: relative; display: inline-flex; align-items: center; gap: 6px; }
+button.cell.orig { border-style: dashed; }
+button.cell.on { border-color: var(--play); }
+button.cell.on.playing { background: var(--play); color: var(--on-play); }
+button.cell.on.playing .fill { background: rgba(255,255,255,.18); }
+.ico { width: 10px; height: 12px; display: inline-block; }
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--surface); border-top: 1px solid var(--line);
+  padding-block: 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar-in { max-width: 1080px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+.bar button { flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--play); color: var(--on-play); cursor: pointer; display: grid; place-items: center; }
+.bar button:disabled { opacity: .4; cursor: default; }
+.bar button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.now { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.now-t { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.now-t b { font-family: var(--mono); font-weight: 500; }
+.ico { pointer-events: none; }
+.seek { width: 100%; accent-color: var(--play); margin: 0; }
+.time { flex: none; font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .time { display: none; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Tesis · DDSP para guitarra</p>
+    <h1>Audios de todos los experimentos</h1>
+    <p class="lede">Cada botón toca una sola versión de un fragmento de test de 9 s. Las versiones de una misma grabación tienen la misma ganancia, así que los niveles y el ruido se pueden comparar. La fila es la grabación (023, 176, 276, 277, 306); la columna, la versión.</p>
+    <div class="opts">
+      <span><kbd>←</kbd> <kbd>→</kbd> versión · <kbd>↑</kbd> <kbd>↓</kbd> grabación · <kbd>Espacio</kbd> pausa</span>
+    </div>
+  </header>
+  <nav id="toc" aria-label="Experimentos"></nav>
+  <div id="sections" style="display:flex;flex-direction:column;gap:56px"></div>
+</div>
+
+<div class="bar" role="region" aria-label="Reproductor">
+  <div class="bar-in">
+    <button id="pp" type="button" aria-label="Reproducir" disabled></button>
+    <div class="now">
+      <p class="now-t" id="nowt">Elige una versión para escuchar</p>
+      <input class="seek" id="seek" type="range" min="0" max="9" step="0.01" value="0" aria-label="Posición" disabled>
+    </div>
+    <span class="time" id="time">0.0 / 9.0 s</span>
+  </div>
+</div>
+
+<script>
+const RECS = [["023_Ypswc", "023"], ["176_mM1wc", "176"], ["276_jw1wc", "276"], ["277_Pw1wc", "277"], ["306_7c1wc", "306"]];
+const ADV3K = "e6-structured_v5_body_audio_nonoise_strongD", ADV9K = "e6-structured_v5_body_audio_nonoise_strongD_9k";
+const ADVN = "e6-structured_v5_body_audio_noise_strongD";
+const SECTIONS = [
+  { id: "rondas", title: "DDSP vs estructurado vs + cuerpo", tag: "Paso 4 · Rondas 1–2",
+    note: "Modelos solo con la partitura: MIDI + loudness por nota leído de la mezcla.",
+    v: [["original", "Original"], ["ddsp_v2", "DDSP"], ["structured_v2", "Estructurado"], ["structured_v2_bodyir", "+ cuerpo"]],
+    heard: "Ronda 1: “todas suenan igual de mal”. Ronda 2: el estructurado suena un poco mejor que DDSP. 023 suena notablemente bien; 176, 276 y 277 suenan como un teclado MIDI barato; 306, intermedio." },
+  { id: "sin-ruido", title: "Sin ruido residual", tag: "Paso 4 · Ronda 2",
+    note: "Sin la salida fácil del ruido. Por métricas, DDSP empeora (6.37 → 6.52) y el estructurado no (6.34 → 6.31).",
+    v: [["original", "Original"], ["ddsp_v2", "DDSP"], ["ddsp_v2_nonoise", "DDSP sin ruido"], ["structured_v2_bodyir", "Estruct. + cuerpo"], ["structured_v2_bodyir_nonoise", "Estruct. sin ruido"]] },
+  { id: "reverb", title: "Reverb de sala: sin vs con", tag: "Paso 4 · Ronda 3",
+    note: "La reverb no mejoró las métricas. En el original, 276 y 306 tienen una reverb muy clara.",
+    v: [["original", "Original"], ["structured_v4_body", "Sin reverb"], ["structured_v4_body_reverb", "Con reverb"]] },
+  { id: "features", title: "Features de audio frame a frame", tag: "Paso 4 · Ronda 4",
+    note: "Ambos modelos reciben el loudness y el pitch de cada nota cada 10 ms (resíntesis).",
+    v: [["original", "Original"], ["ddsp_v5_audio", "DDSP + audio"], ["structured_v5_body_audio", "Estruct. + audio"]],
+    heard: "“Con las features de audio todas suenan mejor.” 176 todavía suena a MIDI barato, y aparece un ruido de fondo como viento." },
+  { id: "viento", title: "El viento: solo el ruido residual", tag: "Calidad perceptual",
+    note: "La última columna es solo el ruido residual del modelo, amplificado +20 dB para que se oiga.",
+    v: [["original", "Original"], ["structured_v5_body_audio", "Modelo completo"], ["structured_v5_body_audio-noise", "Solo ruido +20 dB"]],
+    heard: "El ruido residual solo suena exactamente como el viento; el piso de ruido y el cuerpo, solos, no se oyen." },
+  { id: "mel-adversarial", title: "Loss lineal vs mel vs adversarial", tag: "Calidad perceptual",
+    note: "Adversarial: sin ruido, discriminator fuerte, 3000 pasos.",
+    v: [["original", "Original"], ["structured_v5_body_audio", "Lineal + ruido"], ["structured_v6_mel_noise", "Mel + ruido"], ["structured_v6_mel_nonoise", "Mel sin ruido"], [ADV3K, "Adversarial"]],
+    heard: "En las 5, el mejor es el adversarial, aunque con artefactos (en 176, “súper feos”); en 306, “suena realista”. El resto suena a MIDI barato, salvo 023. Mel sin ruido: armónicos horribles. Mel con ruido: algo de viento, armónicos limpios. En 277 el lineal suena mucho mejor que mel; en 276, un poco mejor." },
+  { id: "adversarial-largo", title: "Adversarial: 2000 vs 9000 pasos", tag: "Calidad perceptual",
+    note: "Reiniciado con los mismos ajustes y entrenado 9000 pasos. Por números, el flapping baja a la mitad después de 6000 pasos.",
+    v: [["original", "Original"], ["adv9k-step2000", "2000 pasos"], [ADV9K, "9000 pasos"]],
+    heard: "176 suena igual de feo después de 9000 pasos. Las otras mejoran un poco, pero los artefactos siguen y suenan muy feos. Coincide con la loss, que casi no se mueve: entrenar más no es la solución." },
+  { id: "adversarial-ruido", title: "Adversarial con el ruido de vuelta", tag: "Calidad perceptual",
+    note: "Mismo discriminator fuerte, 3000 pasos, pero empezando del modelo con ruido y sin quitárselo. Por números: menos flapping que sin ruido (176: +0.7 dB vs +1.6 dB), pero el viento sube un poco (−25.2 → −23.5 dB). Las dos últimas columnas son solo el ruido residual, +20 dB.",
+    v: [["original", "Original"], ["structured_v5_body_audio", "Antes (lineal + ruido)"], [ADV9K, "Adv. sin ruido, 9000"], [ADVN, "Adv. con ruido, 3000"], ["structured_v5_body_audio-noise", "Ruido antes +20 dB"], [ADVN + "-noise", "Ruido después +20 dB"]],
+    heard: "Gana claramente: quita los artefactos por completo y da realismo, pero vuelve el viento raro. En 276 suena igual que el adversarial sin ruido, sin los artefactos; en 306 no se le parece." },
+  { id: "adv-variantes", title: "Adversarial con ruido: más pasos y loss sin término log", tag: "Calidad perceptual · Noche 28–29 oct",
+    note: "Seguir hasta 9000 pasos: la loss no baja, el ruido sube +7 dB y el viento también (−23.5 → −19.9 dB), y el flapping vuelve (176: +1.6 dB). Loss solo lineal (sin el término log): el ruido crece ~9 dB. Por números, ninguna de las dos ayuda.",
+    v: [["original", "Original"], [ADVN, "3000 pasos"], [ADVN + "_9k", "9000 pasos"], [ADVN + "_linonly", "Loss solo lineal"], [ADVN + "_9k-noise", "Ruido 9000 +20 dB"], [ADVN + "_linonly-noise", "Ruido lineal +20 dB"]],
+    heard: "9000 pasos suena mejor que 3000, sobre todo 306: “me sentí un poco más en la sala”, aunque el viento empeoró un poco. Quizás falta la acústica de la sala o la posición del micrófono: cada original viene de un montaje de grabación completamente distinto. Loss solo lineal es por lejos la que más viento tiene, pero sin el ruido no suena mal." },
+  { id: "fenomenos", title: "Fenómenos nuevos (con ruido)", tag: "Fenómenos · 4000 pasos cada uno",
+    note: "Cada columna es el modelo base más una parte nueva, entrenado desde cero. Con el ruido disponible, por números casi no cambian; la diferencia aparece al apagar el ruido (sección siguiente).",
+    v: [["original", "Original"], ["structured_v5_body_audio", "Base"], ["structured_v8_bodyhi", "Cuerpo 6 kHz"], ["structured_v8_twodecay", "Dos decaimientos"], ["structured_v8_click", "Clic"], ["structured_v8_symp", "Simpática"], ["structured_v8_squeak", "Squeak"], ["structured_v8_combo", "Combinado"]],
+    heard: "Igual que la sección siguiente: sin una diferencia clara entre las partes. Lo único: el viento volvió." },
+  { id: "ruido-apagado", title: "Los mismos modelos con el ruido apagado", tag: "Fenómenos",
+    note: "Se apaga el ruido residual al generar (sin reentrenar): queda lo que cubren las partes deterministas. Loss sin ruido: base 7.82, cuerpo 6.95, dos decaimientos 7.36, clic 7.55, combinado 6.42 (con ruido, todos ≈ 6.0).",
+    v: [["original", "Original"], ["structured_v5_body_audio-nonoise", "Base"], ["structured_v8_bodyhi-nonoise", "Cuerpo 6 kHz"], ["structured_v8_twodecay-nonoise", "Dos decaimientos"], ["structured_v8_click-nonoise", "Clic"], ["structured_v8_combo-nonoise", "Combinado"]],
+    heard: "Sin una diferencia clara que pueda afirmar con seguridad. Si el combinado tiene mejores números, quedarse con ese." },
+  { id: "discriminator", title: "Un discriminator que ve el log", tag: "Discriminator",
+    note: "Complejo: el de siempre (partes real e imaginaria). Log: ve la magnitud en escala log, donde el viento de los pasajes silenciosos se ve tanto como las notas. Los dos con log distinguen mejor (loss ~1.5 y ~1.2 vs ~1.8) y solo log tiene el menor flapping (277: +0.3 vs +1.0 dB), pero el viento queda igual (−22 a −23 dB).",
+    v: [["original", "Original"], [ADVN, "Complejo"], [ADVN + "_both", "Complejo + log"], [ADVN + "_logmag", "Solo log"], [ADVN + "-noise", "Ruido complejo +20 dB"], [ADVN + "_both-noise", "Ruido complejo + log +20 dB"], [ADVN + "_logmag-noise", "Ruido solo log +20 dB"]],
+    heard: "Suenan parecidos; complejo es el mejor y complejo + log el peor, pero las diferencias son pequeñas (escuché muchas veces). Todos sufren con el viento, como se esperaba; 176, como siempre, con mucho viento." },
+  { id: "combinado-adversarial", title: "Modelo combinado + adversarial con ruido", tag: "Fenómenos + discriminator",
+    note: "El modelo combinado (cuerpo hasta 6 kHz + dos decaimientos + clic) con el mismo adversarial (discriminator complejo + log, 3000 pasos). Flapping igual al original (+0.0 dB), pero el ruido crece como antes (viento −21.8 → −20.2 dB).",
+    v: [["original", "Original"], [ADVN, "Adv. con ruido (base)"], ["structured_v8_combo", "Combinado"], ["e6-structured_v8_combo_noise_strongD_both", "Combinado + adv."], ["e6-structured_v8_combo_noise_strongD_both-noise", "Ruido combinado + adv. +20 dB"]],
+    heard: "Combinado + adv. y adv. (base) suenan parecidos. En 176 aparece un ruido raro y en 023 el combinado + adv. se desafina un poco; en el resto no hay diferencia clara. El adv. (base) sigue siendo el mejor." },
+  { id: "combinado-sin-ruido", title: "Modelo combinado entrenado sin ruido", tag: "Fenómenos",
+    note: "Entrenado desde cero sin el ruido residual: sin viento posible. Loss 6.03 vs 6.00 con ruido (el modelo viejo sin ruido: 6.36), flapping igual al original (−0.0 dB). Comparar con el mismo modelo entrenado con ruido y con el ruido apagado al generar.",
+    v: [["original", "Original"], ["structured_v8_combo", "Combinado con ruido"], ["structured_v8_combo-nonoise", "Con ruido, apagado"], ["structured_v8_combo_nonoise", "Entrenado sin ruido"], [ADVN, "Adv. con ruido (base)"]],
+    heard: "Gana el adv. con ruido (base): un poco más realista, aunque el combinado con ruido suena más limpio. El combinado con el ruido apagado suena casi igual que con ruido, pero sin viento: el ruido casi no aporta. Entrenado sin ruido tiene artefactos feos, como sus hermanos pero con artefactos. Todos suenan un poco a MIDI barato." },
+  { id: "adv-ruido-apagado", title: "Los adversariales con ruido, con el ruido apagado", tag: "Calidad perceptual",
+    note: "Los tres adversariales con ruido (3000 pasos, 9000 pasos, loss solo lineal), generados con el ruido residual apagado (sin reentrenar). Lo que queda es lo que el adversarial le enseñó a las partes deterministas.",
+    v: [["original", "Original"], [ADVN, "3000, con ruido"], [ADVN + "-nonoise", "3000, apagado"], [ADVN + "_9k-nonoise", "9000, apagado"], [ADVN + "_linonly", "Lineal, con ruido"], [ADVN + "_linonly-nonoise", "Lineal, apagado"]],
+    heard: "Con 3000 pasos, con y sin ruido suenan prácticamente igual si se quita el viento: el ruido solo agrega viento. Con 9000 pasos no lo puedo afirmar con seguridad; quizás después de muchos pasos el filtro de ruido sí aprendió algo más útil que el viento. El lineal sin ruido suena bastante bien, pero el mejor sigue siendo el adv. (3000, con ruido)." },
+  { id: "ruido-en-ataque", title: "Ruido solo alrededor de cada ataque", tag: "Ruido",
+    note: "El ruido residual solo puede sonar desde 20 ms antes de cada ataque hasta ~60 ms después; el fondo constante de cada grabación queda a cargo del piso fijo, que no puede hacer ráfagas. Ruido en el 20 % más silencioso: −56 dB (combinado + adv.) vs −23.5 dB (adv. con ruido). Loss: combinado + compuerta 6.00 (igual que sin compuerta); + adv. 6.09 vs 6.12.",
+    v: [["original", "Original"], [ADVN, "Adv. con ruido (favorito)"], ["structured_v8_gated", "Combinado, ruido en el ataque"], ["e6-structured_v8_gated_noise_strongD", "Combinado + adv."], ["e6-structured_v5_gated_noise_strongD", "Base + adv."], ["e6-structured_v8_gated_noise_strongD-noise", "Ruido combinado + adv. +20 dB"], [ADVN + "-noise", "Ruido del favorito +20 dB"]],
+    heard: "Pendiente de escucha." },
+  { id: "timbre", title: "El timbre de cada ataque", tag: "Fenómenos",
+    note: "La red de cada nota ahora también lee del audio el timbre del ataque: el nivel de los primeros 16 armónicos justo después de la nota, relativo a su promedio (ahí se ve dónde se pulsó la cuerda, uña o yema, qué cuerda). Antes, todas las notas de la misma altura y volumen tenían el mismo timbre. Loss 5.82 vs 6.00; con los timbres intercambiados entre notas de la misma altura sube a 6.17, así que usa el de cada nota. Con 32 armónicos: 5.77; + adv.: 5.84 (16 armónicos + adv.: 5.86). Con 9000 pasos de adv.: 5.88 y vuelve algo de viento (−45 dB vs −52 dB con 3000).",
+    v: [["original", "Original"], ["structured_v8_gated", "Combinado, ruido en el ataque"], ["structured_v9_timbre", "+ timbre de cada ataque"], ["structured_v9_timbre32", "+ timbre 32"], ["e6-structured_v9_timbre_noise_strongD", "+ timbre + adv."], ["e6-structured_v9_timbre32_noise_strongD", "+ timbre 32 + adv."], ["e6-structured_v9_timbre32_noise_strongD_9k", "+ timbre 32 + adv. 9000"], [ADVN, "Adv. con ruido (favorito)"]],
+    heard: "Pendiente de escucha." },
+];
+const ICON_PLAY = '<svg class="ico" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z" fill="currentColor"/></svg>';
+const ICON_PAUSE = '<svg class="ico" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0H3.5V12H0ZM6.5 0H10V12H6.5Z" fill="currentColor"/></svg>';
+const $ = (id) => document.getElementById(id);
+const cache = new Map();
+let cur = null; // {s, r, c, btn, audio}
+
+function audioFor(rid, file) {
+  const key = rid + "/" + file;
+  if (!cache.has(key)) { const a = new Audio("audio/" + key + ".mp4"); a.preload = "auto"; cache.set(key, a); }
+  return cache.get(key);
+}
+
+function build() {
+  const toc = $("toc"), root = $("sections");
+  SECTIONS.forEach((S, s) => {
+    const a = document.createElement("a"); a.href = "#" + S.id; a.textContent = S.title; toc.append(a);
+    const sec = document.createElement("section"); sec.id = S.id;
+    let html = `<div class="sec-head"><p class="sec-num">${String(s + 1).padStart(2, "0")} · ${S.tag}</p><h2>${S.title}</h2><p class="note">${S.note}</p></div>`;
+    if (S.heard) html += `<p class="heard"><b>Lo que escuché:</b> ${S.heard}</p>`;
+    html += `<div class="grid-scroll"><table><thead><tr><th class="rec" scope="col">Grabación</th>${S.v.map(([, l]) => `<th scope="col">${l}</th>`).join("")}</tr></thead><tbody>`;
+    RECS.forEach(([rid, short], r) => {
+      html += `<tr><td class="rec">${short}</td>${S.v.map(([f, l], c) =>
+        `<td><button type="button" class="cell${f === "original" ? " orig" : ""}" data-s="${s}" data-r="${r}" data-c="${c}" aria-label="${short} · ${l}"><span class="fill"></span><span class="lbl">${ICON_PLAY}</span></button></td>`).join("")}</tr>`;
+    });
+    sec.innerHTML = html + "</tbody></table></div>";
+    root.append(sec);
+  });
+  root.addEventListener("click", (e) => {
+    const b = e.target.closest("button.cell"); if (!b) return;
+    select(+b.dataset.s, +b.dataset.r, +b.dataset.c, true);
+  });
+}
+
+function btnAt(s, r, c) { return document.querySelector(`button.cell[data-s="${s}"][data-r="${r}"][data-c="${c}"]`); }
+
+function select(s, r, c, fromClick) {
+  const S = SECTIONS[s], [rid, short] = RECS[r], [file, label] = S.v[c];
+  const a = audioFor(rid, file);
+  if (cur && cur.audio === a && cur.s === s) { // same button: toggle
+    if (fromClick) { a.paused ? a.play() : a.pause(); }
+    return;
+  }
+  if (cur) {
+    cur.audio.pause(); cur.btn.classList.remove("on", "playing"); setIcon(cur.btn, false);
+    cur.btn.querySelector(".fill").style.width = "0";
+  }
+  const btn = btnAt(s, r, c);
+  cur = { s, r, c, btn, audio: a };
+  btn.classList.add("on");
+  a.loop = false;
+  try { a.currentTime = 0; } catch (_) {}
+  a.play().catch(() => {});
+  S.v.forEach(([f]) => audioFor(rid, f)); // preload the rest of the row
+  $("nowt").innerHTML = `<b>${short}</b> · ${S.title} · ${label}`;
+  $("pp").disabled = false; $("seek").disabled = false;
+}
+
+// Only touch the icon when the state changes: replacing it every frame swallows clicks (press and release land on different elements).
+function setIcon(btn, playing) {
+  if (btn.dataset.icon === String(playing)) return;
+  btn.dataset.icon = String(playing);
+  (btn.querySelector(".lbl") || btn).innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
+}
+
+function tick() {
+  if (cur) {
+    const a = cur.audio, d = a.duration || 9, t = a.currentTime || 0;
+    cur.btn.querySelector(".fill").style.width = (100 * t / d) + "%";
+    const playing = !a.paused;
+    cur.btn.classList.toggle("playing", playing); setIcon(cur.btn, playing);
+    setIcon($("pp"), playing); $("pp").setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+    const sk = $("seek"); sk.max = d; if (!sk.matches(":active")) sk.value = t;
+    $("time").textContent = `${t.toFixed(1)} / ${d.toFixed(1)} s`;
+  }
+  requestAnimationFrame(tick);
+}
+
+setIcon($("pp"), false);
+$("pp").addEventListener("click", () => { if (cur) cur.audio.paused ? cur.audio.play() : cur.audio.pause(); });
+$("seek").addEventListener("input", (e) => { if (cur) cur.audio.currentTime = +e.target.value; });
+document.addEventListener("keydown", (e) => {
+  if (!cur || e.target.matches("input[type=range], input[type=checkbox]")) return;
+  const S = SECTIONS[cur.s];
+  const moves = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] };
+  if (e.key === " " && !e.target.closest("button")) { e.preventDefault(); cur.audio.paused ? cur.audio.play() : cur.audio.pause(); return; }
+  if (!(e.key in moves)) return;
+  e.preventDefault();
+  const [dr, dc] = moves[e.key];
+  const r = Math.min(RECS.length - 1, Math.max(0, cur.r + dr)), c = Math.min(S.v.length - 1, Math.max(0, cur.c + dc));
+  if (r !== cur.r || c !== cur.c) { select(cur.s, r, c, false); cur.btn.focus({ preventScroll: true }); }
+});
+build();
+requestAnimationFrame(tick);
+</script>

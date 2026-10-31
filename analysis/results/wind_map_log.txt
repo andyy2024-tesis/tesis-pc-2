@@ -1,0 +1,212 @@
+structured_v5_body_audio {
+ "time": {
+  "pre_40_12ms": {
+   "noise_vs_orig_db": -29.214254389076007,
+   "det_vs_orig_db": -1.2475749337789943,
+   "share_of_noise": 0.0853321145275469,
+   "share_of_orig": 0.035557994856901386
+  },
+  "attack_0_10ms": {
+   "noise_vs_orig_db": -27.34231199524139,
+   "det_vs_orig_db": -1.164369379607691,
+   "share_of_noise": 0.15301798585151669,
+   "share_of_orig": 0.04143553941653599
+  },
+  "attack_10_30ms": {
+   "noise_vs_orig_db": -32.27775524109234,
+   "det_vs_orig_db": -0.7692480643797226,
+   "share_of_noise": 0.14271444297011437,
+   "share_of_orig": 0.12040451347832447
+  },
+  "attack_30_60ms": {
+   "noise_vs_orig_db": -35.30281800827281,
+   "det_vs_orig_db": -0.7037732271432411,
+   "share_of_noise": 0.0962129251951814,
+   "share_of_orig": 0.1628975438014243
+  },
+  "attack_60_150ms": {
+   "noise_vs_orig_db": -36.09236035888334,
+   "det_vs_orig_db": -0.6972334127974145,
+   "share_of_noise": 0.15667616182205207,
+   "share_of_orig": 0.3181546507291013
+  },
+  "held": {
+   "noise_vs_orig_db": -32.61031930353496,
+   "det_vs_orig_db": -0.9515001883404612,
+   "share_of_noise": 0.3477780288920858,
+   "share_of_orig": 0.3167622275345613
+  },
+  "ringing": {
+   "noise_vs_orig_db": -27.20013105224791,
+   "det_vs_orig_db": -2.551424150166193,
+   "share_of_noise": 0.01826834074150276,
+   "share_of_orig": 0.004787530183151227
+  },
+  "nothing": {
+   "noise_vs_orig_db": -200.0,
+   "det_vs_orig_db": -200.0,
+   "share_of_noise": 0.0,
+   "share_of_orig": 0.0
+  }
+ },
+ "octave": {
+  "50-100": {
+   "noise_vs_orig_db": -27.20369681834718,
+   "det_vs_orig_db": -4.353489046568691,
+   "share_of_noise": 0.07255914657013446
+  },
+  "100-200": {
+   "noise_vs_orig_db": -43.67145347751136,
+   "det_vs_orig_db": -1.4417900316741776,
+   "share_of_noise": 0.01665640863089486
+  },
+  "200-400": {
+   "noise_vs_orig_db": -48.03618580605555,
+   "det_vs_orig_db": -0.5330525813060711,
+   "share_of_noise": 0.021038852571088167
+  },
+  "400-800": {
+   "noise_vs_orig_db": -34.634721852873696,
+   "det_vs_orig_db": -0.8666480835286966,
+   "share_of_noise": 0.13842167576719805
+  },
+  "800-1600": {
+   "noise_vs_orig_db": -21.944398038971173,
+   "det_vs_orig_db": -1.5994995635038949,
+   "share_of_noise": 0.4623300502991182
+  },
+  "1600-3200": {
+   "noise_vs_orig_db": -17.30183292532628,
+   "det_vs_orig_db": -3.1305487415843043,
+   "share_of_noise": 0.23034593016696528
+  },
+  "3200-6400": {
+   "noise_vs_orig_db": -13.307606601737593,
+   "det_vs_orig_db": -4.436936875721647,
+   "share_of_noise": 0.0490406515560203
+  },
+  "6400-12800": {
+   "noise_vs_orig_db": -8.369017085896786,
+   "det_vs_orig_db": -5.56094148988199,
+   "share_of_noise": 0.009607284438580674
+  }
+ },
+ "between_partials": {
+  "orig": 0.01421926713616015,
+  "det": 0.004951998413193284,
+  "noise": 0.265194972827496,
+  "noise_vs_orig_db": -20.954934014806945,
+  "det_vs_orig_db": -5.4920861270695545
+ },
+ "open_string_excess_db": {
+  "orig": 13.483362197875977,
+  "model": 9.37801742553711,
+  "n_frames": 3146
+ }
+}
+e6/structured_v5_body_audio_noise_strongD {
+ "time": {
+  "pre_40_12ms": {
+   "noise_vs_orig_db": -27.874902571612633,
+   "det_vs_orig_db": -1.3738806592503314,
+   "share_of_noise": 0.09414382944994569,
+   "share_of_orig": 0.035557994856901386
+  },
+  "attack_0_10ms": {
+   "noise_vs_orig_db": -26.157144695000976,
+   "det_vs_orig_db": -1.117860180803594,
+   "share_of_noise": 0.1629308719746837,
+   "share_of_orig": 0.04143553941653599
+  },
+  "attack_10_30ms": {
+   "noise_vs_orig_db": -32.14311822407885,
+   "det_vs_orig_db": -0.8317682490104672,
+   "share_of_noise": 0.11930971247233864,
+   "share_of_orig": 0.12040451347832447
+  },
+  "attack_30_60ms": {
+   "noise_vs_orig_db": -35.77430708252593,
+   "det_vs_orig_db": -0.9843450311161622,
+   "share_of_noise": 0.06995659808815234,
+   "share_of_orig": 0.1628975438014243
+  },
+  "attack_60_150ms": {
+   "noise_vs_orig_db": -36.237783621393106,
+   "det_vs_orig_db": -0.8483434671158514,
+   "share_of_noise": 0.12280181006849072,
+   "share_of_orig": 0.3181546507291013
+  },
+  "held": {
+   "noise_vs_orig_db": -30.951861269705667,
+   "det_vs_orig_db": -1.0361523296534938,
+   "share_of_noise": 0.4129449084589009,
+   "share_of_orig": 0.3167622275345613
+  },
+  "ringing": {
+   "noise_vs_orig_db": -26.37305764818653,
+   "det_vs_orig_db": -1.7906496247368973,
+   "share_of_noise": 0.017912269487487986,
+   "share_of_orig": 0.004787530183151227
+  },
+  "nothing": {
+   "noise_vs_orig_db": -200.0,
+   "det_vs_orig_db": -200.0,
+   "share_of_noise": 0.0,
+   "share_of_orig": 0.0
+  }
+ },
+ "octave": {
+  "50-100": {
+   "noise_vs_orig_db": -25.955331400326962,
+   "det_vs_orig_db": -4.833070743007814,
+   "share_of_noise": 0.07941875080021794
+  },
+  "100-200": {
+   "noise_vs_orig_db": -41.16897586722302,
+   "det_vs_orig_db": -2.3538810748015098,
+   "share_of_noise": 0.02433455852448925
+  },
+  "200-400": {
+   "noise_vs_orig_db": -46.53350019626747,
+   "det_vs_orig_db": -0.5512930726862282,
+   "share_of_noise": 0.02441658688097738
+  },
+  "400-800": {
+   "noise_vs_orig_db": -33.12278856853733,
+   "det_vs_orig_db": -0.9739318671107462,
+   "share_of_noise": 0.16098735865872957
+  },
+  "800-1600": {
+   "noise_vs_orig_db": -20.956473788709154,
+   "det_vs_orig_db": -0.772616972240282,
+   "share_of_noise": 0.4765833781113102
+  },
+  "1600-3200": {
+   "noise_vs_orig_db": -17.406887906778334,
+   "det_vs_orig_db": -2.0471581844999607,
+   "share_of_noise": 0.18461602212938677
+  },
+  "3200-6400": {
+   "noise_vs_orig_db": -13.430501851958201,
+   "det_vs_orig_db": -2.917035747065536,
+   "share_of_noise": 0.039143625744443376
+  },
+  "6400-12800": {
+   "noise_vs_orig_db": -7.127190187197055,
+   "det_vs_orig_db": -2.0775534640753652,
+   "share_of_noise": 0.010499719150445515
+  }
+ },
+ "between_partials": {
+  "orig": 0.01421926713616015,
+  "det": 0.00590482516673747,
+  "noise": 0.2740160025635849,
+  "noise_vs_orig_db": -19.105470549350535,
+  "det_vs_orig_db": -4.822781374147081
+ },
+ "open_string_excess_db": {
+  "orig": 13.483362197875977,
+  "model": 9.871224403381348,
+  "n_frames": 3146
+ }
+}

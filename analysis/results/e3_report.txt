@@ -1,0 +1,15 @@
+All notes, by mix:
+        notes  model corr  naive corr  model median err dB  naive median err dB  model p90 err dB  naive p90 err dB  model better on  model err, per-string offset removed  naive err, per-string offset removed
+mix                                                                                                                                                                                                             
+hexsum 825.00        0.76        0.95                 1.44                 0.15              8.62              2.54             0.18                                  1.26                                  0.12
+mic    825.00        0.66        0.71                 3.35                 2.88             10.94              9.43             0.49                                  2.48                                  1.97
+
+By how many notes are sounding at the onset:
+                     notes  model corr  naive corr  model median err dB  naive median err dB  model p90 err dB  naive p90 err dB  model better on  model err, per-string offset removed  naive err, per-string offset removed
+mix    sounding_cat                                                                                                                                                                                                          
+hexsum alone        276.00        0.76        0.98                 1.02                 0.01              8.42              0.62             0.08                                  1.01                                  0.01
+       2-3 sounding 304.00        0.79        0.95                 1.77                 0.21              9.64              2.67             0.17                                  1.40                                  0.19
+       4+ sounding  245.00        0.68        0.91                 1.55                 0.29              8.15              4.08             0.30                                  1.31                                  0.30
+mic    alone        276.00        0.71        0.75                 3.44                 3.03             11.02              9.01             0.49                                  2.34                                  2.02
+       2-3 sounding 304.00        0.65        0.69                 3.58                 3.11             11.60             10.26             0.47                                  2.72                                  1.74
+       4+ sounding  245.00        0.65        0.68                 2.78                 2.57              9.48              8.24             0.51                                  2.38                                  2.01

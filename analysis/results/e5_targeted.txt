@@ -1,0 +1,14 @@
+85 held-out music windows, 17 recordings. Medians; LSD = log-spectral distance (dB).
+
+                          spectral loss  noise share (dB)  body share (dB)  attack LSD  2-8 kHz LSD  <200 Hz LSD
+structured_v5_body_audio           5.87            -32.29           -17.07        7.58         8.00         8.64
+ddsp_v5_audio                      6.06            -22.62          -120.00        7.70         8.30         8.73
+structured_v4_body                 6.22            -30.42           -16.41        7.83         8.39         9.11
+ddsp_v2                            6.37            -22.56          -120.00        7.80         8.41         8.94
+
+Share of windows where each run beats structured_v5_body_audio:
+  ddsp_v5_audio                loss 32%  attack 31%  high 36%  low 34%
+  structured_v4_body           loss 16%  attack 27%  high 29%  low 28%
+  ddsp_v2                      loss 16%  attack 26%  high 27%  low 33%
+
+listening excerpts: /home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/analysis/results/e4/listen_structured_v5_body_audio-ddsp_v5_audio-structured_v4_body-ddsp_v2

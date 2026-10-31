@@ -1,0 +1,44 @@
+[project]
+name = "tesis"
+version = "0.1.0"
+description = "Guitar-specific DDSP synthesizer trained on GAPS"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch==2.6.0",
+    "torchaudio==2.6.0",
+    "numpy>=2.2,<2.3",
+    "scipy>=1.15",
+    "soundfile>=0.13",
+    "librosa>=0.11",
+    # numba 0.68 segfaults inside librosa's gufuncs on this machine; 0.61.2 works.
+    "numba==0.61.2",
+    "pretty-midi>=0.2.11",
+    "pandas>=2.3",
+    "matplotlib>=3.10",
+    "pyarrow>=25.0.1",
+]
+
+[project.scripts]
+tesis = "tesis:main"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.3.0",
+    "ipywidgets>=8.1.9",
+    "huggingface-hub>=0.30",
+    "imageio-ffmpeg>=0.6.0",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu124" }
+torchaudio = { index = "pytorch-cu124" }
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true

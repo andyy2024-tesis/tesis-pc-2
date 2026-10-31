@@ -1,0 +1,73 @@
+{
+  "v": 4,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-27T20:00:00Z"
+  },
+  "lists": "css",
+  "title": "DDSP para guitarra: avances",
+  "cover": "cover",
+  "order": [
+    "cover",
+    "idea",
+    "datos",
+    "plan",
+    "e1",
+    "e2",
+    "e3",
+    "red",
+    "e4res",
+    "a-sinruido",
+    "reverb",
+    "audiofeat",
+    "trampa",
+    "a-viento",
+    "advmel",
+    "a-adversarial",
+    "oidos",
+    "adv9k",
+    "a-adv9k",
+    "porque",
+    "mapa",
+    "fenomenos",
+    "discrim",
+    "sala",
+    "compuerta",
+    "timbre",
+    "aprendido",
+    "siguientes"
+  ],
+  "sections": {
+    "s1": {
+      "description": "La idea: una guitarra hecha de fenómenos acústicos conocidos en lugar de armónicos + ruido",
+      "start": "cover"
+    },
+    "s2": {
+      "description": "Pasos 0–3: datos (GAPS) y validaciones baratas sin red",
+      "start": "datos"
+    },
+    "s3": {
+      "description": "Paso 4: el modelo con red, ronda por ronda, con audios",
+      "start": "red"
+    },
+    "s4": {
+      "description": "Calidad perceptual: el viento, adversarial training, fenómenos nuevos, ruido en el ataque y timbre por nota",
+      "start": "trampa"
+    },
+    "s5": {
+      "description": "Lo aprendido y los siguientes pasos",
+      "start": "aprendido"
+    }
+  },
+  "faces": {
+    "source-serif-4": {
+      "family": "Source Serif 4",
+      "href": "https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&display=swap"
+    },
+    "ibm-plex-sans": {
+      "family": "IBM Plex Sans",
+      "href": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    }
+  },
+  "designSystems": []
+}

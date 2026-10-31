@@ -1,0 +1,2 @@
+  WeightNorm.apply(module, name, dim)
+before: {"test_loss": 6.087185663335464, "n_windows": 85, "share_strings_db": -0.0403526383483788, "share_noise_db": -20.339284457238463, "quiet_noise_db": -16.49951171875}

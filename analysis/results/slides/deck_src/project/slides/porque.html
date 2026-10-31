@@ -1,0 +1,31 @@
+<section id="porque" style="background:#F5F3EE;color:#1B1F27;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#A9531A">Calidad perceptual · Diagnóstico</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:60px;font-weight:600;line-height:1.1;color:#1B1F27">Hipótesis: sin ruido, los armónicos tiemblan</h2>
+</div>
+<div style="display:flex;gap:56px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:28px;line-height:1.45;color:#1B1F27">El discriminator pide la pequeña variación aleatoria de una guitarra real (dedos, roce, el borde de cada ataque). Sin una fuente de ruido, lo único que el modelo puede mover rápido es el volumen de cada armónico: lo hace temblar, y eso es el flapping.</p>
+<table style="font-size:26px;color:#1B1F27">
+<tr><th style="width:52%;text-align:left">Modelo</th><th style="width:18%;text-align:left">Ruido</th><th style="width:30%;text-align:right">Flapping</th></tr>
+<tr><td>Lineal (ronda 4)</td><td>sí</td><td style="text-align:right;color:#2F5E8C">−0.2 dB</td></tr>
+<tr><td>Mel</td><td>sí</td><td style="text-align:right;color:#2F5E8C">−0.1 dB</td></tr>
+<tr><td>Mel</td><td>no</td><td style="text-align:right;color:#A9531A">+0.3 dB</td></tr>
+<tr><td>Adversarial 3000 pasos</td><td>no</td><td style="text-align:right;color:#A9531A">+0.5 dB</td></tr>
+<tr><td>Adversarial 9000 pasos</td><td>no</td><td style="text-align:right;color:#A9531A">+0.4 dB</td></tr>
+<tr style="background:#E3EAF2"><td>Adversarial con ruido, 3000</td><td>sí</td><td style="text-align:right;color:#2F5E8C">+0.2 dB</td></tr>
+</table>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-top:6px solid #2F5E8C;border-radius:16px;padding:28px 32px">
+<h3 style="font-size:30px;font-weight:600;color:#1B1F27">Prueba: adversarial con ruido</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5160">El flapping baja (176: +0.7 dB vs +1.6 sin ruido). Al oído gana claramente: los artefactos desaparecen y suena más real, pero vuelve el viento.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-radius:16px;padding:28px 32px">
+<h3 style="font-size:30px;font-weight:600;color:#1B1F27">Entonces</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5160">Si el sintetizador no puede producir algo, el modelo lo tapa con lo que tenga: temblor sin ruido, viento con ruido. Hay que darle las partes que faltan.</p>
+</div>
+</div>
+</div>
+<aside>Flapping: promedio de las 5 grabaciones vs el original (0 = igual que el original). Los modelos con ruido no tienen flapping extra; todos los modelos sin ruido sí. Además, mel con ruido tenía armónicos más limpios que mel sin ruido. El único adversarial con ruido que probamos antes usaba el discriminator débil (32 canales), que casi no distinguía real de falso. El objetivo del generador ya es híbrido: loss espectral + adversarial + feature matching. Prueba con ruido: misma configuración del discriminator, 3000 pasos, empezando del modelo con ruido (loss 6.00 → 6.12, vs 6.6–6.8 sin ruido). Ojo: con ruido, el discriminator distingue peor (loss ~1.7–1.8 vs ~1.1–1.4 sin ruido), así que parte de la mejora puede ser que el adversarial empuja menos. Más datos podrían ayudar al discriminator (su loss baja lentamente, puede estar memorizando 44 min de audio), pero eso viene después.</aside>
+</section>

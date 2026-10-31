@@ -1,0 +1,31 @@
+<section id="sala" style="background:#F5F3EE;color:#1B1F27;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#A9531A">Calidad perceptual · Diagnóstico</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:60px;font-weight:600;line-height:1.1;color:#1B1F27">El viento no es la sala: es el fondo fijo de cada grabación</h2>
+</div>
+<div style="display:flex;gap:56px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<table style="font-size:26px;color:#1B1F27">
+<tr><th style="width:64%;text-align:left">Prueba</th><th style="width:36%;text-align:right">Resultado</th></tr>
+<tr><td>Ruido vs lo que se toca (base)</td><td style="text-align:right;">0.17</td></tr>
+<tr><td>Ruido vs lo que se toca (9000 pasos)</td><td style="text-align:right;">≈ 0</td></tr>
+<tr><td>Ruido vs lo que se toca (combinado)</td><td style="text-align:right;color:#A9531A">−0.35</td></tr>
+<tr><td>Lo que falta entre armónicos vs lo tocado antes</td><td style="text-align:right;color:#A9531A">−0.15</td></tr>
+<tr style="background:#E3EAF2"><td>Estabilidad del ruido (p10 / mediana)</td><td style="text-align:right;">−4 a −5 dB</td></tr>
+<tr><td>Reverb por grabación (ronda 3)</td><td style="text-align:right;">sin usar</td></tr>
+</table>
+<p style="font-size:24px;line-height:1.45;color:#4A5160">Una cola de reverb seguiría lo tocado en los últimos cientos de ms (correlación positiva). No pasa: el ruido es casi constante y sube cuando se toca suave.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-top:6px solid #2F5E8C;border-radius:16px;padding:28px 32px">
+<h3 style="font-size:30px;font-weight:600;color:#1B1F27">Al oído, con el ruido apagado</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5160">Adversarial 3000: con y sin ruido suenan igual salvo el viento; el ruido solo agrega viento. En 9000 no es tan claro. El lineal sin ruido suena bien, pero el mejor sigue siendo el adversarial 3000 con ruido.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-radius:16px;padding:28px 32px">
+<h3 style="font-size:30px;font-weight:600;color:#1B1F27">Entonces</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5160">El fondo de cada grabación (ruido de la sala, del micrófono) es real, pero el modelo lo toca con ráfagas. Ruido solo alrededor de cada ataque; el fondo, a cargo del piso fijo por grabación.</p>
+</div>
+</div>
+</div>
+<aside>Correlaciones en log, ventanas de 10 ms, 200 Hz–6.4 kHz, en las 85 ventanas held-out; "lo tocado antes" = la parte determinista suavizada con una exponencial de 0 a 0.8 s (una cola de reverb seguiría esa versión suavizada). La correlación es negativa para todos los tiempos. El modelo ya tiene un piso de ruido constante por grabación, pero el entrenamiento prefiere el ruido que se mueve cuadro a cuadro: lo puede bajar bajo los pasajes fuertes. Cada grabación de GAPS viene de un montaje distinto, así que cada una tiene su propio fondo.</aside>
+</section>

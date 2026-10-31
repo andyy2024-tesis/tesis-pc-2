@@ -1,0 +1,1 @@
+{"base": "structured_v5_body_audio", "overrides": {"noise": false}, "args": {"run": "structured_v5_body_audio", "steps": 9000, "batch": 8, "lr": 0.0001, "adv": 1.0, "fm": 2.0, "warmup_d": 200, "d_ch": 64, "d_lr_mult": 2.0, "config": "{\"noise\": false}", "tag": "_nonoise_strongD_9k", "ckpt_every": 1000, "clip_every": 2000, "resume": false}}

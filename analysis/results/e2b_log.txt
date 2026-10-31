@@ -1,0 +1,36 @@
+088_Yf1wc: 321 notes, 108 s, 18934 valid window starts
+  real step     0  loss 14.025  (0 s)
+  real step   500  loss 5.701  (54 s)
+  real step  1000  loss 5.367  (108 s)
+  real step  1500  loss 5.313  (163 s)
+  real step  1999  loss 5.066  (218 s)
+real fit: {"spectral_loss": 5.309831067919731, "n_windows": 32, "share_strings_db": -0.017080224206309804, "share_burst_db": -61.948354122229865, "share_body_db": -24.790020645550936, "share_floor_db": -32.70710153361756, "share_noise_db": -41.58504708445833}
+036_SN1wc: 302 notes, 99 s, 16240 valid window starts
+  real step     0  loss 12.760  (0 s)
+  real step   500  loss 5.464  (58 s)
+  real step  1000  loss 5.102  (114 s)
+  real step  1500  loss 5.115  (171 s)
+  real step  1999  loss 5.144  (227 s)
+real fit: {"spectral_loss": 5.114984936184353, "n_windows": 27, "share_strings_db": -0.06605796244713541, "share_burst_db": -60.70142129922195, "share_body_db": -19.022230285542, "share_floor_db": -29.554697043623, "share_noise_db": -28.351984208955304}
+253_Ky1wc: 263 notes, 129 s, 21204 valid window starts
+  real step     0  loss 17.311  (0 s)
+  real step   500  loss 5.139  (50 s)
+  real step  1000  loss 5.016  (99 s)
+  real step  1500  loss 4.920  (149 s)
+  real step  1999  loss 4.900  (197 s)
+real fit: {"spectral_loss": 4.94381912776402, "n_windows": 35, "share_strings_db": -0.03201749158975096, "share_burst_db": -67.53796534169322, "share_body_db": -22.876772147904333, "share_floor_db": -27.057734571088762, "share_noise_db": -36.57607849888769}
+297_2pswc: 952 notes, 171 s, 31129 valid window starts
+  real step     0  loss 15.809  (0 s)
+  real step   500  loss 5.511  (69 s)
+  real step  1000  loss 5.296  (139 s)
+  real step  1500  loss 5.138  (208 s)
+  real step  1999  loss 5.274  (276 s)
+real fit: {"spectral_loss": 5.272059926619897, "n_windows": 52, "share_strings_db": -0.24445165414080494, "share_burst_db": -64.19331356685771, "share_body_db": -12.72357915293123, "share_floor_db": -29.486571250138187, "share_noise_db": -37.122175720276914}
+104_xf1wc: 422 notes, 183 s, 33181 valid window starts
+  real step     0  loss 13.430  (0 s)
+  real step   500  loss 4.870  (50 s)
+  real step  1000  loss 4.877  (101 s)
+  real step  1500  loss 4.846  (152 s)
+  real step  1999  loss 4.903  (203 s)
+real fit: {"spectral_loss": 4.903477098260607, "n_windows": 56, "share_strings_db": -0.05889013303259065, "share_burst_db": -64.90397869953823, "share_body_db": -19.400692870697302, "share_floor_db": -29.747285598124794, "share_noise_db": -30.32223548950574}
+ALL_DONE

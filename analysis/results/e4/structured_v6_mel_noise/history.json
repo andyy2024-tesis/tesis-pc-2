@@ -1,0 +1,46 @@
+[
+ {
+  "step": 1000,
+  "train_loss": 2.2399443686008453,
+  "test_loss": 6.35900998396032,
+  "n_windows": 85,
+  "share_burst_db": -57.136899430878515,
+  "share_strings_db": -0.16191500782651638,
+  "share_body_db": -14.556878382119127,
+  "share_floor_db": -47.50673190999942,
+  "share_noise_db": -28.078474169808672
+ },
+ {
+  "step": 2000,
+  "train_loss": 2.48396897315979,
+  "test_loss": 6.126814387826359,
+  "n_windows": 85,
+  "share_burst_db": -53.86743247375983,
+  "share_strings_db": -0.2299311874808176,
+  "share_body_db": -13.982391384378666,
+  "share_floor_db": -45.19687108097321,
+  "share_noise_db": -19.370525033187008
+ },
+ {
+  "step": 3000,
+  "train_loss": 2.148443028330803,
+  "test_loss": 6.117871996935676,
+  "n_windows": 85,
+  "share_burst_db": -54.62020149900637,
+  "share_strings_db": -0.21939346601234946,
+  "share_body_db": -14.032633176084204,
+  "share_floor_db": -43.659034199712174,
+  "share_noise_db": -20.130839107180194
+ },
+ {
+  "step": 4000,
+  "train_loss": 2.080948680639267,
+  "test_loss": 6.071507167816162,
+  "n_windows": 85,
+  "share_burst_db": -54.216693567248285,
+  "share_strings_db": -0.22874621746054494,
+  "share_body_db": -14.109760628541627,
+  "share_floor_db": -43.69488764832106,
+  "share_noise_db": -19.05039201119745
+ }
+]

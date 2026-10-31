@@ -1,0 +1,37 @@
+
+structured_v8_combo_nonoise: buzz (30-150 Hz envelope fluctuation), model minus original, dB
+  body       single  -2.59 (212)   chord -33.02 (577)
+  click      single -15.49 (212)   chord -51.61 (577)
+  full       single  +0.79 (212)   chord  +0.94 (577)
+  strings    single  +0.24 (212)   chord  +1.44 (577)
+
+structured_v8_combo: buzz (30-150 Hz envelope fluctuation), model minus original, dB
+  body       single  -2.58 (212)   chord -33.20 (577)
+  click      single -16.08 (212)   chord -51.97 (577)
+  full       single  +0.98 (212)   chord  +0.72 (577)
+  no noise   single  +0.60 (212)   chord  +0.58 (577)
+  strings    single  -0.47 (212)   chord  +0.33 (577)
+
+structured_v8_twodecay: buzz (30-150 Hz envelope fluctuation), model minus original, dB
+  body       single  -3.88 (212)   chord -35.54 (577)
+  full       single  +0.88 (212)   chord  +0.78 (577)
+  no noise   single  +0.85 (212)   chord  +0.88 (577)
+  strings    single  -0.48 (212)   chord  +0.36 (577)
+
+structured_v8_bodyhi: buzz (30-150 Hz envelope fluctuation), model minus original, dB
+  body       single  -2.96 (212)   chord -33.67 (577)
+  full       single  +1.01 (212)   chord  +0.86 (577)
+  no noise   single  +0.69 (212)   chord  +0.87 (577)
+  strings    single  -0.50 (212)   chord  +0.39 (577)
+
+structured_v5_body_audio: buzz (30-150 Hz envelope fluctuation), model minus original, dB
+  body       single  -3.37 (212)   chord -34.99 (577)
+  full       single  +0.81 (212)   chord  +0.77 (577)
+  no noise   single  +0.61 (212)   chord  +0.83 (577)
+  strings    single  -0.58 (212)   chord  +0.44 (577)
+
+e6/structured_v5_body_audio_noise_strongD: buzz (30-150 Hz envelope fluctuation), model minus original, dB
+  body       single  -3.46 (212)   chord -34.76 (577)
+  full       single  +0.63 (212)   chord  +0.71 (577)
+  no noise   single  +0.65 (212)   chord  +0.64 (577)
+  strings    single  -0.51 (212)   chord  +0.18 (577)

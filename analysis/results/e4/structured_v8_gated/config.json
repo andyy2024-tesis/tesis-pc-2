@@ -1,0 +1,1 @@
+{"variant": "structured", "overrides": {"body_ir": true, "audio_feats": true, "body_ir_cutoff": 6000.0, "body_eq_max": 8000.0, "body_eq_bands": 10, "two_decay": true, "pluck_click": true, "noise_gate": true}, "loss": "mss", "seed": 0}

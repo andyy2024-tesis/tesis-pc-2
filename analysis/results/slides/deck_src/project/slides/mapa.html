@@ -1,0 +1,28 @@
+<section id="mapa" style="background:#F5F3EE;color:#1B1F27;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#A9531A">Calidad perceptual · Diagnóstico</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:60px;font-weight:600;line-height:1.1;color:#1B1F27">¿Qué está tapando el viento?</h2>
+</div>
+<div style="display:flex;gap:56px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<table style="font-size:26px;color:#1B1F27">
+<tr><th style="width:56%;text-align:left">Momento</th><th style="width:22%;text-align:right">Ruido</th><th style="width:22%;text-align:right">Concentr.</th></tr>
+<tr><td style="text-align:left;">12–40 ms antes del ataque</td><td style="text-align:right;">8.5 %</td><td style="text-align:right;color:#A9531A">2.4×</td></tr>
+<tr style="background:#E3EAF2"><td style="text-align:left;">0–10 ms después del ataque</td><td style="text-align:right;">15.3 %</td><td style="text-align:right;color:#A9531A">3.7×</td></tr>
+<tr><td style="text-align:left;">10–30 ms</td><td style="text-align:right;">14.3 %</td><td style="text-align:right;">1.2×</td></tr>
+<tr><td style="text-align:left;">30–150 ms</td><td style="text-align:right;">25.3 %</td><td style="text-align:right;color:#2F5E8C">0.5×</td></tr>
+<tr><td style="text-align:left;">Nota sostenida</td><td style="text-align:right;">34.8 %</td><td style="text-align:right;">1.1×</td></tr>
+</table>
+<p style="font-size:24px;line-height:1.45;color:#4A5160">Concentración = parte del ruido / parte de la energía del original en ese momento.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<ul style="font-size:28px;line-height:1.45;color:#1B1F27">
+<li>El ruido se amontona en el ataque y justo antes: uña, dedo, el dedo que se apoya en la cuerda.</li>
+<li>69 % del ruido está entre 0.8 y 3.2 kHz; a la parte determinista le falta energía arriba de 3.2 kHz (−4 a −6 dB).</li>
+<li>Entre armónicos, el original tiene ~3.5× más energía que el modelo.</li>
+<li>En las frecuencias de las 6 cuerdas al aire, el original tiene +4 dB extra: resonancia simpática.</li>
+</ul>
+</div>
+</div>
+<aside>Mapa calculado en las 85 ventanas held-out con el modelo base (estructurado + cuerpo + features de audio), ventana de 21 ms para clasificar los momentos. Squeaks: antes de los ataques en cuerdas entorchadas al modelo le faltan −3.8 a −4.7 dB en 1.5–6 kHz, vs −1.5 dB en las agudas; no depende de si hubo un cambio de posición (sin tablatura solo hay una aproximación). La energía extra en las cuerdas al aire no viene de cuerdas que el sintetizador corta antes de tiempo. Dato aparte: 33 % de las notas las corta la siguiente nota en su voz antes de sonar 1 s (6 voces no son 6 cuerdas). De aquí salen los candidatos de la siguiente diapositiva.</aside>
+</section>

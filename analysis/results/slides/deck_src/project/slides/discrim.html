@@ -1,0 +1,29 @@
+<section id="discrim" style="background:#F5F3EE;color:#1B1F27;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#A9531A">Discriminator · Adversarial con ruido, 3000 pasos</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:60px;font-weight:600;line-height:1.1;color:#1B1F27">Ningún discriminator saca el viento</h2>
+</div>
+<div style="display:flex;gap:48px">
+<div style="flex:1.3;display:flex;flex-direction:column;gap:20px">
+<table style="font-size:26px;color:#1B1F27">
+<tr><th style="width:46%;text-align:left">Variante</th><th style="width:18%;text-align:right">Loss D</th><th style="width:18%;text-align:right">Viento</th><th style="width:18%;text-align:right">Flapping</th></tr>
+<tr style="background:#E3EAF2"><td style="text-align:left;">Complejo (el que gustó)</td><td style="text-align:right;">~1.8</td><td style="text-align:right;">−23.5</td><td style="text-align:right;">+0.2</td></tr>
+<tr><td style="text-align:left;">… 9000 pasos</td><td style="text-align:right;"></td><td style="text-align:right;color:#A9531A">−19.9</td><td style="text-align:right;color:#A9531A">+0.5</td></tr>
+<tr><td style="text-align:left;">… loss solo lineal</td><td style="text-align:right;"></td><td style="text-align:right;color:#A9531A">−20.1</td><td style="text-align:right;color:#A9531A">+0.4</td></tr>
+<tr><td style="text-align:left;">Complejo + log</td><td style="text-align:right;">~1.5</td><td style="text-align:right;">−22.3</td><td style="text-align:right;">+0.3</td></tr>
+<tr><td style="text-align:left;">Solo log</td><td style="text-align:right;">~1.2</td><td style="text-align:right;">−22.5</td><td style="text-align:right;">+0.0</td></tr>
+<tr><td style="text-align:left;">Combinado + complejo + log</td><td style="text-align:right;">~1.6</td><td style="text-align:right;">−20.2</td><td style="text-align:right;">+0.0</td></tr>
+</table>
+<p style="font-size:24px;line-height:1.45;color:#4A5160">Viento: ruido en el 20 % más silencioso, en dB (base sin adversarial: −25.1). Flapping vs el original.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<ul style="font-size:28px;line-height:1.45;color:#1B1F27">
+<li>Un discriminator que ve la magnitud en log ve el viento tanto como las notas, y distingue mejor.</li>
+<li>Pero el generador deja el viento igual: lo que tapa no lo puede producir de otra forma.</li>
+<li>Solo log da el menor flapping (277: +0.3 vs +1.0 dB).</li>
+</ul>
+<p style="font-size:28px;line-height:1.45;color:#A9531A">Con el ruido disponible, todas las variantes terminan con el viento en −20 a −23 dB.</p>
+</div>
+</div>
+<aside>Todas parten del modelo con ruido y usan el mismo generador (loss espectral + adversarial + feature matching), 64 canales en el discriminator y su learning rate ×2. Más pasos: la loss no baja y el ruido sube +7 dB. Sin el término log de la loss espectral, el ruido crece ~9 dB: el término log también castiga el exceso de ruido, así que no es él quien pide el viento. Loss del generador en held-out: 6.12–6.17 en todas. Cuál suena mejor lo decide la escucha (sección “Un discriminator que ve el log” en la página de audios).</aside>
+</section>

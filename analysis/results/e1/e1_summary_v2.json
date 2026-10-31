@@ -1,0 +1,22 @@
+[
+ {
+  "variant": "hybrid",
+  "spectral_loss": 3.736988067626953,
+  "noise_frac": 0.0056862677447497845,
+  "noise_frac_first50ms": 0.004455439280718565,
+  "noise_frac_below_f0": 0.1265355348587036,
+  "body_frac": 0.0023891825694590807,
+  "burst_frac_first50ms": 0.0016261902637779713,
+  "note_params": 2370
+ },
+ {
+  "variant": "ddsp_full",
+  "spectral_loss": 3.4722886085510254,
+  "noise_frac": 0.004642308223992586,
+  "noise_frac_first50ms": 0.003047729143872857,
+  "noise_frac_below_f0": 0.10638981312513351,
+  "body_frac": 0.0004943194217048585,
+  "burst_frac_first50ms": 0.0009321182733401656,
+  "note_params": 16530
+ }
+]

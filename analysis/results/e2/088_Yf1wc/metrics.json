@@ -1,0 +1,45 @@
+{
+ "real": {
+  "spectral_loss": 5.292265519499779,
+  "n_windows": 32,
+  "share_strings_db": -0.11650468083579689,
+  "share_burst_db": -71.0657490658751,
+  "share_body_db": -15.868882136279757,
+  "share_floor_db": -33.30267879799671,
+  "share_noise_db": -39.45958279726708
+ },
+ "recovery_model": {
+  "corr": 0.9987479860874046,
+  "median_abs_err_db": 0.02137279510498047,
+  "p90_abs_err_db": 0.27144813537597656
+ },
+ "recovery_naive": {
+  "corr": 0.8789563655167919,
+  "median_abs_err_db": 0.882207339980738,
+  "p90_abs_err_db": 3.674003168596755
+ },
+ "recovery_model_alone": {
+  "n": 40,
+  "median_abs_err_db": 0.020593643188476562
+ },
+ "recovery_naive_alone": {
+  "n": 40,
+  "median_abs_err_db": 1.15491409957135
+ },
+ "recovery_model_2-3 sounding": {
+  "n": 234,
+  "median_abs_err_db": 0.02187490463256836
+ },
+ "recovery_naive_2-3 sounding": {
+  "n": 234,
+  "median_abs_err_db": 0.8339609763099745
+ },
+ "recovery_model_4+ sounding": {
+  "n": 47,
+  "median_abs_err_db": 0.017090797424316406
+ },
+ "recovery_naive_4+ sounding": {
+  "n": 47,
+  "median_abs_err_db": 0.9956216168604186
+ }
+}

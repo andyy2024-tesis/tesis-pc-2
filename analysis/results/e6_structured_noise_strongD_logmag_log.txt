@@ -1,0 +1,39 @@
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+before: {"test_loss": 6.003251389896168, "n_windows": 85, "share_burst_db": -61.446044758253166, "share_strings_db": -0.1392295498465923, "share_body_db": -15.501056723081714, "share_floor_db": -46.54455046167865, "share_noise_db": -24.748896785717495, "quiet_noise_db": -25.181007385253906}
+  step   100  D 1.569  spec 0.000  adv 0.000  fm 0.000 (54 s)
+  step   200  D 1.501  spec 0.000  adv 0.000  fm 0.000 (155 s)
+  step   300  D 1.598  spec 6.136  adv 1.581  fm 0.653 (315 s)
+  step   400  D 1.619  spec 6.149  adv 2.051  fm 0.701 (489 s)
+  step   500  D 1.474  spec 6.190  adv 1.778  fm 0.763 (664 s)
+  step   600  D 1.353  spec 6.307  adv 1.319  fm 0.792 (834 s)
+  step   700  D 1.449  spec 6.199  adv 1.594  fm 0.799 (979 s)
+  step   800  D 1.387  spec 6.102  adv 1.507  fm 0.804 (1123 s)
+  step   900  D 1.273  spec 6.098  adv 1.587  fm 0.827 (1266 s)
+  step  1000  D 1.247  spec 5.731  adv 1.765  fm 0.848 (1410 s)
+  EVAL step 1000: {"test_loss": 6.13870720021865, "n_windows": 85, "share_burst_db": -60.38267216280495, "share_strings_db": -0.1651164045786599, "share_body_db": -15.330177083035641, "share_floor_db": -47.10283371782273, "share_noise_db": -20.981249223413002, "quiet_noise_db": -21.584514617919922}
+  step  1100  D 1.257  spec 6.188  adv 1.525  fm 0.801 (1567 s)
+  step  1200  D 1.205  spec 6.242  adv 1.642  fm 0.843 (1711 s)
+  step  1300  D 1.266  spec 6.152  adv 1.735  fm 0.858 (1855 s)
+  step  1400  D 1.358  spec 6.000  adv 1.772  fm 0.830 (1993 s)
+  step  1500  D 1.373  spec 6.212  adv 1.211  fm 0.837 (2137 s)
+  step  1600  D 1.365  spec 5.979  adv 1.982  fm 0.821 (2281 s)
+  step  1700  D 1.241  spec 5.919  adv 1.551  fm 0.855 (2425 s)
+  step  1800  D 1.229  spec 6.112  adv 1.465  fm 0.846 (2568 s)
+  step  1900  D 1.256  spec 6.234  adv 1.567  fm 0.860 (2713 s)
+  step  2000  D 1.248  spec 6.272  adv 1.729  fm 0.841 (2857 s)
+  EVAL step 2000: {"test_loss": 6.143830086203183, "n_windows": 85, "share_burst_db": -58.84957459695564, "share_strings_db": -0.19111703816149125, "share_body_db": -14.543189786207073, "share_floor_db": -46.847792963307846, "share_noise_db": -21.023786970958422, "quiet_noise_db": -21.292743682861328}
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+resumed at step 2000
+  step  2100  D 1.229  spec 5.968  adv 1.729  fm 0.849 (147 s)
+  step  2200  D 1.208  spec 6.178  adv 1.443  fm 0.870 (293 s)
+  step  2300  D 1.271  spec 6.211  adv 1.703  fm 0.868 (437 s)
+  step  2400  D 1.174  spec 6.084  adv 1.693  fm 0.856 (581 s)
+  step  2500  D 1.484  spec 5.599  adv 2.195  fm 0.847 (726 s)
+  step  2600  D 1.163  spec 6.235  adv 2.201  fm 0.873 (871 s)
+  step  2700  D 1.260  spec 5.912  adv 1.825  fm 0.868 (1015 s)
+  step  2800  D 1.111  spec 5.582  adv 1.943  fm 0.897 (1160 s)
+  step  2900  D 1.201  spec 6.381  adv 1.824  fm 0.852 (1304 s)
+  step  3000  D 1.197  spec 6.231  adv 1.628  fm 0.875 (1449 s)
+  EVAL step 3000: {"test_loss": 6.152743070265826, "n_windows": 85, "share_burst_db": -60.006046613232904, "share_strings_db": -0.1693665391077691, "share_body_db": -14.834275331746712, "share_floor_db": -46.827457937094096, "share_noise_db": -22.69792443861769, "quiet_noise_db": -22.511808395385742}

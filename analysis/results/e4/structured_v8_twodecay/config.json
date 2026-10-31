@@ -1,0 +1,1 @@
+{"variant": "structured", "overrides": {"body_ir": true, "audio_feats": true, "two_decay": true}, "loss": "mss", "seed": 0}

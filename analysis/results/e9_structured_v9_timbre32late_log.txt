@@ -1,0 +1,8 @@
+structured: 20 recordings, 241814 train starts, 85 test windows
+parameters: 0.69 M
+  step   100  train loss 7.625  (96 s)
+  step   200  train loss 6.642  (191 s)
+  step   300  train loss 6.460  (288 s)
+  step   400  train loss 6.324  (384 s)
+  step   500  train loss 6.301  (479 s)
+  step   600  train loss 6.375  (575 s)

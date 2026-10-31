@@ -1,0 +1,19 @@
+285 notes prepared in 2 s
+  hybrid: 48/285 notes
+  hybrid: 96/285 notes
+  hybrid: 144/285 notes
+  hybrid: 192/285 notes
+  hybrid: 240/285 notes
+  hybrid: 285/285 notes
+hybrid done in 682 s
+  ddsp_full: 48/285 notes
+  ddsp_full: 96/285 notes
+  ddsp_full: 144/285 notes
+  ddsp_full: 192/285 notes
+  ddsp_full: 240/285 notes
+  ddsp_full: 285/285 notes
+ddsp_full done in 605 s
+           spectral_loss  noise_frac  noise_frac_first50ms  noise_frac_below_f0  body_frac  burst_frac_first50ms  note_params
+variant                                                                                                                      
+hybrid             3.737    0.005686              0.004455               0.1265   0.002389              0.001626         2370
+ddsp_full          3.472    0.004642              0.003048               0.1064  0.0004943             0.0009321        16530

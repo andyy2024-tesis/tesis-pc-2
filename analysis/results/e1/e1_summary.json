@@ -1,0 +1,52 @@
+[
+ {
+  "variant": "ddsp",
+  "spectral_loss": 3.5335640907287598,
+  "noise_frac": 0.00738207483664155,
+  "noise_frac_first50ms": 0.006473989225924015,
+  "noise_frac_below_f0": 0.1856745332479477,
+  "body_frac": 0.0,
+  "burst_frac_first50ms": 0.0,
+  "note_params": 16400
+ },
+ {
+  "variant": "ddsp_inh",
+  "spectral_loss": 3.485363483428955,
+  "noise_frac": 0.006659774575382471,
+  "noise_frac_first50ms": 0.004671050701290369,
+  "noise_frac_below_f0": 0.18389947712421417,
+  "body_frac": 0.0,
+  "burst_frac_first50ms": 0.0,
+  "note_params": 16400
+ },
+ {
+  "variant": "phys_nob",
+  "spectral_loss": 3.9378905296325684,
+  "noise_frac": 0.01711510866880417,
+  "noise_frac_first50ms": 0.015490934252738953,
+  "noise_frac_below_f0": 0.9999989867210388,
+  "body_frac": 0.0,
+  "burst_frac_first50ms": 0.0,
+  "note_params": 160
+ },
+ {
+  "variant": "phys",
+  "spectral_loss": 3.9106922149658203,
+  "noise_frac": 0.01267258170992136,
+  "noise_frac_first50ms": 0.009730638936161995,
+  "noise_frac_below_f0": 0.9998264312744141,
+  "body_frac": 0.0,
+  "burst_frac_first50ms": 0.003399713197723031,
+  "note_params": 194
+ },
+ {
+  "variant": "phys_body",
+  "spectral_loss": 3.884476900100708,
+  "noise_frac": 0.008493343368172646,
+  "noise_frac_first50ms": 0.006023476365953684,
+  "noise_frac_below_f0": 0.09887026250362396,
+  "body_frac": 0.002493163337931037,
+  "burst_frac_first50ms": 0.00276395957916975,
+  "note_params": 290
+ }
+]

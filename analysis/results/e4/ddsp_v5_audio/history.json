@@ -1,0 +1,34 @@
+[
+ {
+  "step": 1000,
+  "train_loss": 6.015906751155853,
+  "test_loss": 6.482630628698012,
+  "n_windows": 85,
+  "share_strings_db": -0.005704445801724381,
+  "share_noise_db": -28.818560434796954
+ },
+ {
+  "step": 2000,
+  "train_loss": 6.491786360740662,
+  "test_loss": 6.391705872030819,
+  "n_windows": 85,
+  "share_strings_db": -0.019770072914351965,
+  "share_noise_db": -23.427641687182387
+ },
+ {
+  "step": 3000,
+  "train_loss": 6.157022774219513,
+  "test_loss": 6.140052481258617,
+  "n_windows": 85,
+  "share_strings_db": -0.02589101299164845,
+  "share_noise_db": -22.259291760330115
+ },
+ {
+  "step": 4000,
+  "train_loss": 5.8379663825035095,
+  "test_loss": 6.087185663335464,
+  "n_windows": 85,
+  "share_strings_db": -0.0403526383483788,
+  "share_noise_db": -20.339284457238463
+ }
+]

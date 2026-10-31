@@ -1,0 +1,74 @@
+[
+ {
+  "step": 2000,
+  "train_loss": 5.429883599281311,
+  "test_loss": 6.021566940756405,
+  "n_windows": 85,
+  "share_burst_db": -92.33418716999809,
+  "share_strings_db": -0.05236478583038932,
+  "share_body_db": -19.26329017029289,
+  "share_click_db": -57.8171176977989,
+  "share_floor_db": -38.7169422902059,
+  "share_noise_db": -65.14882130656171
+ },
+ {
+  "step": 4000,
+  "train_loss": 5.653361797332764,
+  "test_loss": 5.995891486897188,
+  "n_windows": 85,
+  "share_burst_db": -101.64614577300647,
+  "share_strings_db": -0.06435687794182131,
+  "share_body_db": -18.38390751101167,
+  "share_click_db": -62.319346980886685,
+  "share_floor_db": -36.98840976320231,
+  "share_noise_db": -61.19564204382858
+ },
+ {
+  "step": 6000,
+  "train_loss": 5.714310586452484,
+  "test_loss": 5.85106123194975,
+  "n_windows": 85,
+  "share_burst_db": -101.81621138782762,
+  "share_strings_db": -0.06922340894105292,
+  "share_body_db": -18.08710095282673,
+  "share_click_db": -57.56238805486415,
+  "share_floor_db": -35.811947151084496,
+  "share_noise_db": -48.34830646759155
+ },
+ {
+  "step": 8000,
+  "train_loss": 5.5282018184661865,
+  "test_loss": 5.8288680469288545,
+  "n_windows": 85,
+  "share_burst_db": -105.18458309123879,
+  "share_strings_db": -0.07937027441049815,
+  "share_body_db": -17.51535579129732,
+  "share_click_db": -58.83439077716703,
+  "share_floor_db": -34.188177079001896,
+  "share_noise_db": -51.468410953600284
+ },
+ {
+  "step": 10000,
+  "train_loss": 5.6873297691345215,
+  "test_loss": 5.8304533397450165,
+  "n_windows": 85,
+  "share_burst_db": -107.49164602997158,
+  "share_strings_db": -0.07559801817589659,
+  "share_body_db": -17.725117530972014,
+  "share_click_db": -58.874804147257585,
+  "share_floor_db": -34.368057906044626,
+  "share_noise_db": -53.09522794524006
+ },
+ {
+  "step": 12000,
+  "train_loss": 5.922864258289337,
+  "test_loss": 5.837565147175509,
+  "n_windows": 85,
+  "share_burst_db": -108.01958928705908,
+  "share_strings_db": -0.06202604127963461,
+  "share_body_db": -18.582024821503843,
+  "share_click_db": -59.505035180120046,
+  "share_floor_db": -35.02500917010158,
+  "share_noise_db": -54.09770586377675
+ }
+]

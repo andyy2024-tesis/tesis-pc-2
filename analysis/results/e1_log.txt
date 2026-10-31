@@ -1,0 +1,43 @@
+285 notes prepared in 2 s
+  ddsp: 48/285 notes
+  ddsp: 96/285 notes
+  ddsp: 144/285 notes
+  ddsp: 192/285 notes
+  ddsp: 240/285 notes
+  ddsp: 285/285 notes
+ddsp done in 530 s
+  ddsp_inh: 48/285 notes
+  ddsp_inh: 96/285 notes
+  ddsp_inh: 144/285 notes
+  ddsp_inh: 192/285 notes
+  ddsp_inh: 240/285 notes
+  ddsp_inh: 285/285 notes
+ddsp_inh done in 528 s
+  phys_nob: 48/285 notes
+  phys_nob: 96/285 notes
+  phys_nob: 144/285 notes
+  phys_nob: 192/285 notes
+  phys_nob: 240/285 notes
+  phys_nob: 285/285 notes
+phys_nob done in 533 s
+  phys: 48/285 notes
+  phys: 96/285 notes
+  phys: 144/285 notes
+  phys: 192/285 notes
+  phys: 240/285 notes
+  phys: 285/285 notes
+phys done in 537 s
+  phys_body: 48/285 notes
+  phys_body: 96/285 notes
+  phys_body: 144/285 notes
+  phys_body: 192/285 notes
+  phys_body: 240/285 notes
+  phys_body: 285/285 notes
+phys_body done in 611 s
+           spectral_loss  noise_frac  noise_frac_first50ms  noise_frac_below_f0  body_frac  burst_frac_first50ms  note_params
+variant                                                                                                                      
+ddsp               3.534    0.007382              0.006474               0.1857          0                     0        16400
+ddsp_inh           3.485     0.00666              0.004671               0.1839          0                     0        16400
+phys_nob           3.938     0.01712               0.01549                    1          0                     0          160
+phys               3.911     0.01267              0.009731               0.9998          0                0.0034          194
+phys_body          3.884    0.008493              0.006023              0.09887   0.002493              0.002764          290

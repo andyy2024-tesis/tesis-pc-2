@@ -1,0 +1,38 @@
+[
+ {
+  "step": 1000,
+  "train_loss": 6.310551226139069,
+  "test_loss": 6.573795638364904,
+  "n_windows": 85,
+  "share_strings_db": -0.1021008163295809,
+  "share_reverb_db": -17.07426822752598,
+  "share_noise_db": -24.411633095861074
+ },
+ {
+  "step": 2000,
+  "train_loss": 6.697229564189911,
+  "test_loss": 6.4923395044663375,
+  "n_windows": 85,
+  "share_strings_db": -0.11607131916671119,
+  "share_reverb_db": -18.463627996760646,
+  "share_noise_db": -19.16201953047301
+ },
+ {
+  "step": 3000,
+  "train_loss": 6.368025898933411,
+  "test_loss": 6.391969837861903,
+  "n_windows": 85,
+  "share_strings_db": -0.1260091108195986,
+  "share_reverb_db": -19.010955508367285,
+  "share_noise_db": -17.9478887729065
+ },
+ {
+  "step": 4000,
+  "train_loss": 6.041743636131287,
+  "test_loss": 6.349113329719095,
+  "n_windows": 85,
+  "share_strings_db": -0.10657029361082275,
+  "share_reverb_db": -19.066996959442818,
+  "share_noise_db": -19.265179022268285
+ }
+]

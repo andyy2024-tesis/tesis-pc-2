@@ -1,0 +1,10 @@
+{
+ "real": {
+  "spectral_loss": 5.010144124712263,
+  "n_windows": 35,
+  "share_strings_db": -0.009713002666398667,
+  "share_burst_db": -64.38394902205877,
+  "share_floor_db": -26.9426487175768,
+  "share_noise_db": -36.739669107381225
+ }
+}

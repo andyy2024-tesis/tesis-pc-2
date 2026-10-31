@@ -1,0 +1,29 @@
+<section id="fenomenos" style="background:#F5F3EE;color:#1B1F27;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#A9531A">Fenómenos nuevos · 4000 pasos cada uno</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:60px;font-weight:600;line-height:1.1;color:#1B1F27">Las partes nuevas cubren lo que fingía el ruido</h2>
+</div>
+<div style="display:flex;gap:48px">
+<div style="flex:1.2;display:flex;flex-direction:column;gap:20px">
+<table style="font-size:26px;color:#1B1F27">
+<tr><th style="width:52%;text-align:left">Modelo</th><th style="width:24%;text-align:right">Loss</th><th style="width:24%;text-align:right">Ruido apagado</th></tr>
+<tr><td style="text-align:left;">Base</td><td style="text-align:right;">6.00</td><td style="text-align:right;">7.82</td></tr>
+<tr><td style="text-align:left;">Cuerpo hasta 6 kHz</td><td style="text-align:right;">6.02</td><td style="text-align:right;color:#2F5E8C">6.95</td></tr>
+<tr><td style="text-align:left;">Dos tasas de decaimiento</td><td style="text-align:right;">6.04</td><td style="text-align:right;color:#2F5E8C">7.36</td></tr>
+<tr><td style="text-align:left;">Clic de uña y dedo</td><td style="text-align:right;">6.00</td><td style="text-align:right;color:#2F5E8C">7.55</td></tr>
+<tr><td style="text-align:left;">Squeak (cuerdas entorchadas)</td><td style="text-align:right;">6.02</td><td style="text-align:right;">7.78</td></tr>
+<tr><td style="text-align:left;">Resonancia simpática</td><td style="text-align:right;">6.02</td><td style="text-align:right;">7.90</td></tr>
+<tr style="background:#E3EAF2"><td style="text-align:left;">Combinado (cuerpo + decaimientos + clic)</td><td style="text-align:right;">6.00</td><td style="text-align:right;color:#2F5E8C">6.42</td></tr>
+</table>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<ul style="font-size:28px;line-height:1.45;color:#1B1F27">
+<li>“Ruido apagado”: el mismo modelo entrenado, sin el ruido residual al generar. Mide cuánto cubren las partes deterministas solas.</li>
+<li>Cuerpo completo ~la mitad de lo que tapaba el ruido; dos decaimientos ~27 %; clic ~15 %. Squeak y simpática casi no se usan.</li>
+<li>Combinado: apagar el ruido cuesta +0.42 en vez de +1.82, ~77 % cubierto.</li>
+</ul>
+<p style="font-size:28px;line-height:1.45;color:#A9531A">Pero con el ruido disponible, el viento no baja: la loss lo fija al nivel del original en los pasajes silenciosos.</p>
+</div>
+</div>
+<aside>Cada candidato es un interruptor del modelo, entrenado igual que el mejor modelo base (estructurado + cuerpo + audio, loss espectral, 4000 pasos), evaluado en las 85 ventanas held-out. Cuerpo hasta 6 kHz: la respuesta del cuerpo después de cada ataque, antes filtrada a 600 Hz, con EQ por grabación hasta 8 kHz. Dos decaimientos: cada armónico son dos polarizaciones de la cuerda, con su propio decaimiento y un pequeño desafinamiento (batido lento). Clic: dos formas de onda cortas aprendidas (uña ~4 ms, dedo ~12 ms) desde 20 ms antes del ataque. Simpática: las 6 cuerdas al aire resuenan cuando un armónico tocado cae cerca de los suyos. Squeak: ruido filtrado en los 60 ms antes de cada nota en cuerda entorchada. Viento con ruido: base −25.1 dB, partes nuevas −21 a −24 dB, combinado −22.2 dB. El nivel del ruido se mueve ~4 dB entre checkpoints del mismo modelo, así que solo los efectos grandes cuentan. Combinado entrenado desde cero sin ruido: loss 6.03 (vs 6.00 con ruido; el modelo viejo sin ruido 6.36) y sin flapping (−0.0 dB): ya casi no necesita el ruido.</aside>
+</section>

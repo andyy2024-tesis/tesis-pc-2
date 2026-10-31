@@ -1,0 +1,519 @@
+{
+ "log_b": [
+  -7.1724831530472475,
+  -0.037980152132195424
+ ],
+ "config": {
+  "source": "smooth",
+  "body": "filter",
+  "attack_ms": 2.0,
+  "pluck_per_note": true
+ },
+ "steps": 1500,
+ "results": {
+  "01_Funk2-108-Eb_solo hexsum": {
+   "model": {
+    "n": 181,
+    "corr": 0.694118657601478,
+    "median_abs_err_db": 0.9984611834965023,
+    "p90_abs_err_db": 10.362086006033827
+   },
+   "naive": {
+    "n": 181,
+    "corr": 0.972166942938295,
+    "median_abs_err_db": 0.004763341522544096,
+    "p90_abs_err_db": 0.140926266853576
+   },
+   "model 1 sounding": {
+    "n": 118,
+    "corr": 0.6927717315448365,
+    "median_abs_err_db": 0.9605245575097818,
+    "p90_abs_err_db": 9.572041901069147
+   },
+   "naive 1 sounding": {
+    "n": 118,
+    "corr": 0.9999261267311085,
+    "median_abs_err_db": 0.0033963058001980073,
+    "p90_abs_err_db": 0.06369529557084376
+   },
+   "model 2-3 sounding": {
+    "n": 63,
+    "corr": 0.699597751502432,
+    "median_abs_err_db": 1.249581297246685,
+    "p90_abs_err_db": 12.014053737197225
+   },
+   "naive 2-3 sounding": {
+    "n": 63,
+    "corr": 0.9401217188527792,
+    "median_abs_err_db": 0.010347972309123321,
+    "p90_abs_err_db": 0.33629900404095947
+   }
+  },
+  "01_Funk2-108-Eb_solo mic": {
+   "model": {
+    "n": 181,
+    "corr": 0.7045246937414511,
+    "median_abs_err_db": 2.469063682459371,
+    "p90_abs_err_db": 8.655049058095948
+   },
+   "naive": {
+    "n": 181,
+    "corr": 0.795791507096948,
+    "median_abs_err_db": 2.012451025074693,
+    "p90_abs_err_db": 6.297197411887268
+   },
+   "model 1 sounding": {
+    "n": 118,
+    "corr": 0.6893509453699077,
+    "median_abs_err_db": 2.2255691361675574,
+    "p90_abs_err_db": 7.729015514975273
+   },
+   "naive 1 sounding": {
+    "n": 118,
+    "corr": 0.8068928105860447,
+    "median_abs_err_db": 2.4942244923651913,
+    "p90_abs_err_db": 6.404942424572236
+   },
+   "model 2-3 sounding": {
+    "n": 63,
+    "corr": 0.7266774721449989,
+    "median_abs_err_db": 2.7157153498793747,
+    "p90_abs_err_db": 9.139123502036236
+   },
+   "naive 2-3 sounding": {
+    "n": 63,
+    "corr": 0.8109137735949052,
+    "median_abs_err_db": 1.5888525889088179,
+    "p90_abs_err_db": 4.958014873272724
+   }
+  },
+  "02_Jazz1-130-D_comp hexsum": {
+   "model": {
+    "n": 188,
+    "corr": 0.7136675632512945,
+    "median_abs_err_db": 1.8028224023790358,
+    "p90_abs_err_db": 9.323023762825146
+   },
+   "naive": {
+    "n": 188,
+    "corr": 0.9128859259742093,
+    "median_abs_err_db": 0.4178166619370902,
+    "p90_abs_err_db": 4.8801326653033685
+   },
+   "model 1 sounding": {
+    "n": 15,
+    "corr": 0.8875071527454758,
+    "median_abs_err_db": 1.324850379099523,
+    "p90_abs_err_db": 7.028959002881664
+   },
+   "naive 1 sounding": {
+    "n": 15,
+    "corr": 0.9504802470676027,
+    "median_abs_err_db": 0.6211722023134527,
+    "p90_abs_err_db": 5.049354629338273
+   },
+   "model 2-3 sounding": {
+    "n": 97,
+    "corr": 0.7817756142659951,
+    "median_abs_err_db": 1.623308726884531,
+    "p90_abs_err_db": 9.197947633198673
+   },
+   "naive 2-3 sounding": {
+    "n": 97,
+    "corr": 0.9586201261504651,
+    "median_abs_err_db": 0.24087489123155592,
+    "p90_abs_err_db": 3.039619799356951
+   },
+   "model 4+ sounding": {
+    "n": 76,
+    "corr": 0.6274157099686277,
+    "median_abs_err_db": 2.7107720661809367,
+    "p90_abs_err_db": 9.543211499530692
+   },
+   "naive 4+ sounding": {
+    "n": 76,
+    "corr": 0.8634910795601183,
+    "median_abs_err_db": 0.9629888354357199,
+    "p90_abs_err_db": 9.488882620948445
+   }
+  },
+  "02_Jazz1-130-D_comp mic": {
+   "model": {
+    "n": 188,
+    "corr": 0.5774787663247973,
+    "median_abs_err_db": 3.663927770467275,
+    "p90_abs_err_db": 12.16586872051438
+   },
+   "naive": {
+    "n": 188,
+    "corr": 0.6925464898946618,
+    "median_abs_err_db": 4.233184833913443,
+    "p90_abs_err_db": 11.3027612186658
+   },
+   "model 1 sounding": {
+    "n": 15,
+    "corr": 0.665301021547959,
+    "median_abs_err_db": 1.7900301212350342,
+    "p90_abs_err_db": 9.129273877584481
+   },
+   "naive 1 sounding": {
+    "n": 15,
+    "corr": 0.6222438079251882,
+    "median_abs_err_db": 4.374017427001743,
+    "p90_abs_err_db": 13.11039239215029
+   },
+   "model 2-3 sounding": {
+    "n": 97,
+    "corr": 0.5617771834393293,
+    "median_abs_err_db": 3.4196187974535235,
+    "p90_abs_err_db": 12.281602191042309
+   },
+   "naive 2-3 sounding": {
+    "n": 97,
+    "corr": 0.7026087759315092,
+    "median_abs_err_db": 4.136185498707912,
+    "p90_abs_err_db": 10.774612413641666
+   },
+   "model 4+ sounding": {
+    "n": 76,
+    "corr": 0.5925911973788449,
+    "median_abs_err_db": 4.681698045687995,
+    "p90_abs_err_db": 12.198291584415472
+   },
+   "naive 4+ sounding": {
+    "n": 76,
+    "corr": 0.6977296022853695,
+    "median_abs_err_db": 4.709415711033061,
+    "p90_abs_err_db": 11.036160262809515
+   }
+  },
+  "02_Rock1-90-C#_solo hexsum": {
+   "model": {
+    "n": 72,
+    "corr": 0.8275613376280537,
+    "median_abs_err_db": 0.6453038684785071,
+    "p90_abs_err_db": 5.646632449567428
+   },
+   "naive": {
+    "n": 72,
+    "corr": 0.9615406996832302,
+    "median_abs_err_db": 0.011706419900749054,
+    "p90_abs_err_db": 0.3119398802213077
+   },
+   "model 1 sounding": {
+    "n": 58,
+    "corr": 0.7970467498201778,
+    "median_abs_err_db": 0.601214240884552,
+    "p90_abs_err_db": 5.92232453553312
+   },
+   "naive 1 sounding": {
+    "n": 58,
+    "corr": 0.9530066682636384,
+    "median_abs_err_db": 0.01011383233642782,
+    "p90_abs_err_db": 0.33494998660023556
+   },
+   "model 2-3 sounding": {
+    "n": 14,
+    "corr": 0.9776027846241555,
+    "median_abs_err_db": 0.7650777239830688,
+    "p90_abs_err_db": 2.04344280240965
+   },
+   "naive 2-3 sounding": {
+    "n": 14,
+    "corr": 0.9997128825802958,
+    "median_abs_err_db": 0.03558816137204701,
+    "p90_abs_err_db": 0.29264161673129974
+   }
+  },
+  "02_Rock1-90-C#_solo mic": {
+   "model": {
+    "n": 72,
+    "corr": 0.5982813628233206,
+    "median_abs_err_db": 3.714857577640135,
+    "p90_abs_err_db": 8.412601006725323
+   },
+   "naive": {
+    "n": 72,
+    "corr": 0.6375934663409027,
+    "median_abs_err_db": 3.961364536388338,
+    "p90_abs_err_db": 7.763648457905603
+   },
+   "model 1 sounding": {
+    "n": 58,
+    "corr": 0.5931901553124637,
+    "median_abs_err_db": 3.885085480840253,
+    "p90_abs_err_db": 8.042822457733454
+   },
+   "naive 1 sounding": {
+    "n": 58,
+    "corr": 0.6472600110286248,
+    "median_abs_err_db": 3.890826321631568,
+    "p90_abs_err_db": 7.564289355514341
+   },
+   "model 2-3 sounding": {
+    "n": 14,
+    "corr": 0.7267656955744335,
+    "median_abs_err_db": 1.9399826809112355,
+    "p90_abs_err_db": 7.760793141424905
+   },
+   "naive 2-3 sounding": {
+    "n": 14,
+    "corr": 0.7069720772816185,
+    "median_abs_err_db": 2.885450717155557,
+    "p90_abs_err_db": 7.98631475930239
+   }
+  },
+  "03_BN2-166-Ab_comp hexsum": {
+   "model": {
+    "n": 180,
+    "corr": 0.8068028579419659,
+    "median_abs_err_db": 2.8949780848374864,
+    "p90_abs_err_db": 10.701395151302199
+   },
+   "naive": {
+    "n": 180,
+    "corr": 0.9593026824673043,
+    "median_abs_err_db": 0.14035187743460042,
+    "p90_abs_err_db": 3.572015197684509
+   },
+   "model 1 sounding": {
+    "n": 49,
+    "corr": 0.8814614512473307,
+    "median_abs_err_db": 2.3413522381667207,
+    "p90_abs_err_db": 8.836328435476897
+   },
+   "naive 1 sounding": {
+    "n": 49,
+    "corr": 0.9647174765814794,
+    "median_abs_err_db": 0.04680000267506301,
+    "p90_abs_err_db": 3.219355247978602
+   },
+   "model 2-3 sounding": {
+    "n": 92,
+    "corr": 0.8065728474645097,
+    "median_abs_err_db": 2.903560123615126,
+    "p90_abs_err_db": 10.698920595122349
+   },
+   "naive 2-3 sounding": {
+    "n": 92,
+    "corr": 0.9504999859078745,
+    "median_abs_err_db": 0.18783560424104984,
+    "p90_abs_err_db": 3.4958241816550304
+   },
+   "model 4+ sounding": {
+    "n": 39,
+    "corr": 0.6994952513757607,
+    "median_abs_err_db": 3.925570240442312,
+    "p90_abs_err_db": 9.58541839317913
+   },
+   "naive 4+ sounding": {
+    "n": 39,
+    "corr": 0.9689496428431601,
+    "median_abs_err_db": 0.1486683459281295,
+    "p90_abs_err_db": 4.023711566825724
+   }
+  },
+  "03_BN2-166-Ab_comp mic": {
+   "model": {
+    "n": 180,
+    "corr": 0.7247461122878458,
+    "median_abs_err_db": 4.84601737026653,
+    "p90_abs_err_db": 12.166516115872577
+   },
+   "naive": {
+    "n": 180,
+    "corr": 0.7342216586243564,
+    "median_abs_err_db": 4.3504556606961415,
+    "p90_abs_err_db": 11.022504424192883
+   },
+   "model 1 sounding": {
+    "n": 49,
+    "corr": 0.8007132625748707,
+    "median_abs_err_db": 5.129393126955399,
+    "p90_abs_err_db": 13.017461204584047
+   },
+   "naive 1 sounding": {
+    "n": 49,
+    "corr": 0.7935615174625341,
+    "median_abs_err_db": 5.051711519720051,
+    "p90_abs_err_db": 12.387732281455616
+   },
+   "model 2-3 sounding": {
+    "n": 92,
+    "corr": 0.6601080885181898,
+    "median_abs_err_db": 4.974566877387392,
+    "p90_abs_err_db": 12.592606084748294
+   },
+   "naive 2-3 sounding": {
+    "n": 92,
+    "corr": 0.6777571227143496,
+    "median_abs_err_db": 4.381957854397132,
+    "p90_abs_err_db": 10.583076169022403
+   },
+   "model 4+ sounding": {
+    "n": 39,
+    "corr": 0.7298484089925857,
+    "median_abs_err_db": 5.510868299961068,
+    "p90_abs_err_db": 12.454921104794678
+   },
+   "naive 4+ sounding": {
+    "n": 39,
+    "corr": 0.7527749531392496,
+    "median_abs_err_db": 3.864717006883806,
+    "p90_abs_err_db": 10.065695950844557
+   }
+  },
+  "04_SS2-88-F_comp hexsum": {
+   "model": {
+    "n": 178,
+    "corr": 0.8667155360061826,
+    "median_abs_err_db": 1.0523763547338305,
+    "p90_abs_err_db": 4.258270019866999
+   },
+   "naive": {
+    "n": 178,
+    "corr": 0.9295676903598388,
+    "median_abs_err_db": 0.22372557613088873,
+    "p90_abs_err_db": 1.8039509405054577
+   },
+   "model 1 sounding": {
+    "n": 12,
+    "corr": 0.731191900299701,
+    "median_abs_err_db": 2.5068186703417403,
+    "p90_abs_err_db": 5.500180275793117
+   },
+   "naive 1 sounding": {
+    "n": 12,
+    "corr": 0.9987317618907032,
+    "median_abs_err_db": 0.09460345690308536,
+    "p90_abs_err_db": 0.4484418594599263
+   },
+   "model 2-3 sounding": {
+    "n": 36,
+    "corr": 0.9559672162068209,
+    "median_abs_err_db": 1.2403445801661697,
+    "p90_abs_err_db": 3.4376379902642
+   },
+   "naive 2-3 sounding": {
+    "n": 36,
+    "corr": 0.9460801601524877,
+    "median_abs_err_db": 0.19683379532089695,
+    "p90_abs_err_db": 6.711699930543537
+   },
+   "model 4+ sounding": {
+    "n": 130,
+    "corr": 0.8545443317407115,
+    "median_abs_err_db": 0.9898604631060124,
+    "p90_abs_err_db": 4.130071822788708
+   },
+   "naive 4+ sounding": {
+    "n": 130,
+    "corr": 0.9173279917877954,
+    "median_abs_err_db": 0.25502543716926596,
+    "p90_abs_err_db": 1.6010860463093746
+   }
+  },
+  "04_SS2-88-F_comp mic": {
+   "model": {
+    "n": 178,
+    "corr": 0.7560545964584461,
+    "median_abs_err_db": 1.91124295665837,
+    "p90_abs_err_db": 5.964819820102239
+   },
+   "naive": {
+    "n": 178,
+    "corr": 0.6555712498615739,
+    "median_abs_err_db": 1.8562741871231552,
+    "p90_abs_err_db": 6.3862872785142555
+   },
+   "model 1 sounding": {
+    "n": 12,
+    "corr": 0.8790418226728665,
+    "median_abs_err_db": 1.7444592816923539,
+    "p90_abs_err_db": 4.219494402961283
+   },
+   "naive 1 sounding": {
+    "n": 12,
+    "corr": 0.8754399925099537,
+    "median_abs_err_db": 2.5425827826898857,
+    "p90_abs_err_db": 6.602848054883458
+   },
+   "model 2-3 sounding": {
+    "n": 36,
+    "corr": 0.8999364795759194,
+    "median_abs_err_db": 1.5955147529397777,
+    "p90_abs_err_db": 6.169367400482983
+   },
+   "naive 2-3 sounding": {
+    "n": 36,
+    "corr": 0.801839670648951,
+    "median_abs_err_db": 2.0827185442646723,
+    "p90_abs_err_db": 6.6920780547104854
+   },
+   "model 4+ sounding": {
+    "n": 130,
+    "corr": 0.6677691603961609,
+    "median_abs_err_db": 1.7723631012104164,
+    "p90_abs_err_db": 5.014037232613144
+   },
+   "naive 4+ sounding": {
+    "n": 130,
+    "corr": 0.5758940904838974,
+    "median_abs_err_db": 1.8741040431482112,
+    "p90_abs_err_db": 5.96746201053748
+   }
+  },
+  "05_BN1-147-Gb_solo hexsum": {
+   "model": {
+    "n": 26,
+    "corr": 0.859123388055401,
+    "median_abs_err_db": 0.9499258125487628,
+    "p90_abs_err_db": 4.587903526839334
+   },
+   "naive": {
+    "n": 26,
+    "corr": 0.9999662911145446,
+    "median_abs_err_db": 0.00034026412353327373,
+    "p90_abs_err_db": 0.02292072255765687
+   },
+   "model 1 sounding": {
+    "n": 24,
+    "corr": 0.8487669388964855,
+    "median_abs_err_db": 0.7850594854326438,
+    "p90_abs_err_db": 4.625967401433173
+   },
+   "naive 1 sounding": {
+    "n": 24,
+    "corr": 0.9999653379788132,
+    "median_abs_err_db": 0.000266644932143123,
+    "p90_abs_err_db": 0.030018919444613053
+   }
+  },
+  "05_BN1-147-Gb_solo mic": {
+   "model": {
+    "n": 26,
+    "corr": 0.464501730228254,
+    "median_abs_err_db": 6.752747899993455,
+    "p90_abs_err_db": 14.00309857469544
+   },
+   "naive": {
+    "n": 26,
+    "corr": 0.595315265361631,
+    "median_abs_err_db": 7.256397798891758,
+    "p90_abs_err_db": 10.97479136764457
+   },
+   "model 1 sounding": {
+    "n": 24,
+    "corr": 0.4858041231815362,
+    "median_abs_err_db": 6.125738054222452,
+    "p90_abs_err_db": 15.566451551106246
+   },
+   "naive 1 sounding": {
+    "n": 24,
+    "corr": 0.6311426863291638,
+    "median_abs_err_db": 6.8168371647961035,
+    "p90_abs_err_db": 12.063971281618738
+   }
+  }
+ }
+}

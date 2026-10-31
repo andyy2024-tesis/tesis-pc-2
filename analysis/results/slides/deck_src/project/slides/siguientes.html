@@ -1,0 +1,33 @@
+<section id="siguientes" style="background:#F5F3EE;color:#1B1F27;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#A9531A">Lo que sigue</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:60px;font-weight:600;line-height:1.1;color:#1B1F27">Siguientes pasos</h2>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:24px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-top:6px solid #2F5E8C;border-radius:16px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#1B1F27">Escuchar</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5160">Ruido en el ataque, timbre por nota y sus adversariales: ¿suenan menos a MIDI que el favorito?</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-radius:16px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#1B1F27">Más datos</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5160">Probado con 80 grabaciones: no mejora (5.83 con 3× más pasos vs 5.77; + adversarial 5.95 vs 5.84). Para estas grabaciones bastan 20; importaría para grabaciones nuevas.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-radius:16px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#1B1F27">DDSP + adversarial</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5160">La misma receta en DDSP, para que la comparación sea justa.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-radius:16px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#1B1F27">48 kHz</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5160">GAPS viene a 48 kHz; hoy trabajamos a 24 kHz.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-radius:16px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#1B1F27">Cuerdas reales</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5160">La cuerda de cada nota desde la tablatura MusicXML, alineando partitura y MIDI.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FFFDF8;border:1px solid #E2DED4;border-radius:16px;padding:32px">
+<h3 style="font-size:32px;font-weight:600;color:#1B1F27">Medida perceptual</h3>
+<p style="font-size:26px;line-height:1.4;color:#4A5160">Una métrica o un test de escucha que siga lo que se oye, para la tesis.</p>
+</div>
+</div>
+<aside>Las cuerdas reales siguen pesando: 33 % de las notas las corta la siguiente nota de su voz antes de sonar 1 s, y el timbre por nota en parte ya captura qué cuerda se tocó. Para la cuerda exacta hay que alinear la partitura (MusicXML) con el MIDI, porque el pitch solo determina la cuerda en el 22.5 % de las notas. Generar desde la partitura sola necesitaría un modelo del timbre por nota (por ejemplo, muestrear timbres de notas de entrenamiento con la misma altura y volumen).</aside>
+</section>

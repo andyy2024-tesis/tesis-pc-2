@@ -1,0 +1,10 @@
+088_Yf1wc: 321 notes, 108 s, 18934 valid window starts
+real fit: {"spectral_loss": 5.424086257815361, "n_windows": 32, "share_strings_db": -0.005316544727265389, "share_burst_db": -64.31511050982695, "share_floor_db": -29.366016099372185, "share_noise_db": -41.8119922032814}
+088_Yf1wc: 321 notes, 108 s, 18934 valid window starts
+real fit: {"spectral_loss": 5.427760526537895, "n_windows": 32, "share_strings_db": -0.006167350343962576, "share_burst_db": -64.08542259917434, "share_floor_db": -28.717022004224543, "share_noise_db": -41.24934792233951}
+036_SN1wc: 302 notes, 99 s, 16240 valid window starts
+real fit: {"spectral_loss": 5.221136764243797, "n_windows": 27, "share_strings_db": -0.007947933547866139, "share_burst_db": -58.0269149105625, "share_floor_db": -28.978884053197817, "share_noise_db": -32.50442007311479}
+253_Ky1wc: 263 notes, 129 s, 21204 valid window starts
+real fit: {"spectral_loss": 5.010144124712263, "n_windows": 35, "share_strings_db": -0.009713002666398667, "share_burst_db": -64.38394902205877, "share_floor_db": -26.9426487175768, "share_noise_db": -36.739669107381225}
+297_2pswc: 952 notes, 171 s, 31129 valid window starts
+real fit: {"spectral_loss": 5.42878167445843, "n_windows": 52, "share_strings_db": -0.01165060452488942, "share_burst_db": -56.89880501698422, "share_floor_db": -26.132123573532496, "share_noise_db": -36.190757419278896}

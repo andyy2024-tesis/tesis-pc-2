@@ -1,0 +1,15 @@
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+before: {"test_loss": 5.865048027038574, "n_windows": 85, "share_burst_db": -95.99275728179252, "share_strings_db": -0.056737071296064465, "share_body_db": -18.923275155397533, "share_click_db": -59.81217262765963, "share_floor_db": -37.88635020776355, "share_noise_db": -57.322881632795244, "quiet_noise_db": -56.5663948059082}
+Traceback (most recent call last):
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/scripts/e6_adversarial.py", line 204, in <module>
+    main()
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/scripts/e6_adversarial.py", line 140, in main
+    fake, _ = model(recs[r], w0)
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/model/guitar_net.py", line 482, in forward
+    parts["strings"] = (amp * torch.sin(2 * math.pi * cyc)).sum((0, 1))
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 808.00 MiB. GPU 0 has a total capacity of 23.51 GiB of which 131.81 MiB is free. Process 963675 has 14.64 GiB memory in use. Including non-PyTorch memory, this process has 8.43 GiB memory in use. Of the allocated memory 7.74 GiB is allocated by PyTorch, and 241.09 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

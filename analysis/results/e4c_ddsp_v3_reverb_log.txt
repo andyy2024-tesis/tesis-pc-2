@@ -1,0 +1,11 @@
+ddsp: 20 recordings, 241814 train starts, 85 test windows
+parameters: 0.57 M
+  step   100  train loss 8.734  (28 s)
+  step   200  train loss 7.698  (55 s)
+  step   300  train loss 7.165  (83 s)
+  step   400  train loss 7.014  (111 s)
+  step   500  train loss 7.148  (139 s)
+  step   600  train loss 7.029  (167 s)
+  step   700  train loss 6.964  (195 s)
+  step   800  train loss 6.669  (223 s)
+  step   900  train loss 6.623  (250 s)
