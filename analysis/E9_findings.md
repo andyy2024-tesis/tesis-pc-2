@@ -130,8 +130,88 @@ the discriminator does not gain from more data here either. Decision: stay with 
 Loss 5.99 / 5.86 / 5.80 / 5.78 at steps 1000-4000: same as 32 partials (5.77). 32 is enough; above it the partials
 are weak or past Nyquist for high notes.
 
-### Not finished: late timbre reading (`timbre_late`, code in guitar_net.py / loudness.note_timbre_db `start`)
+### Late timbre reading (`structured_v9_timbre32late`, `timbre_late`, 4000 steps)
 
-Adds the same per-partial reading 150-235 ms after the onset (per-pluck differences in decay) to the 32-partial timbre.
-The run (`--tag _v9_timbre32late`) died at step 600 when the session was stopped; re-run with
-`--config '{... "note_timbre": true, "timbre_k": 32, "timbre_late": true}' --steps 4000 --tag _v9_timbre32late`.
+Adds the same per-partial reading 150-235 ms after the onset (per-pluck differences in decay) to the 32-partial timbre
+(code in guitar_net.py / loudness.note_timbre_db `start`).
+
+| step | loss | noise share | floor share |
+|---|---|---|---|
+| 1000 | 6.01 (timbre32: 5.97) | -70.0 | -37.6 |
+| 2000 | 5.87 (5.87) | -61.9 | -33.5 |
+| 3000 | 5.79 (5.78) | -51.2 | -30.1 |
+| 4000 | 5.79 (5.77) | -51.1 | -30.2 |
+
+Wind (quiet 20 %): -54.0 vs -51.3 for timbre32 (same script, which reproduces timbre32's -51.3).
+Loss is a tie (0.02 worse, within run-to-run spread); the catch-all noise is ~3 dB quieter and the stationary floor
+~4 dB louder, i.e. a bit of steady background moved from the gusty noise into the floor. The late reading adds no
+fidelity by the loss; timbre32 stays the reference. No adversarial fine-tune run on it (not better on loss).
+
+## Overnight 2026-10-31: seed spread, leave-one-out, bigger GRU, unseen recordings
+
+Queue: `analysis/results/queue_overnight/` (run.sh, stage2.sh, status.txt, wind.txt). All 4000 steps, timbre 32 config
+unless noted; held-out = the usual 85 windows; wind = noise in the quietest 20 % of frames.
+
+### Seed spread (same config, different initialization and window sampling)
+
+| seed | loss | wind |
+|---|---|---|
+| 0 (`structured_v9_timbre32`) | 5.77 | -51.3 |
+| 1 (`_seed1`) | 5.80 | -51.5 |
+| 2 (`_seed2`) | 5.80 | -53.5 |
+
+Mean 5.79, range 0.03. Differences of a few hundredths between runs are noise: late timbre (5.79), 60 partials (5.78),
+GRU 512 (5.77) and 16 partials (5.82) are all ties with timbre 32. Wind varies by ~2 dB between seeds.
+
+### Leave-one-out: the final model minus one part (vs seed mean 5.79)
+
+| removed | run | loss | change | wind | what the part buys |
+|---|---|---|---|---|---|
+| note timbre | `structured_v8_gated` (existing) | 6.00 | +0.21 | -59.3 | most of the fidelity |
+| body response | `_v9_t32_no_bodyir` | 5.89 | +0.10 | -41.5 | fidelity; without it the noise covers the body (+10 dB wind) |
+| two decays | `_v9_t32_no_twodecay` | 5.81 | +0.02 | -53.0 | nothing measurable |
+| catch-all noise | `_v9_t32_no_noise` | 5.81 | +0.02 | (none) | nothing measurable |
+| pluck click | `_v9_t32_no_click` | 5.78 | -0.01 | -51.2 | nothing measurable |
+| noise gate | `_v9_t32_no_gate` | 5.79 | 0.00 | -21.3 | no loss change, but 30 dB less wind |
+
+Bigger GRU (512, `_v9_t32_gru512`): 5.77, wind -55.7: a tie; network size is not the limit.
+
+Reading: inside the final model only two parts carry the loss, note timbre and the body response. The gate is what
+removes the wind. Two decays, click and the catch-all noise no longer move the loss once timbre is in (E8 measured them
+added to the old base, where some helped); whether they are audible is for the ear.
+
+### Unseen recordings (`analysis/unseen_adapt.py`)
+
+10 recordings never used in any training (the first 10 of `e4_train.extra_ids`; 7 have held-out windows, 35 windows).
+Every shared weight is frozen; only the per-recording tables (embedding, body EQ/filter, floor, transient...) are fitted,
+1500 steps on the first 85 % of each new recording; scored on the windows after 85 %. Results in `analysis/results/unseen/`.
+
+| model | before fitting (mean tables) | fitted, 1500 steps | wind |
+|---|---|---|---|
+| timbre 32 (final) | 7.98 | **5.34** | -45.9 |
+| base structured (`structured_v5_body_audio`) | 8.07 | 5.59 | -22.6 |
+| plain DDSP (`ddsp_v5_audio`) | 8.08 | 5.78 | -14.3 |
+| reference: timbre 32 trained with the 10 included (`structured_v9_timbre32_data30`) | | 5.38 | -48.5 |
+
+The final model's shared part generalizes: on recordings it never heard, fitting only the per-recording settings gives
+5.34, as good as a model trained on those recordings (5.38). The gap to plain DDSP is larger on new recordings (0.44)
+than on the training recordings (E4). Converges in ~750 steps (~6 min). Without fitting (7.98) the per-recording
+settings matter a lot: room, mic and guitar differ between recordings. Still resynthesis: loudness, tracks and timbre
+are read from the new audio.
+
+### How much audio of a new recording is needed (`--train-seconds`, 1000 steps)
+
+| audio used per new recording | loss | wind |
+|---|---|---|
+| none (mean tables) | 7.98 | -43.6 |
+| 10 s | 5.48 | -45.3 |
+| 30 s | 5.44 | -46.0 |
+| 60 s | 5.41 | -46.8 |
+| all of the first 85 % (minutes) | 5.34 | -45.9 |
+
+10 seconds of a new recording already gets most of the way: the per-recording settings are few and smooth.
+
+### Simplified final model (`structured_v9_t32_simple`: timbre 32 + body + gate, no two decays, no click)
+
+Loss 6.02 / 5.87 / 5.80 / 5.79 at steps 1000-4000, wind -49.2: a tie with the full timbre 32 model (seed mean 5.79,
+wind -51 to -54). By the numbers, two decays and the click can go; keep them only if they are audible.

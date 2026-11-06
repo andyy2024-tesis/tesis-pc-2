@@ -38,8 +38,9 @@ section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 2
 .note { color: var(--muted); }
 .heard { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 10px 14px; border-radius: 0 8px 8px 0; max-width: 72ch; }
 .heard b { font-weight: 600; }
-.grid-scroll { overflow-x: auto; }
-table { border-collapse: separate; border-spacing: 6px; margin: -6px; }
+/* The -6px margin sits on the scroller, not the table: inside it, it makes the scroller overflow vertically, and that scrollbar flickering on and off resizes the table every frame while a clip plays. */
+.grid-scroll { overflow-x: auto; overflow-y: hidden; margin: -6px; }
+table { border-collapse: separate; border-spacing: 6px; }
 th { font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; vertical-align: bottom; padding: 0 4px 2px; min-width: 104px; }
 th.rec { text-align: left; min-width: 56px; }
 td.rec { font-family: var(--mono); font-weight: 500; font-size: 15px; padding-right: 6px; }
@@ -163,8 +164,8 @@ const SECTIONS = [
     v: [["original", "Original"], [ADVN, "Adv. con ruido (favorito)"], ["structured_v8_gated", "Combinado, ruido en el ataque"], ["e6-structured_v8_gated_noise_strongD", "Combinado + adv."], ["e6-structured_v5_gated_noise_strongD", "Base + adv."], ["e6-structured_v8_gated_noise_strongD-noise", "Ruido combinado + adv. +20 dB"], [ADVN + "-noise", "Ruido del favorito +20 dB"]],
     heard: "Pendiente de escucha." },
   { id: "timbre", title: "El timbre de cada ataque", tag: "Fenómenos",
-    note: "La red de cada nota ahora también lee del audio el timbre del ataque: el nivel de los primeros 16 armónicos justo después de la nota, relativo a su promedio (ahí se ve dónde se pulsó la cuerda, uña o yema, qué cuerda). Antes, todas las notas de la misma altura y volumen tenían el mismo timbre. Loss 5.82 vs 6.00; con los timbres intercambiados entre notas de la misma altura sube a 6.17, así que usa el de cada nota. Con 32 armónicos: 5.77; + adv.: 5.84 (16 armónicos + adv.: 5.86). Con 9000 pasos de adv.: 5.88 y vuelve algo de viento (−45 dB vs −52 dB con 3000).",
-    v: [["original", "Original"], ["structured_v8_gated", "Combinado, ruido en el ataque"], ["structured_v9_timbre", "+ timbre de cada ataque"], ["structured_v9_timbre32", "+ timbre 32"], ["e6-structured_v9_timbre_noise_strongD", "+ timbre + adv."], ["e6-structured_v9_timbre32_noise_strongD", "+ timbre 32 + adv."], ["e6-structured_v9_timbre32_noise_strongD_9k", "+ timbre 32 + adv. 9000"], [ADVN, "Adv. con ruido (favorito)"]],
+    note: "La red de cada nota ahora también lee del audio el timbre del ataque: el nivel de los primeros 16 armónicos justo después de la nota, relativo a su promedio (ahí se ve dónde se pulsó la cuerda, uña o yema, qué cuerda). Antes, todas las notas de la misma altura y volumen tenían el mismo timbre. Loss 5.82 vs 6.00; con los timbres intercambiados entre notas de la misma altura sube a 6.17, así que usa el de cada nota. Con 32 armónicos: 5.77; + adv.: 5.84 (16 armónicos + adv.: 5.86). Con 9000 pasos de adv.: 5.88 y vuelve algo de viento (−45 dB vs −52 dB con 3000). Lectura tardía (los mismos 32 armónicos leídos también 150–235 ms después del ataque): loss 5.79, empate con 5.77; viento −54 dB vs −51 dB. Sin dos decaimientos ni clic: loss 5.79, empate (tres semillas del modelo completo: 5.77, 5.80, 5.80), viento −49 dB; si no se oye la diferencia, se pueden quitar.",
+    v: [["original", "Original"], ["structured_v8_gated", "Combinado, ruido en el ataque"], ["structured_v9_timbre", "+ timbre de cada ataque"], ["structured_v9_timbre32", "+ timbre 32"], ["structured_v9_timbre32late", "+ timbre 32 + lectura tardía"], ["structured_v9_t32_simple", "Timbre 32 sin dos decaimientos ni clic"], ["e6-structured_v9_timbre_noise_strongD", "+ timbre + adv."], ["e6-structured_v9_timbre32_noise_strongD", "+ timbre 32 + adv."], ["e6-structured_v9_timbre32_noise_strongD_9k", "+ timbre 32 + adv. 9000"], [ADVN, "Adv. con ruido (favorito)"]],
     heard: "Pendiente de escucha." },
 ];
 const ICON_PLAY = '<svg class="ico" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z" fill="currentColor"/></svg>';

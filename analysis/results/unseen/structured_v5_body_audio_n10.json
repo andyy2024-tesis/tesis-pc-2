@@ -1,0 +1,59 @@
+{
+ "run": "structured_v5_body_audio",
+ "new_ids": [
+  "014_vSswc",
+  "045_jc1wc",
+  "288_cY1wc",
+  "190_Hk1wc",
+  "231_h41wc",
+  "143_rD1wc",
+  "239_wy1wc",
+  "355_5k1wc",
+  "264_fw1wc",
+  "198_Kk1wc"
+ ],
+ "adapt": [
+  {
+   "step": 0,
+   "loss": 8.072,
+   "n_windows": 35,
+   "wind": -21.1
+  },
+  {
+   "step": 250,
+   "loss": 6.156,
+   "n_windows": 35,
+   "wind": -21.6
+  },
+  {
+   "step": 500,
+   "loss": 5.65,
+   "n_windows": 35,
+   "wind": -22.2
+  },
+  {
+   "step": 750,
+   "loss": 5.61,
+   "n_windows": 35,
+   "wind": -22.5
+  },
+  {
+   "step": 1000,
+   "loss": 5.598,
+   "n_windows": 35,
+   "wind": -22.6
+  },
+  {
+   "step": 1250,
+   "loss": 5.596,
+   "n_windows": 35,
+   "wind": -22.6
+  },
+  {
+   "step": 1500,
+   "loss": 5.594,
+   "n_windows": 35,
+   "wind": -22.6
+  }
+ ]
+}

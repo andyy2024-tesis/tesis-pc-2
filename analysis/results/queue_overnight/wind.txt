@@ -1,0 +1,9 @@
+structured_v9_timbre32_seed1 wind -51.5
+structured_v9_timbre32_seed2 wind -53.5
+structured_v9_t32_no_twodecay wind -53.0
+structured_v9_t32_no_bodyir wind -41.5
+structured_v9_t32_no_click wind -51.2
+structured_v9_t32_no_gate wind -21.3
+structured_v9_t32_no_noise wind nan
+structured_v9_t32_gru512 wind -55.7
+structured_v9_t32_simple wind -49.2

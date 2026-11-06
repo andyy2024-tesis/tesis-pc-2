@@ -1,0 +1,5 @@
+{"step": 0, "loss": 7.984, "n_windows": 35, "wind": -43.6}
+{"step": 250, "loss": 5.771, "n_windows": 35, "wind": -45.4}
+{"step": 500, "loss": 5.522, "n_windows": 35, "wind": -45.8}
+{"step": 750, "loss": 5.451, "n_windows": 35, "wind": -46.0}
+{"step": 1000, "loss": 5.442, "n_windows": 35, "wind": -46.0}

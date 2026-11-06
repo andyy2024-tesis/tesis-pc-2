@@ -62,6 +62,8 @@ VERSIONS = {
     "e6-structured_v9_timbre32_noise_strongD": "Timbre 32 armónicos + adversarial",
     "structured_v9_timbre32": "Timbre 32 armónicos",
     "e6-structured_v9_timbre32_noise_strongD_9k": "Timbre 32 + adversarial, 9000 pasos",
+    "structured_v9_timbre32late": "Timbre 32 + lectura tardía",
+    "structured_v9_t32_simple": "Timbre 32 simplificado (sin dos decaimientos ni clic)",
 }
 DECK_CLIPS = {
     "023_Ypswc": ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir_nonoise"],

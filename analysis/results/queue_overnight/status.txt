@@ -1,0 +1,35 @@
+02:27:28 start _v9_timbre32_seed1
+03:00:37 end _v9_timbre32_seed1 exit 0
+03:00:37 start _v9_timbre32_seed2
+03:33:38 end _v9_timbre32_seed2 exit 0
+03:33:38 start _v9_t32_no_twodecay
+04:00:41 end _v9_t32_no_twodecay exit 0
+04:00:41 start _v9_t32_no_bodyir
+04:27:04 end _v9_t32_no_bodyir exit 0
+04:27:04 start _v9_t32_no_click
+04:59:36 end _v9_t32_no_click exit 0
+04:59:36 start _v9_t32_no_gate
+05:32:20 end _v9_t32_no_gate exit 0
+05:32:20 start _v9_t32_no_noise
+06:04:49 end _v9_t32_no_noise exit 0
+06:04:49 start _v9_t32_gru512
+06:39:07 end _v9_t32_gru512 exit 0
+06:39:33 wind done
+06:39:33 start data30 ref
+07:13:16 end data30 exit 0
+07:13:16 start unseen structured_v9_timbre32
+07:23:50 end unseen structured_v9_timbre32 exit 0
+07:23:50 start unseen structured_v5_body_audio
+07:34:45 end unseen structured_v5_body_audio exit 0
+07:34:45 start unseen ddsp_v5_audio
+07:39:59 end unseen ddsp_v5_audio exit 0
+07:39:59 all done
+07:41:56 start unseen timbre32 10s
+07:48:37 end unseen 10s exit 0
+07:48:37 start unseen timbre32 30s
+07:55:37 end unseen 30s exit 0
+07:55:37 start unseen timbre32 60s
+08:02:45 end unseen 60s exit 0
+08:02:45 start _v9_t32_simple
+08:29:22 end _v9_t32_simple exit 0
+08:29:27 stage3 done

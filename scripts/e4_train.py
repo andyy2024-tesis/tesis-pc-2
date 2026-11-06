@@ -109,6 +109,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0, help="initialization and window-sampling seed")
     ap.add_argument("--extra-recordings", type=int, default=0,
                     help="train also on this many more recordings (evaluation stays on the 20 of e4_recordings.csv)")
+    ap.add_argument("--eval-extra", action="store_true", help="the extra recordings also get held-out test windows")
     a = ap.parse_args()
     torch.manual_seed(a.seed)
     dev = "cuda"
@@ -118,9 +119,10 @@ def main():
     ids = pd.read_csv(REPO / "analysis" / "results" / "e4_recordings.csv").id.tolist()
     extra = extra_ids(a.extra_recordings)
     (out_dir / "config.json").write_text(json.dumps(dict(variant=a.variant, overrides=json.loads(a.config), loss=a.loss,
-                                                         seed=a.seed, **(dict(extra_ids=extra) if extra else {}))))
+                                                         seed=a.seed, **(dict(extra_ids=extra) if extra else {}),
+                                                         **(dict(eval_extra=True) if a.eval_extra else {}))))
     (out_dir / "audio").mkdir(parents=True, exist_ok=True)
-    recs, splits = load_recordings(ids + extra, cfg, n_eval=len(ids))
+    recs, splits = load_recordings(ids + extra, cfg, n_eval=None if a.eval_extra else len(ids))
     print(f"{a.variant}: {len(recs)} recordings, {sum(len(s[0]) for s in splits)} train starts, "
           f"{sum(len(s[1]) for s in splits)} test windows", flush=True)
 

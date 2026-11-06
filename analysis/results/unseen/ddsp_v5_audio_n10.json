@@ -1,0 +1,59 @@
+{
+ "run": "ddsp_v5_audio",
+ "new_ids": [
+  "014_vSswc",
+  "045_jc1wc",
+  "288_cY1wc",
+  "190_Hk1wc",
+  "231_h41wc",
+  "143_rD1wc",
+  "239_wy1wc",
+  "355_5k1wc",
+  "264_fw1wc",
+  "198_Kk1wc"
+ ],
+ "adapt": [
+  {
+   "step": 0,
+   "loss": 8.08,
+   "n_windows": 35,
+   "wind": -13.5
+  },
+  {
+   "step": 250,
+   "loss": 6.496,
+   "n_windows": 35,
+   "wind": -14.5
+  },
+  {
+   "step": 500,
+   "loss": 5.954,
+   "n_windows": 35,
+   "wind": -14.6
+  },
+  {
+   "step": 750,
+   "loss": 5.826,
+   "n_windows": 35,
+   "wind": -14.4
+  },
+  {
+   "step": 1000,
+   "loss": 5.788,
+   "n_windows": 35,
+   "wind": -14.2
+  },
+  {
+   "step": 1250,
+   "loss": 5.777,
+   "n_windows": 35,
+   "wind": -14.2
+  },
+  {
+   "step": 1500,
+   "loss": 5.776,
+   "n_windows": 35,
+   "wind": -14.3
+  }
+ ]
+}

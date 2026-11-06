@@ -1,0 +1,47 @@
+{
+ "run": "structured_v9_timbre32",
+ "new_ids": [
+  "014_vSswc",
+  "045_jc1wc",
+  "288_cY1wc",
+  "190_Hk1wc",
+  "231_h41wc",
+  "143_rD1wc",
+  "239_wy1wc",
+  "355_5k1wc",
+  "264_fw1wc",
+  "198_Kk1wc"
+ ],
+ "adapt": [
+  {
+   "step": 0,
+   "loss": 7.984,
+   "n_windows": 35,
+   "wind": -43.6
+  },
+  {
+   "step": 250,
+   "loss": 5.768,
+   "n_windows": 35,
+   "wind": -44.7
+  },
+  {
+   "step": 500,
+   "loss": 5.54,
+   "n_windows": 35,
+   "wind": -45.7
+  },
+  {
+   "step": 750,
+   "loss": 5.484,
+   "n_windows": 35,
+   "wind": -45.1
+  },
+  {
+   "step": 1000,
+   "loss": 5.476,
+   "n_windows": 35,
+   "wind": -45.3
+  }
+ ]
+}
