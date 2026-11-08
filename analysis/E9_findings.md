@@ -215,3 +215,68 @@ are read from the new audio.
 
 Loss 6.02 / 5.87 / 5.80 / 5.79 at steps 1000-4000, wind -49.2: a tie with the full timbre 32 model (seed mean 5.79,
 wind -51 to -54). By the numbers, two decays and the click can go; keep them only if they are audible.
+
+## Model names and one scale for the numbers (2026-11-06)
+
+`analysis/build_listening_catalog.py` holds the single catalog of model names; it refuses to build if a description disagrees
+with the saved configs. `analysis/measure_catalog.py` re-measured every model on the same 85 windows
+(`analysis/results/catalog_metrics.json`). The values reproduce each run's history.json exactly, and the medians reproduce the
+E4 tables: E4 reported medians, everything later reports means (M1: median 5.87, mean 6.00). Configs alone can't describe two
+steps: S2 differs from S1 + cuerpo only in the code (per-recording tables, E4 round 3, visible in the weights), and
+`adv9k-step2000` has no saved weights, so its 6.79 comes from E6_findings.
+
+## Timbre without the gate (2026-11-06)
+
+The user rejected the gate by ear, so the timbre was re-tested with the noise on all the time. Same 85 windows, means.
+
+| model | loss | wind |
+|---|---|---|
+| M1 | 6.00 | -25.2 |
+| M1 + adv | 6.12 | -23.5 |
+| M1 + timbre 32 | 5.82 | -21.5 |
+| M1 + timbre 32 + adv | 5.93 | -19.0 |
+| M2 | 6.00 | -21.8 |
+| M2 + timbre 32 | 5.79 | -21.3 |
+| M2 + timbre 32 + adv | 5.87 | -21.1 |
+
+The timbre lowers the loss by about 0.2 on M1, M1 + adv and M2, well above the seed spread (0.03). On M1 it also raises the wind
+by about 4 dB; on M2 the wind barely moves. Each model also has a noise-off render (same weights) in section 18 of the listening
+page, to test by ear whether the noise helps during training or only at playback. Not listened to yet.
+
+### What the listening said, and what the noise does
+
+Ear (section 18): every no-gate timbre model beats M1 + adv on 023, the adversarial versions sound a little better on 276, 277 and
+306, and M1 + timbre 32 + adv is the most-named favorite. With the noise off at render there are none of the old artifacts; with it
+on there is always wind. M2 + timbre 32 + adv sometimes has short isolated high pitches on 306 and 277, also with the noise off.
+
+`analysis/noise_role.py` (85 windows, sustained frames) tests the user's idea that the noise keeps other parts from learning the
+wrong thing. Wobble is the frame-to-frame change of the GRU correction on sounding voices, dB per 10 ms, partials 9-24 / 25-60:
+
+| trained | models | wobble | strings at 2-4 kHz, on partials |
+|---|---|---|---|
+| free noise, heard clean | M1, M1 + adv, M2, and the 4 no-gate timbre models | 0.5-0.9 / 0.5-0.8 | -60 to -64 dB |
+| gate | M1 + compuerta, M1 + compuerta + adv | 0.9 / 1.7, 3.4 / 6.1 | -49 to -50 dB |
+| gate | M2 + compuerta, M2 + compuerta + adv | 4.0 / 4.3, 6.3 / 6.3 | -48 to -49 dB |
+| gate + timbre 32 | M2 + compuerta + timbre 32, + adv | 14.6 / 13.2, 14.6 / 14.1 | -48 dB |
+| no noise | M2 · entrenado sin ruido, M1 sin ruido + adv, S1 + cuerpo · entrenado sin ruido | 9-15 / 12-19 | -39 to -46 dB |
+
+So the idea holds: the models heard as buzzy have up to 20 times the wobble, and their strings are 13-23 dB louder on the partials at 2-4 kHz
+and 12-28 dB louder between them. Denied the noise, the strings imitate the broadband bed by raising high partials and shaking them.
+The loss does not punish this: M2 + compuerta + timbre 32 has the best loss of all (5.77). Wobble is the first number that follows
+what the user hears as artifacts, though M1 + compuerta is a weak case (0.9 / 1.7 and still heard with artifacts).
+
+`analysis/high_partials.py` (97 isolated notes, including training audio, since held-out has only 11): up to 2 kHz the model's
+partials match the original within about 2 dB from 50 to 700 ms. At 2-4 kHz the model falls short, 4 dB at 50 ms and 19 dB at 700 ms.
+Above 4 kHz, from 100 ms on, the original's prominence (7-9 dB) is what the noise part itself shows (7 dB): no clear partials there,
+so the model is not missing them. Between partials, the original's level above 1 kHz barely depends on time and is already there
+before the onset (4-8 kHz: -50.7 before, -49 to -54 after), and the noise matches it within 1-3 dB after the onset. So what the
+noise imitates above 1 kHz is a steady bed while playing, not missing partials. Below 1 kHz the between-partial level decays (-14 to
+-24 dB over 700 ms), and the noise stays flat at about -25: that part is not understood. Whole recordings show the bed is not simply
+fixed: 7 of 20 reach digital silence in their quietest frames, and high-band level varies 20-30 dB with the playing.
+
+Not explained: the short high pitches. A scan finds short high blobs, but M1 + timbre 32 + adv has about as many as M2 + timbre 32 +
+adv against the original (160 vs 177), 306 and 277 are busier on every model, and smoothing the GRU correction at render barely
+changes the count. Zeroing the detune changes few of them. So this detector does not isolate what the user hears; it needs timestamps.
+
+Smoothing the GRU correction at render (no training) costs little loss: M2 + compuerta + timbre 32 with noise off goes 5.78 -> 5.83
+at 100 ms. Whether that removes the buzz has not been listened to.

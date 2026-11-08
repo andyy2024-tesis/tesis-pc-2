@@ -1,0 +1,248 @@
+{
+ "ddsp_v2": {
+  "mean": 6.348,
+  "median": 6.366,
+  "n": 85,
+  "wind": -17.5
+ },
+ "ddsp_v2_nonoise": {
+  "mean": 6.629,
+  "median": 6.518,
+  "n": 85,
+  "wind": null
+ },
+ "ddsp_v5_audio": {
+  "mean": 6.087,
+  "median": 6.061,
+  "n": 85,
+  "wind": -16.5
+ },
+ "e6/structured_v5_body_audio_noise_strongD": {
+  "mean": 6.118,
+  "median": 6.09,
+  "n": 85,
+  "wind": -23.5
+ },
+ "e6/structured_v5_body_audio_noise_strongD_9k": {
+  "mean": 6.148,
+  "median": 6.05,
+  "n": 85,
+  "wind": -19.9
+ },
+ "e6/structured_v5_body_audio_noise_strongD_both": {
+  "mean": 6.15,
+  "median": 6.129,
+  "n": 85,
+  "wind": -22.3
+ },
+ "e6/structured_v5_body_audio_noise_strongD_linonly": {
+  "mean": 6.303,
+  "median": 6.277,
+  "n": 85,
+  "wind": -20.1
+ },
+ "e6/structured_v5_body_audio_noise_strongD_logmag": {
+  "mean": 6.153,
+  "median": 6.052,
+  "n": 85,
+  "wind": -22.5
+ },
+ "e6/structured_v5_body_audio_nonoise_strongD": {
+  "mean": 6.635,
+  "median": 6.549,
+  "n": 85,
+  "wind": null
+ },
+ "e6/structured_v5_body_audio_nonoise_strongD_9k": {
+  "mean": 6.613,
+  "median": 6.466,
+  "n": 85,
+  "wind": null
+ },
+ "e6/structured_v5_gated_noise_strongD": {
+  "mean": 6.223,
+  "median": 6.291,
+  "n": 85,
+  "wind": -41.3
+ },
+ "e6/structured_v8_combo_noise_strongD_both": {
+  "mean": 6.169,
+  "median": 6.171,
+  "n": 85,
+  "wind": -20.2
+ },
+ "e6/structured_v8_gated_noise_strongD": {
+  "mean": 6.094,
+  "median": 6.053,
+  "n": 85,
+  "wind": -56.3
+ },
+ "e6/structured_v9_base_t32_noise_strongD": {
+  "mean": 5.931,
+  "median": 5.953,
+  "n": 85,
+  "wind": -19.0
+ },
+ "e6/structured_v9_t32_no_gate_noise_strongD": {
+  "mean": 5.865,
+  "median": 5.88,
+  "n": 85,
+  "wind": -21.1
+ },
+ "e6/structured_v9_timbre32_noise_strongD": {
+  "mean": 5.84,
+  "median": 5.752,
+  "n": 85,
+  "wind": -51.6
+ },
+ "e6/structured_v9_timbre32_noise_strongD_9k": {
+  "mean": 5.882,
+  "median": 5.816,
+  "n": 85,
+  "wind": -45.1
+ },
+ "e6/structured_v9_timbre_noise_strongD": {
+  "mean": 5.864,
+  "median": 5.811,
+  "n": 85,
+  "wind": -52.8
+ },
+ "structured_v2": {
+  "mean": 6.302,
+  "median": 6.294,
+  "n": 85,
+  "wind": -15.9
+ },
+ "structured_v2_bodyir": {
+  "mean": 6.321,
+  "median": 6.335,
+  "n": 85,
+  "wind": -22.7
+ },
+ "structured_v2_bodyir_nonoise": {
+  "mean": 6.364,
+  "median": 6.308,
+  "n": 85,
+  "wind": null
+ },
+ "structured_v4_body": {
+  "mean": 6.278,
+  "median": 6.222,
+  "n": 85,
+  "wind": -20.7
+ },
+ "structured_v4_body_reverb": {
+  "mean": 6.316,
+  "median": 6.281,
+  "n": 85,
+  "wind": -20.3
+ },
+ "structured_v5_body_audio": {
+  "mean": 6.003,
+  "median": 5.871,
+  "n": 85,
+  "wind": -25.2
+ },
+ "structured_v5_gated": {
+  "mean": 6.145,
+  "median": 6.192,
+  "n": 85,
+  "wind": -41.3
+ },
+ "structured_v6_mel_noise": {
+  "mean": 6.072,
+  "median": 6.011,
+  "n": 85,
+  "wind": -19.8
+ },
+ "structured_v6_mel_nonoise": {
+  "mean": 6.18,
+  "median": 6.234,
+  "n": 85,
+  "wind": null
+ },
+ "structured_v8_bodyhi": {
+  "mean": 6.018,
+  "median": 6.027,
+  "n": 85,
+  "wind": -21.0
+ },
+ "structured_v8_click": {
+  "mean": 6.003,
+  "median": 5.913,
+  "n": 85,
+  "wind": -22.9
+ },
+ "structured_v8_combo": {
+  "mean": 6.002,
+  "median": 5.992,
+  "n": 85,
+  "wind": -21.8
+ },
+ "structured_v8_combo_nonoise": {
+  "mean": 6.03,
+  "median": 6.017,
+  "n": 85,
+  "wind": null
+ },
+ "structured_v8_gated": {
+  "mean": 6.001,
+  "median": 5.961,
+  "n": 85,
+  "wind": -59.3
+ },
+ "structured_v8_squeak": {
+  "mean": 6.026,
+  "median": 5.944,
+  "n": 85,
+  "wind": -23.9
+ },
+ "structured_v8_symp": {
+  "mean": 6.027,
+  "median": 5.943,
+  "n": 85,
+  "wind": -22.3
+ },
+ "structured_v8_twodecay": {
+  "mean": 6.04,
+  "median": 6.057,
+  "n": 85,
+  "wind": -22.8
+ },
+ "structured_v9_base_t32": {
+  "mean": 5.823,
+  "median": 5.884,
+  "n": 85,
+  "wind": -21.5
+ },
+ "structured_v9_t32_no_gate": {
+  "mean": 5.786,
+  "median": 5.767,
+  "n": 85,
+  "wind": -21.3
+ },
+ "structured_v9_t32_simple": {
+  "mean": 5.786,
+  "median": 5.737,
+  "n": 85,
+  "wind": -49.2
+ },
+ "structured_v9_timbre": {
+  "mean": 5.821,
+  "median": 5.771,
+  "n": 85,
+  "wind": -52.0
+ },
+ "structured_v9_timbre32": {
+  "mean": 5.772,
+  "median": 5.678,
+  "n": 85,
+  "wind": -51.3
+ },
+ "structured_v9_timbre32late": {
+  "mean": 5.792,
+  "median": 5.67,
+  "n": 85,
+  "wind": -54.0
+ }
+}

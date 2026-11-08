@@ -40,11 +40,11 @@ section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 2
 .heard b { font-weight: 600; }
 /* The -6px margin sits on the scroller, not the table: inside it, it makes the scroller overflow vertically, and that scrollbar flickering on and off resizes the table every frame while a clip plays. */
 .grid-scroll { overflow-x: auto; overflow-y: hidden; margin: -6px; }
-table { border-collapse: separate; border-spacing: 6px; }
-th { font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; vertical-align: bottom; padding: 0 4px 2px; min-width: 104px; }
-th.rec { text-align: left; min-width: 56px; }
+table.clips { border-collapse: separate; border-spacing: 6px; }
+table.clips th { font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; vertical-align: bottom; padding: 0 4px 2px; min-width: 80px; }
+table.clips th.rec { text-align: left; min-width: 56px; }
 td.rec { font-family: var(--mono); font-weight: 500; font-size: 15px; padding-right: 6px; }
-button.cell { position: relative; overflow: hidden; width: 100%; min-width: 104px; height: 44px; border: 1px solid var(--line); border-radius: 8px;
+button.cell { position: relative; overflow: hidden; width: 100%; min-width: 88px; height: 44px; border: 1px solid var(--line); border-radius: 8px;
   background: var(--surface); color: var(--fg); font: 500 14px var(--sans); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 button.cell:hover { border-color: var(--play); }
 button.cell:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; }
@@ -54,6 +54,35 @@ button.cell.orig { border-style: dashed; }
 button.cell.on { border-color: var(--play); }
 button.cell.on.playing { background: var(--play); color: var(--on-play); }
 button.cell.on.playing .fill { background: rgba(255,255,255,.18); }
+.var { display: block; font-weight: 400; font-style: italic; color: var(--accent); }
+.overview { gap: 20px; }
+.live { display: flex; flex-direction: column; gap: 6px; }
+.live ul { margin: 6px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.live a { color: var(--fg); font-weight: 500; }
+.tagm { font-size: 12px; font-weight: 600; color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 0 7px; white-space: nowrap; }
+.rel { font-size: 12px; color: var(--muted); font-style: italic; white-space: nowrap; }
+.tv { font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
+details.cat { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); max-width: 100%; }
+details.cat > summary { cursor: pointer; padding: 10px 14px; font-weight: 500; font-size: 15px; }
+details.cat > summary:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; border-radius: 8px; }
+.catbody { padding: 0 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+.catnote { font-size: 14px; color: var(--muted); max-width: 80ch; }
+.catscroll { overflow-x: auto; }
+table.cat { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 14px; line-height: 1.35; }
+table.cat th, table.cat td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); min-width: 0; }
+table.cat thead th { color: var(--muted); font-size: 13px; font-weight: 600; }
+table.cat tbody th { font-weight: 500; color: var(--fg); font-size: 14px; min-width: 150px; }
+table.cat td:nth-child(2) { min-width: 130px; }
+table.cat .num { text-align: right; font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+table.cat tr.away th, table.cat tr.away td { color: var(--muted); font-weight: 400; }
+.tree ul { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 1px solid var(--line); }
+.tree > ul { padding-left: 0; border-left: none; }
+.tree li { padding: 7px 0 0 10px; }
+.tree > ul > li { padding-left: 0; }
+.tree li.cont > .tn { color: var(--accent); }
+.tree .tn { font-weight: 500; }
+.tc { font-size: 14px; color: var(--muted); max-width: 72ch; }
+@media (max-width: 560px) { .tree ul { padding-left: 8px; } .tree li { padding-left: 6px; } .tv { white-space: normal; } }
 .ico { width: 10px; height: 12px; display: inline-block; }
 .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--surface); border-top: 1px solid var(--line);
   padding-block: 12px calc(12px + env(safe-area-inset-bottom, 0px));
@@ -81,6 +110,13 @@ button.cell.on.playing .fill { background: rgba(255,255,255,.18); }
       <span><kbd>←</kbd> <kbd>→</kbd> versión · <kbd>↑</kbd> <kbd>↓</kbd> grabación · <kbd>Espacio</kbd> pausa</span>
     </div>
   </header>
+  <section class="overview" aria-label="Modelos">
+    <div class="live"><h2>Modelos vivos</h2><p class="note">Los candidatos actuales, con su loss y su viento.</p><ul id="live"></ul></div>
+    <details class="cat"><summary>Árbol completo de modelos</summary><div class="catbody">
+      <p class="catnote"><b>Continúa:</b> sigue entrenando con los pesos del modelo de arriba (los adversariales). <b>Desde cero:</b> misma receta que el de arriba más un cambio, entrenado de nuevo. Un modelo con el ruido apagado no aparece aquí: es el mismo modelo, generado distinto. Entre dos entrenamientos idénticos con otra semilla, la loss se mueve hasta 0.03: una diferencia menor no significa nada.</p>
+      <p class="catnote">Todas las losses son la media sobre las mismas 85 ventanas de test, medidas con el mismo script; las tablas de E4 traían medianas, por eso no coinciden con esas. Viento: ruido residual en el 20 % más silencioso de cada ventana, relativo al original. † Tomada de los resultados; sus pesos no se guardaron.</p>
+      <div id="tree" class="tree"></div></div></details>
+  </section>
   <nav id="toc" aria-label="Experimentos"></nav>
   <div id="sections" style="display:flex;flex-direction:column;gap:56px"></div>
 </div>
@@ -100,74 +136,464 @@ button.cell.on.playing .fill { background: rgba(255,255,255,.18); }
 const RECS = [["023_Ypswc", "023"], ["176_mM1wc", "176"], ["276_jw1wc", "276"], ["277_Pw1wc", "277"], ["306_7c1wc", "306"]];
 const ADV3K = "e6-structured_v5_body_audio_nonoise_strongD", ADV9K = "e6-structured_v5_body_audio_nonoise_strongD_9k";
 const ADVN = "e6-structured_v5_body_audio_noise_strongD";
+/*MODELS-START*/
+const MODELS = {
+"structured_v2": {
+"name": "S1 Estructurado",
+"parent": null,
+"rel": null,
+"change": "Primer modelo estructurado: parciales de cuerda rígida, plantilla por nota, decaimiento físico y corrección de la GRU. Solo partitura.",
+"loss": 6.302,
+"wind": -15.9
+},
+"structured_v2_bodyir": {
+"name": "S1 + cuerpo",
+"parent": "structured_v2",
+"rel": "rec",
+"change": "Respuesta del cuerpo excitada por cada pulsación, hasta 600 Hz.",
+"loss": 6.321,
+"wind": -22.7
+},
+"structured_v2_bodyir_nonoise": {
+"name": "S1 + cuerpo · entrenado sin ruido",
+"parent": "structured_v2_bodyir",
+"rel": "rec",
+"change": "Se entrena sin el ruido residual.",
+"loss": 6.364,
+"wind": null
+},
+"ddsp_v2": {
+"name": "D1 DDSP",
+"parent": null,
+"rel": null,
+"change": "DDSP simple: armónicos más ruido, sin estructura. Solo partitura.",
+"loss": 6.348,
+"wind": -17.5
+},
+"ddsp_v2_nonoise": {
+"name": "D1 · entrenado sin ruido",
+"parent": "ddsp_v2",
+"rel": "rec",
+"change": "Se entrena sin el ruido residual.",
+"loss": 6.629,
+"wind": null
+},
+"structured_v4_body": {
+"name": "S2",
+"parent": "structured_v2_bodyir",
+"rel": "rec",
+"change": "Ajustes por grabación en tablas propias (cuerpo, piso de ruido, transitorio), con 10× de learning rate. La config no lo muestra: viene del código (E4, ronda 3) y se confirma en los pesos.",
+"loss": 6.278,
+"wind": -20.7
+},
+"structured_v4_body_reverb": {
+"name": "S2 + reverb",
+"parent": "structured_v4_body",
+"rel": "rec",
+"change": "Reverb de sala por grabación.",
+"loss": 6.316,
+"wind": -20.3
+},
+"structured_v5_body_audio": {
+"name": "M1 Base",
+"parent": "structured_v4_body",
+"rel": "rec",
+"change": "Features de audio: loudness y pitch de cada nota cada 10 ms (resíntesis).",
+"loss": 6.003,
+"wind": -25.2
+},
+"ddsp_v5_audio": {
+"name": "D2",
+"parent": "ddsp_v2",
+"rel": "rec",
+"change": "Las mismas features de audio.",
+"loss": 6.087,
+"wind": -16.5
+},
+"e6-structured_v5_body_audio_nonoise_strongD": {
+"name": "M1 sin ruido + adv",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos, quitándole el ruido. Los pasos y el discriminator vienen de E6_findings: este meta.json no los guarda.",
+"loss": 6.635,
+"wind": null
+},
+"structured_v6_mel_noise": {
+"name": "M1 · loss mel",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Se entrena con loss mel en vez de la espectral lineal + log.",
+"loss": 6.072,
+"wind": -19.8
+},
+"structured_v6_mel_nonoise": {
+"name": "M1 · loss mel, entrenado sin ruido",
+"parent": "structured_v6_mel_noise",
+"rel": "rec",
+"change": "Se entrena sin el ruido residual.",
+"loss": 6.18,
+"wind": null
+},
+"adv9k-step2000": {
+"name": "M1 sin ruido + adv · 2000 pasos",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Paso 2000 de la corrida de 9000. Esos pesos no se guardaron: la loss viene de E6_findings y no se volvió a medir.",
+"loss": 6.79,
+"wind": null,
+"findings": true
+},
+"e6-structured_v5_body_audio_nonoise_strongD_9k": {
+"name": "M1 sin ruido + adv · 9000 pasos",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Reiniciado desde M1 con los mismos ajustes, 9000 pasos.",
+"loss": 6.613,
+"wind": null
+},
+"e6-structured_v5_body_audio_noise_strongD": {
+"name": "M1 + adv",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos, conservando el ruido.",
+"loss": 6.118,
+"wind": -23.5
+},
+"e6-structured_v5_body_audio_noise_strongD_linonly": {
+"name": "M1 + adv · loss solo lineal",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Como M1 + adv, pero la loss espectral no tiene el término log.",
+"loss": 6.303,
+"wind": -20.1
+},
+"e6-structured_v5_body_audio_noise_strongD_9k": {
+"name": "M1 + adv · 9000 pasos",
+"parent": "e6-structured_v5_body_audio_noise_strongD",
+"rel": "cont",
+"change": "Sigue hasta 9000 pasos.",
+"loss": 6.148,
+"wind": -19.9
+},
+"structured_v8_symp": {
+"name": "M1 + simpática",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Las cuerdas al aire resuenan con los parciales cercanos.",
+"loss": 6.027,
+"wind": -22.3
+},
+"structured_v8_click": {
+"name": "M1 + clic",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Forma de onda aprendida de uña y dedo en cada ataque.",
+"loss": 6.003,
+"wind": -22.9
+},
+"structured_v8_bodyhi": {
+"name": "M1 + cuerpo 6 kHz",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Respuesta del cuerpo hasta 6 kHz (antes 600 Hz) y EQ hasta 8 kHz.",
+"loss": 6.018,
+"wind": -21.0
+},
+"structured_v8_squeak": {
+"name": "M1 + squeak",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Ruido justo antes de las notas en las cuerdas entorchadas.",
+"loss": 6.026,
+"wind": -23.9
+},
+"structured_v8_twodecay": {
+"name": "M1 + dos decaimientos",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Dos polarizaciones por parcial, cada una con su decaimiento.",
+"loss": 6.04,
+"wind": -22.8
+},
+"e6-structured_v5_body_audio_noise_strongD_both": {
+"name": "M1 + adv · D complejo + log",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Como M1 + adv, con un discriminator que ve el complejo y la magnitud log.",
+"loss": 6.15,
+"wind": -22.3
+},
+"structured_v8_combo": {
+"name": "M2 Combinado",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Junta cuerpo 6 kHz, dos decaimientos y clic.",
+"loss": 6.002,
+"wind": -21.8
+},
+"e6-structured_v5_body_audio_noise_strongD_logmag": {
+"name": "M1 + adv · D solo log",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Como M1 + adv, con un discriminator que solo ve la magnitud log.",
+"loss": 6.153,
+"wind": -22.5
+},
+"e6-structured_v8_combo_noise_strongD_both": {
+"name": "M2 + adv · D complejo + log",
+"parent": "structured_v8_combo",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos, discriminator complejo + log.",
+"loss": 6.169,
+"wind": -20.2
+},
+"structured_v8_combo_nonoise": {
+"name": "M2 · entrenado sin ruido",
+"parent": "structured_v8_combo",
+"rel": "rec",
+"change": "Se entrena sin el ruido residual. No es lo mismo que M2 con el ruido apagado.",
+"loss": 6.03,
+"wind": null
+},
+"structured_v5_gated": {
+"name": "M1 + compuerta",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "El ruido solo suena alrededor de cada ataque.",
+"loss": 6.145,
+"wind": -41.3
+},
+"structured_v8_gated": {
+"name": "M2 + compuerta",
+"parent": "structured_v8_combo",
+"rel": "rec",
+"change": "El ruido solo suena alrededor de cada ataque.",
+"loss": 6.001,
+"wind": -59.3
+},
+"e6-structured_v5_gated_noise_strongD": {
+"name": "M1 + compuerta + adv",
+"parent": "structured_v5_gated",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 6.223,
+"wind": -41.3
+},
+"structured_v9_timbre": {
+"name": "M2 + compuerta + timbre 16",
+"parent": "structured_v8_gated",
+"rel": "rec",
+"change": "La red de cada nota lee del audio el timbre del ataque: 16 armónicos.",
+"loss": 5.821,
+"wind": -52.0
+},
+"e6-structured_v8_gated_noise_strongD": {
+"name": "M2 + compuerta + adv",
+"parent": "structured_v8_gated",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 6.094,
+"wind": -56.3
+},
+"structured_v9_timbre32": {
+"name": "M2 + compuerta + timbre 32",
+"parent": "structured_v9_timbre",
+"rel": "rec",
+"change": "Lee 32 armónicos en vez de 16.",
+"loss": 5.772,
+"wind": -51.3
+},
+"e6-structured_v9_timbre_noise_strongD": {
+"name": "M2 + compuerta + timbre 16 + adv",
+"parent": "structured_v9_timbre",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 5.864,
+"wind": -52.8
+},
+"e6-structured_v9_timbre32_noise_strongD": {
+"name": "M2 + compuerta + timbre 32 + adv",
+"parent": "structured_v9_timbre32",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 5.84,
+"wind": -51.6
+},
+"e6-structured_v9_timbre32_noise_strongD_9k": {
+"name": "M2 + compuerta + timbre 32 + adv · 9000 pasos",
+"parent": "e6-structured_v9_timbre32_noise_strongD",
+"rel": "cont",
+"change": "Sigue hasta 9000 pasos.",
+"loss": 5.882,
+"wind": -45.1
+},
+"structured_v9_timbre32late": {
+"name": "M2 + compuerta + timbre 32 + lectura tardía",
+"parent": "structured_v9_timbre32",
+"rel": "rec",
+"change": "También lee los armónicos 150–235 ms después del ataque.",
+"loss": 5.792,
+"wind": -54.0
+},
+"structured_v9_t32_no_gate": {
+"name": "M2 + timbre 32",
+"parent": "structured_v8_combo",
+"rel": "rec",
+"change": "Timbre de 32 armónicos, con el ruido sonando todo el tiempo.",
+"loss": 5.786,
+"wind": -21.3,
+"live": true
+},
+"structured_v9_t32_simple": {
+"name": "M1 + cuerpo 6 kHz + compuerta + timbre 32",
+"parent": "structured_v9_timbre32",
+"rel": "rec",
+"change": "M2 + compuerta + timbre 32, sin dos decaimientos y sin clic.",
+"loss": 5.786,
+"wind": -49.2
+},
+"structured_v9_base_t32": {
+"name": "M1 + timbre 32",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Timbre de 32 armónicos sobre la base, con el ruido sonando todo el tiempo.",
+"loss": 5.823,
+"wind": -21.5,
+"live": true
+},
+"e6-structured_v9_base_t32_noise_strongD": {
+"name": "M1 + timbre 32 + adv",
+"parent": "structured_v9_base_t32",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos. Es M1 + adv con el timbre como único cambio.",
+"loss": 5.931,
+"wind": -19.0,
+"fav": true,
+"live": true
+},
+"e6-structured_v9_t32_no_gate_noise_strongD": {
+"name": "M2 + timbre 32 + adv",
+"parent": "structured_v9_t32_no_gate",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 5.865,
+"wind": -21.1,
+"live": true
+}
+};
+/*MODELS-END*/
+const LIVE_SECTION = "timbre-sin-compuerta";
+const VARIANTS = { "-nonoise": "ruido apagado", "-noise": "solo el ruido +20 dB" };
 const SECTIONS = [
-  { id: "rondas", title: "DDSP vs estructurado vs + cuerpo", tag: "Paso 4 · Rondas 1–2",
+  { id: "rondas", title: "D1 vs S1 vs S1 + cuerpo", tag: "Paso 4 · Rondas 1–2",
     note: "Modelos solo con la partitura: MIDI + loudness por nota leído de la mezcla.",
-    v: [["original", "Original"], ["ddsp_v2", "DDSP"], ["structured_v2", "Estructurado"], ["structured_v2_bodyir", "+ cuerpo"]],
-    heard: "Ronda 1: “todas suenan igual de mal”. Ronda 2: el estructurado suena un poco mejor que DDSP. 023 suena notablemente bien; 176, 276 y 277 suenan como un teclado MIDI barato; 306, intermedio." },
-  { id: "sin-ruido", title: "Sin ruido residual", tag: "Paso 4 · Ronda 2",
-    note: "Sin la salida fácil del ruido. Por métricas, DDSP empeora (6.37 → 6.52) y el estructurado no (6.34 → 6.31).",
-    v: [["original", "Original"], ["ddsp_v2", "DDSP"], ["ddsp_v2_nonoise", "DDSP sin ruido"], ["structured_v2_bodyir", "Estruct. + cuerpo"], ["structured_v2_bodyir_nonoise", "Estruct. sin ruido"]] },
-  { id: "reverb", title: "Reverb de sala: sin vs con", tag: "Paso 4 · Ronda 3",
-    note: "La reverb no mejoró las métricas. En el original, 276 y 306 tienen una reverb muy clara.",
-    v: [["original", "Original"], ["structured_v4_body", "Sin reverb"], ["structured_v4_body_reverb", "Con reverb"]] },
-  { id: "features", title: "Features de audio frame a frame", tag: "Paso 4 · Ronda 4",
+    v: ["original", "ddsp_v2", "structured_v2", "structured_v2_bodyir"],
+    heard: "Ronda 1 (modelos anteriores a estos): todos suenan igual de mal. Ronda 2: los estructurados suenan un poco mejor que D1. 023 suena notablemente bien; 176, 276 y 277 suenan como un teclado MIDI barato; 306, intermedio." },
+  { id: "sin-ruido", title: "Entrenados sin ruido residual", tag: "Paso 4 · Ronda 2",
+    note: "Sin la salida fácil del ruido. Por métricas, D1 empeora bastante (6.35 → 6.63) y S1 + cuerpo poco (6.32 → 6.36).",
+    v: ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir", "structured_v2_bodyir_nonoise"] },
+  { id: "reverb", title: "S2: sin y con reverb de sala", tag: "Paso 4 · Ronda 3",
+    note: "La reverb no mejoró las métricas (6.28 → 6.32). En el original, 276 y 306 tienen una reverb muy clara.",
+    v: ["original", "structured_v4_body", "structured_v4_body_reverb"] },
+  { id: "features", title: "Features de audio: D2 y M1", tag: "Paso 4 · Ronda 4",
     note: "Ambos modelos reciben el loudness y el pitch de cada nota cada 10 ms (resíntesis).",
-    v: [["original", "Original"], ["ddsp_v5_audio", "DDSP + audio"], ["structured_v5_body_audio", "Estruct. + audio"]],
-    heard: "“Con las features de audio todas suenan mejor.” 176 todavía suena a MIDI barato, y aparece un ruido de fondo como viento." },
-  { id: "viento", title: "El viento: solo el ruido residual", tag: "Calidad perceptual",
-    note: "La última columna es solo el ruido residual del modelo, amplificado +20 dB para que se oiga.",
-    v: [["original", "Original"], ["structured_v5_body_audio", "Modelo completo"], ["structured_v5_body_audio-noise", "Solo ruido +20 dB"]],
+    v: ["original", "ddsp_v5_audio", "structured_v5_body_audio"],
+    heard: "Con las features de audio todos suenan mejor. 176 todavía suena a MIDI barato, y aparece un ruido de fondo como viento." },
+  { id: "viento", title: "M1: qué es el viento", tag: "Calidad perceptual",
+    note: "La última columna es solo el ruido residual de M1, amplificado +20 dB para que se oiga.",
+    v: ["original", "structured_v5_body_audio", "structured_v5_body_audio-noise"],
     heard: "El ruido residual solo suena exactamente como el viento; el piso de ruido y el cuerpo, solos, no se oyen." },
-  { id: "mel-adversarial", title: "Loss lineal vs mel vs adversarial", tag: "Calidad perceptual",
-    note: "Adversarial: sin ruido, discriminator fuerte, 3000 pasos.",
-    v: [["original", "Original"], ["structured_v5_body_audio", "Lineal + ruido"], ["structured_v6_mel_noise", "Mel + ruido"], ["structured_v6_mel_nonoise", "Mel sin ruido"], [ADV3K, "Adversarial"]],
-    heard: "En las 5, el mejor es el adversarial, aunque con artefactos (en 176, “súper feos”); en 306, “suena realista”. El resto suena a MIDI barato, salvo 023. Mel sin ruido: armónicos horribles. Mel con ruido: algo de viento, armónicos limpios. En 277 el lineal suena mucho mejor que mel; en 276, un poco mejor." },
-  { id: "adversarial-largo", title: "Adversarial: 2000 vs 9000 pasos", tag: "Calidad perceptual",
+  { id: "mel-adversarial", title: "M1: loss lineal, loss mel y adversarial", tag: "Calidad perceptual",
+    note: "M1 sin ruido + adv usa un discriminator fuerte y 3000 pasos.",
+    v: ["original", "structured_v5_body_audio", "structured_v6_mel_noise", "structured_v6_mel_nonoise", "e6-structured_v5_body_audio_nonoise_strongD"],
+    heard: "En las 5, el mejor es M1 sin ruido + adv, aunque con artefactos (en 176, súper feos); en 306 suena realista. El resto suena a MIDI barato, salvo 023. M1 · loss mel, entrenado sin ruido: armónicos horribles. M1 · loss mel: algo de viento, armónicos limpios. En 277, M1 suena mucho mejor que M1 · loss mel; en 276, un poco mejor." },
+  { id: "adversarial-largo", title: "M1 sin ruido + adv: 2000 vs 9000 pasos", tag: "Calidad perceptual",
     note: "Reiniciado con los mismos ajustes y entrenado 9000 pasos. Por números, el flapping baja a la mitad después de 6000 pasos.",
-    v: [["original", "Original"], ["adv9k-step2000", "2000 pasos"], [ADV9K, "9000 pasos"]],
+    v: ["original", "adv9k-step2000", "e6-structured_v5_body_audio_nonoise_strongD_9k"],
     heard: "176 suena igual de feo después de 9000 pasos. Las otras mejoran un poco, pero los artefactos siguen y suenan muy feos. Coincide con la loss, que casi no se mueve: entrenar más no es la solución." },
-  { id: "adversarial-ruido", title: "Adversarial con el ruido de vuelta", tag: "Calidad perceptual",
-    note: "Mismo discriminator fuerte, 3000 pasos, pero empezando del modelo con ruido y sin quitárselo. Por números: menos flapping que sin ruido (176: +0.7 dB vs +1.6 dB), pero el viento sube un poco (−25.2 → −23.5 dB). Las dos últimas columnas son solo el ruido residual, +20 dB.",
-    v: [["original", "Original"], ["structured_v5_body_audio", "Antes (lineal + ruido)"], [ADV9K, "Adv. sin ruido, 9000"], [ADVN, "Adv. con ruido, 3000"], ["structured_v5_body_audio-noise", "Ruido antes +20 dB"], [ADVN + "-noise", "Ruido después +20 dB"]],
-    heard: "Gana claramente: quita los artefactos por completo y da realismo, pero vuelve el viento raro. En 276 suena igual que el adversarial sin ruido, sin los artefactos; en 306 no se le parece." },
-  { id: "adv-variantes", title: "Adversarial con ruido: más pasos y loss sin término log", tag: "Calidad perceptual · Noche 28–29 oct",
+  { id: "adversarial-ruido", title: "M1 + adv: el adversarial sin quitar el ruido", tag: "Calidad perceptual",
+    note: "Mismo discriminator fuerte y 3000 pasos, pero sin quitarle el ruido a M1. Por números: menos flapping que sin ruido (176: +0.7 dB vs +1.6 dB), pero el viento sube un poco (−25.2 → −23.5 dB). Las dos últimas columnas son solo el ruido residual, +20 dB.",
+    v: ["original", "structured_v5_body_audio", "e6-structured_v5_body_audio_nonoise_strongD_9k", "e6-structured_v5_body_audio_noise_strongD", "structured_v5_body_audio-noise", "e6-structured_v5_body_audio_noise_strongD-noise"],
+    heard: "M1 + adv gana claramente: quita los artefactos por completo y da realismo, pero vuelve el viento raro. En 276 suena igual que M1 sin ruido + adv, sin los artefactos; en 306 no se le parece." },
+  { id: "adv-variantes", title: "M1 + adv: más pasos y loss solo lineal", tag: "Calidad perceptual · Noche 28–29 oct",
     note: "Seguir hasta 9000 pasos: la loss no baja, el ruido sube +7 dB y el viento también (−23.5 → −19.9 dB), y el flapping vuelve (176: +1.6 dB). Loss solo lineal (sin el término log): el ruido crece ~9 dB. Por números, ninguna de las dos ayuda.",
-    v: [["original", "Original"], [ADVN, "3000 pasos"], [ADVN + "_9k", "9000 pasos"], [ADVN + "_linonly", "Loss solo lineal"], [ADVN + "_9k-noise", "Ruido 9000 +20 dB"], [ADVN + "_linonly-noise", "Ruido lineal +20 dB"]],
-    heard: "9000 pasos suena mejor que 3000, sobre todo 306: “me sentí un poco más en la sala”, aunque el viento empeoró un poco. Quizás falta la acústica de la sala o la posición del micrófono: cada original viene de un montaje de grabación completamente distinto. Loss solo lineal es por lejos la que más viento tiene, pero sin el ruido no suena mal." },
-  { id: "fenomenos", title: "Fenómenos nuevos (con ruido)", tag: "Fenómenos · 4000 pasos cada uno",
-    note: "Cada columna es el modelo base más una parte nueva, entrenado desde cero. Con el ruido disponible, por números casi no cambian; la diferencia aparece al apagar el ruido (sección siguiente).",
-    v: [["original", "Original"], ["structured_v5_body_audio", "Base"], ["structured_v8_bodyhi", "Cuerpo 6 kHz"], ["structured_v8_twodecay", "Dos decaimientos"], ["structured_v8_click", "Clic"], ["structured_v8_symp", "Simpática"], ["structured_v8_squeak", "Squeak"], ["structured_v8_combo", "Combinado"]],
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "e6-structured_v5_body_audio_noise_strongD_9k", "e6-structured_v5_body_audio_noise_strongD_linonly", "e6-structured_v5_body_audio_noise_strongD_9k-noise", "e6-structured_v5_body_audio_noise_strongD_linonly-noise"],
+    heard: "M1 + adv · 9000 pasos suena mejor que M1 + adv, sobre todo en 306: me sentí un poco más en la sala, aunque el viento empeoró un poco. Quizás falta la acústica de la sala o la posición del micrófono: cada original viene de un montaje de grabación completamente distinto. M1 + adv · loss solo lineal es por lejos la que más viento tiene, pero sin el ruido no suena mal." },
+  { id: "fenomenos", title: "M1 + cada fenómeno nuevo, y M2 Combinado", tag: "Fenómenos · 4000 pasos cada uno",
+    note: "Cada columna es M1 más una parte nueva, entrenado desde cero; M2 junta tres de ellas. Con el ruido disponible, por números casi no cambian; la diferencia aparece al apagar el ruido (sección siguiente).",
+    v: ["original", "structured_v5_body_audio", "structured_v8_bodyhi", "structured_v8_twodecay", "structured_v8_click", "structured_v8_symp", "structured_v8_squeak", "structured_v8_combo"],
     heard: "Igual que la sección siguiente: sin una diferencia clara entre las partes. Lo único: el viento volvió." },
   { id: "ruido-apagado", title: "Los mismos modelos con el ruido apagado", tag: "Fenómenos",
-    note: "Se apaga el ruido residual al generar (sin reentrenar): queda lo que cubren las partes deterministas. Loss sin ruido: base 7.82, cuerpo 6.95, dos decaimientos 7.36, clic 7.55, combinado 6.42 (con ruido, todos ≈ 6.0).",
-    v: [["original", "Original"], ["structured_v5_body_audio-nonoise", "Base"], ["structured_v8_bodyhi-nonoise", "Cuerpo 6 kHz"], ["structured_v8_twodecay-nonoise", "Dos decaimientos"], ["structured_v8_click-nonoise", "Clic"], ["structured_v8_combo-nonoise", "Combinado"]],
-    heard: "Sin una diferencia clara que pueda afirmar con seguridad. Si el combinado tiene mejores números, quedarse con ese." },
-  { id: "discriminator", title: "Un discriminator que ve el log", tag: "Discriminator",
-    note: "Complejo: el de siempre (partes real e imaginaria). Log: ve la magnitud en escala log, donde el viento de los pasajes silenciosos se ve tanto como las notas. Los dos con log distinguen mejor (loss ~1.5 y ~1.2 vs ~1.8) y solo log tiene el menor flapping (277: +0.3 vs +1.0 dB), pero el viento queda igual (−22 a −23 dB).",
-    v: [["original", "Original"], [ADVN, "Complejo"], [ADVN + "_both", "Complejo + log"], [ADVN + "_logmag", "Solo log"], [ADVN + "-noise", "Ruido complejo +20 dB"], [ADVN + "_both-noise", "Ruido complejo + log +20 dB"], [ADVN + "_logmag-noise", "Ruido solo log +20 dB"]],
-    heard: "Suenan parecidos; complejo es el mejor y complejo + log el peor, pero las diferencias son pequeñas (escuché muchas veces). Todos sufren con el viento, como se esperaba; 176, como siempre, con mucho viento." },
-  { id: "combinado-adversarial", title: "Modelo combinado + adversarial con ruido", tag: "Fenómenos + discriminator",
-    note: "El modelo combinado (cuerpo hasta 6 kHz + dos decaimientos + clic) con el mismo adversarial (discriminator complejo + log, 3000 pasos). Flapping igual al original (+0.0 dB), pero el ruido crece como antes (viento −21.8 → −20.2 dB).",
-    v: [["original", "Original"], [ADVN, "Adv. con ruido (base)"], ["structured_v8_combo", "Combinado"], ["e6-structured_v8_combo_noise_strongD_both", "Combinado + adv."], ["e6-structured_v8_combo_noise_strongD_both-noise", "Ruido combinado + adv. +20 dB"]],
-    heard: "Combinado + adv. y adv. (base) suenan parecidos. En 176 aparece un ruido raro y en 023 el combinado + adv. se desafina un poco; en el resto no hay diferencia clara. El adv. (base) sigue siendo el mejor." },
-  { id: "combinado-sin-ruido", title: "Modelo combinado entrenado sin ruido", tag: "Fenómenos",
-    note: "Entrenado desde cero sin el ruido residual: sin viento posible. Loss 6.03 vs 6.00 con ruido (el modelo viejo sin ruido: 6.36), flapping igual al original (−0.0 dB). Comparar con el mismo modelo entrenado con ruido y con el ruido apagado al generar.",
-    v: [["original", "Original"], ["structured_v8_combo", "Combinado con ruido"], ["structured_v8_combo-nonoise", "Con ruido, apagado"], ["structured_v8_combo_nonoise", "Entrenado sin ruido"], [ADVN, "Adv. con ruido (base)"]],
-    heard: "Gana el adv. con ruido (base): un poco más realista, aunque el combinado con ruido suena más limpio. El combinado con el ruido apagado suena casi igual que con ruido, pero sin viento: el ruido casi no aporta. Entrenado sin ruido tiene artefactos feos, como sus hermanos pero con artefactos. Todos suenan un poco a MIDI barato." },
-  { id: "adv-ruido-apagado", title: "Los adversariales con ruido, con el ruido apagado", tag: "Calidad perceptual",
-    note: "Los tres adversariales con ruido (3000 pasos, 9000 pasos, loss solo lineal), generados con el ruido residual apagado (sin reentrenar). Lo que queda es lo que el adversarial le enseñó a las partes deterministas.",
-    v: [["original", "Original"], [ADVN, "3000, con ruido"], [ADVN + "-nonoise", "3000, apagado"], [ADVN + "_9k-nonoise", "9000, apagado"], [ADVN + "_linonly", "Lineal, con ruido"], [ADVN + "_linonly-nonoise", "Lineal, apagado"]],
-    heard: "Con 3000 pasos, con y sin ruido suenan prácticamente igual si se quita el viento: el ruido solo agrega viento. Con 9000 pasos no lo puedo afirmar con seguridad; quizás después de muchos pasos el filtro de ruido sí aprendió algo más útil que el viento. El lineal sin ruido suena bastante bien, pero el mejor sigue siendo el adv. (3000, con ruido)." },
-  { id: "ruido-en-ataque", title: "Ruido solo alrededor de cada ataque", tag: "Ruido",
-    note: "El ruido residual solo puede sonar desde 20 ms antes de cada ataque hasta ~60 ms después; el fondo constante de cada grabación queda a cargo del piso fijo, que no puede hacer ráfagas. Ruido en el 20 % más silencioso: −56 dB (combinado + adv.) vs −23.5 dB (adv. con ruido). Loss: combinado + compuerta 6.00 (igual que sin compuerta); + adv. 6.09 vs 6.12.",
-    v: [["original", "Original"], [ADVN, "Adv. con ruido (favorito)"], ["structured_v8_gated", "Combinado, ruido en el ataque"], ["e6-structured_v8_gated_noise_strongD", "Combinado + adv."], ["e6-structured_v5_gated_noise_strongD", "Base + adv."], ["e6-structured_v8_gated_noise_strongD-noise", "Ruido combinado + adv. +20 dB"], [ADVN + "-noise", "Ruido del favorito +20 dB"]],
-    heard: "Pendiente de escucha." },
-  { id: "timbre", title: "El timbre de cada ataque", tag: "Fenómenos",
-    note: "La red de cada nota ahora también lee del audio el timbre del ataque: el nivel de los primeros 16 armónicos justo después de la nota, relativo a su promedio (ahí se ve dónde se pulsó la cuerda, uña o yema, qué cuerda). Antes, todas las notas de la misma altura y volumen tenían el mismo timbre. Loss 5.82 vs 6.00; con los timbres intercambiados entre notas de la misma altura sube a 6.17, así que usa el de cada nota. Con 32 armónicos: 5.77; + adv.: 5.84 (16 armónicos + adv.: 5.86). Con 9000 pasos de adv.: 5.88 y vuelve algo de viento (−45 dB vs −52 dB con 3000). Lectura tardía (los mismos 32 armónicos leídos también 150–235 ms después del ataque): loss 5.79, empate con 5.77; viento −54 dB vs −51 dB. Sin dos decaimientos ni clic: loss 5.79, empate (tres semillas del modelo completo: 5.77, 5.80, 5.80), viento −49 dB; si no se oye la diferencia, se pueden quitar.",
-    v: [["original", "Original"], ["structured_v8_gated", "Combinado, ruido en el ataque"], ["structured_v9_timbre", "+ timbre de cada ataque"], ["structured_v9_timbre32", "+ timbre 32"], ["structured_v9_timbre32late", "+ timbre 32 + lectura tardía"], ["structured_v9_t32_simple", "Timbre 32 sin dos decaimientos ni clic"], ["e6-structured_v9_timbre_noise_strongD", "+ timbre + adv."], ["e6-structured_v9_timbre32_noise_strongD", "+ timbre 32 + adv."], ["e6-structured_v9_timbre32_noise_strongD_9k", "+ timbre 32 + adv. 9000"], [ADVN, "Adv. con ruido (favorito)"]],
-    heard: "Pendiente de escucha." },
+    note: "Se apaga el ruido residual al generar, sin reentrenar: queda lo que cubren las partes deterministas. Loss con el ruido apagado: M1 7.82, M1 + cuerpo 6 kHz 6.95, M1 + dos decaimientos 7.36, M1 + clic 7.55, M2 6.42 (con ruido, todos ≈ 6.0).",
+    v: ["original", "structured_v5_body_audio-nonoise", "structured_v8_bodyhi-nonoise", "structured_v8_twodecay-nonoise", "structured_v8_click-nonoise", "structured_v8_combo-nonoise"],
+    heard: "Sin una diferencia clara que pueda afirmar con seguridad. Si M2 tiene mejores números, quedarse con ese." },
+  { id: "discriminator", title: "M1 + adv: qué ve el discriminator", tag: "Discriminator",
+    note: "Complejo: el de siempre, en M1 + adv (partes real e imaginaria). Log: ve la magnitud en escala log, donde el viento de los pasajes silenciosos se ve tanto como las notas. Los dos con log distinguen mejor (loss ~1.5 y ~1.2 vs ~1.8) y solo log tiene el menor flapping (277: +0.3 vs +1.0 dB), pero el viento queda igual (−22 a −23 dB).",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "e6-structured_v5_body_audio_noise_strongD_both", "e6-structured_v5_body_audio_noise_strongD_logmag", "e6-structured_v5_body_audio_noise_strongD-noise", "e6-structured_v5_body_audio_noise_strongD_both-noise", "e6-structured_v5_body_audio_noise_strongD_logmag-noise"],
+    heard: "Suenan parecidos; M1 + adv es el mejor y M1 + adv · D complejo + log el peor, pero las diferencias son pequeñas (escuché muchas veces). Todos sufren con el viento, como se esperaba; 176, como siempre, con mucho viento." },
+  { id: "combinado-adversarial", title: "M2 + adv", tag: "Fenómenos + discriminator",
+    note: "M2 con adversarial de 3000 pasos y discriminator complejo + log. Flapping igual al original (+0.0 dB), pero el ruido crece como antes (viento −21.8 → −20.2 dB).",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "structured_v8_combo", "e6-structured_v8_combo_noise_strongD_both", "e6-structured_v8_combo_noise_strongD_both-noise"],
+    heard: "M2 + adv y M1 + adv suenan parecidos. En 176 aparece un ruido raro y en 023 M2 + adv se desafina un poco; en el resto no hay diferencia clara. M1 + adv sigue siendo el mejor." },
+  { id: "combinado-sin-ruido", title: "M2: entrenado sin ruido vs ruido apagado", tag: "Fenómenos",
+    note: "M2 · entrenado sin ruido es otro modelo, entrenado desde cero sin el ruido residual: sin viento posible. Loss 6.03 vs 6.00 de M2 (S1 + cuerpo · entrenado sin ruido: 6.36), flapping igual al original (−0.0 dB). M2 con el ruido apagado es el mismo M2, generado sin ruido.",
+    v: ["original", "structured_v8_combo", "structured_v8_combo-nonoise", "structured_v8_combo_nonoise", "e6-structured_v5_body_audio_noise_strongD"],
+    heard: "Gana M1 + adv: un poco más realista, aunque M2 suena más limpio. M2 con el ruido apagado suena casi igual que M2, pero sin viento: el ruido casi no aporta. M2 · entrenado sin ruido tiene artefactos feos; por lo demás suena como los otros dos. Todos suenan un poco a MIDI barato." },
+  { id: "adv-ruido-apagado", title: "M1 + adv y sus variantes, con el ruido apagado", tag: "Calidad perceptual",
+    note: "M1 + adv, M1 + adv · 9000 pasos y M1 + adv · loss solo lineal, generados con el ruido residual apagado, sin reentrenar. Lo que queda es lo que el adversarial le enseñó a las partes deterministas.",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "e6-structured_v5_body_audio_noise_strongD-nonoise", "e6-structured_v5_body_audio_noise_strongD_9k-nonoise", "e6-structured_v5_body_audio_noise_strongD_linonly", "e6-structured_v5_body_audio_noise_strongD_linonly-nonoise"],
+    heard: "M1 + adv con y sin ruido suenan prácticamente igual si se quita el viento: el ruido solo agrega viento. Con M1 + adv · 9000 pasos no lo puedo afirmar con seguridad; quizás después de muchos pasos el filtro de ruido sí aprendió algo más útil que el viento. M1 + adv · loss solo lineal con el ruido apagado suena bastante bien, pero el mejor sigue siendo M1 + adv, con ruido." },
+  { id: "ruido-en-ataque", title: "La compuerta: ruido solo alrededor de cada ataque", tag: "Ruido",
+    note: "El ruido residual solo puede sonar desde 20 ms antes de cada ataque hasta ~60 ms después; el fondo constante de cada grabación queda a cargo del piso fijo, que no puede hacer ráfagas. Ruido en el 20 % más silencioso: −56 dB (M2 + compuerta + adv) vs −23.5 dB (M1 + adv). Loss: M2 + compuerta 6.00, igual que M2; M2 + compuerta + adv 6.09 vs M1 + adv 6.12.",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "structured_v8_gated", "e6-structured_v8_gated_noise_strongD", "e6-structured_v5_gated_noise_strongD", "e6-structured_v8_gated_noise_strongD-noise", "e6-structured_v5_body_audio_noise_strongD-noise"],
+    heard: "En general volvieron los artefactos. El ruido ya no se oye por ningún lado, pero algunos armónicos suenan raros y aparecen sonidos raros al azar. Si se ignoran los artefactos, al menos M1 + compuerta + adv suena bastante bien." },
+  { id: "timbre", title: "El timbre de cada ataque, con compuerta", tag: "Fenómenos",
+    note: "La red de cada nota también lee del audio el timbre del ataque: el nivel de los primeros armónicos justo después de la nota, relativo a su promedio (ahí se ve dónde se pulsó la cuerda, uña o yema, qué cuerda). Antes, todas las notas de la misma altura y volumen tenían el mismo timbre. Con 16 armónicos, loss 5.82 vs 6.00 de M2 + compuerta; con los timbres intercambiados entre notas de la misma altura sube a 6.17, así que usa el de cada nota. Con 32: 5.77; + adv: 5.84. Con 9000 pasos de adv: 5.88 y vuelve algo de viento (−45 dB vs −52 dB). La lectura tardía empata (5.79). Sin dos decaimientos ni clic también empata (5.79; tres semillas de M2 + compuerta + timbre 32: 5.77, 5.80, 5.80).",
+    v: ["original", "structured_v8_gated", "structured_v9_timbre", "structured_v9_timbre32", "structured_v9_timbre32late", "structured_v9_t32_simple", "e6-structured_v9_timbre_noise_strongD", "e6-structured_v9_timbre32_noise_strongD", "e6-structured_v9_timbre32_noise_strongD_9k", "e6-structured_v5_body_audio_noise_strongD"],
+    heard: "Todos estos modelos usan la compuerta, así que es difícil juzgarlos: todos tienen artefactos. Por lo que escuché, el timbre suena prometedor; hay que repetirlo sin la compuerta." },
+  { id: "timbre-sin-compuerta", title: "El timbre de cada ataque, sin compuerta", tag: "Fenómenos",
+    note: "El timbre de 32 armónicos, con el ruido residual sonando todo el tiempo, sobre M1 y sobre M2, con y sin adversarial. Cada uno aparece también con el ruido apagado, sin reentrenar. Si los armónicos siguen limpios con el ruido apagado, el ruido ayuda durante el entrenamiento y no solo al escuchar. M1 + adv queda como referencia. Por métricas, el timbre baja la pérdida unas 0.2 en M1, M1 + adv y M2. En M1 el viento empeora unos 4 dB; en M2 casi no cambia. Medido después: en estos modelos la corrección de la GRU cambia menos de 1 dB cada 10 ms; en M2 · entrenado sin ruido y en M2 + compuerta + timbre 32, unos 14 dB.",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD",
+        "structured_v9_base_t32", "structured_v9_base_t32-nonoise",
+        "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v9_base_t32_noise_strongD-nonoise",
+        "structured_v9_t32_no_gate", "structured_v9_t32_no_gate-nonoise",
+        "e6-structured_v9_t32_no_gate_noise_strongD", "e6-structured_v9_t32_no_gate_noise_strongD-nonoise"],
+    heard: "Con el ruido apagado no hay ninguno de los artefactos de antes: los armónicos suenan limpios. Empiezo a pensar que el ruido casi no aporta al sonido y solo evita que otras partes aprendan lo que no deben durante el entrenamiento. Con el ruido encendido siempre está ese viento molesto: compensa algo que no hemos identificado. 023: todos superan a M1 + adv; el timbre ayudó mucho y, cuando suena más de una cuerda, se oye más color; sin un ganador claro. 176: más o menos igual. 276: mi favorito es M1 + timbre 32 + adv; los que tienen adv suenan un poco mejor. 277: los que tienen adv suenan un poco mejor; mis favoritos son M1 + timbre 32 + adv y M2 + timbre 32 + adv. 306: los que tienen adv tienen más color; mi favorito es M2 + timbre 32 + adv y M1 + timbre 32 + adv también suena muy bien. M2 + timbre 32 + adv a veces tiene armónicos raros: en 306 y 277 se oyen agudos cortos y aislados, también con el ruido apagado." },
 ];
+const fmtLoss = (m) => m.pending ? "en entrenamiento" : m.loss.toFixed(2) + (m.findings ? " †" : "");
+const fmtWind = (m) => m.pending ? "—" : m.wind === null ? "sin ruido" : m.wind.toFixed(1).replace("-", "−") + " dB";
+const REL = { rec: "desde cero", cont: "continúa" };
+const parts = (file) => { // a file is a trained model, possibly rendered differently
+  for (const [suffix, variant] of Object.entries(VARIANTS)) if (file.endsWith(suffix)) return { key: file.slice(0, -suffix.length), variant };
+  return { key: file, variant: null };
+};
+const nameOf = (file) => { if (file === "original") return "Original"; const { key, variant } = parts(file); return MODELS[key].name + (variant ? " · " + variant : ""); };
+const ORDER = Object.keys(MODELS);
+
+function modelRow(k, here) {
+  const m = MODELS[k], p = m.parent ? MODELS[m.parent] : null;
+  return `<tr${here ? "" : ' class="away"'}><th scope="row">${m.name}${m.fav ? ' <span class="tagm">favorito</span>' : ""}</th><td>${p ? `${p.name} <span class="rel">${REL[m.rel]}</span>` : "—"}</td><td>${m.change}</td><td class="num">${fmtLoss(m)}</td><td class="num">${fmtWind(m)}</td></tr>`;
+}
+
+function timeline(S) {
+  const here = new Set(), all = new Set(), variants = [];
+  S.v.forEach((f) => { if (f === "original") return; const { key, variant } = parts(f); if (variant) variants.push(f); else here.add(key); let k = key; while (k) { all.add(k); k = MODELS[k].parent; } });
+  const rows = ORDER.filter((k) => all.has(k)).map((k) => modelRow(k, here.has(k))).join("");
+  const vs = variants.length ? `<p class="catnote">Variantes de generación, no son modelos nuevos: ${variants.map(nameOf).join("; ")}.</p>` : "";
+  return `<details class="cat"><summary>Modelos de esta sección</summary><div class="catbody"><div class="catscroll"><table class="cat"><thead><tr><th scope="col">Modelo</th><th scope="col">Viene de</th><th scope="col">Qué cambió</th><th scope="col" class="num">Loss</th><th scope="col" class="num">Viento</th></tr></thead><tbody>${rows}</tbody></table></div><p class="catnote">De más viejo a más nuevo. En gris, los antecesores que no se escuchan en esta sección.</p>${vs}</div></details>`;
+}
+
+function treeOf(parent) {
+  const kids = ORDER.filter((k) => MODELS[k].parent === parent);
+  if (!kids.length) return "";
+  return `<ul>${kids.map((k) => { const m = MODELS[k]; return `<li class="${m.rel || "root"}"><span class="tn">${m.name}</span>${m.fav ? ' <span class="tagm">favorito</span>' : ""}${m.rel ? ` <span class="rel">${REL[m.rel]}</span>` : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}</span><div class="tc">${m.change}</div>${treeOf(k)}</li>`; }).join("")}</ul>`;
+}
+
+function buildCatalog() {
+  $("tree").innerHTML = treeOf(null);
+  $("live").innerHTML = ORDER.filter((k) => MODELS[k].fav || MODELS[k].live).map((k) => { const m = MODELS[k]; return `<li><a href="#${LIVE_SECTION}">${m.name}</a>${m.fav ? ' <span class="tagm">favorito</span>' : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}</span></li>`; }).join("");
+}
+
 const ICON_PLAY = '<svg class="ico" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z" fill="currentColor"/></svg>';
 const ICON_PAUSE = '<svg class="ico" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0H3.5V12H0ZM6.5 0H10V12H6.5Z" fill="currentColor"/></svg>';
 const $ = (id) => document.getElementById(id);
@@ -187,10 +613,11 @@ function build() {
     const sec = document.createElement("section"); sec.id = S.id;
     let html = `<div class="sec-head"><p class="sec-num">${String(s + 1).padStart(2, "0")} · ${S.tag}</p><h2>${S.title}</h2><p class="note">${S.note}</p></div>`;
     if (S.heard) html += `<p class="heard"><b>Lo que escuché:</b> ${S.heard}</p>`;
-    html += `<div class="grid-scroll"><table><thead><tr><th class="rec" scope="col">Grabación</th>${S.v.map(([, l]) => `<th scope="col">${l}</th>`).join("")}</tr></thead><tbody>`;
+    html += timeline(S);
+    html += `<div class="grid-scroll"><table class="clips"><thead><tr><th class="rec" scope="col">Grabación</th>${S.v.map((f) => { const { key, variant } = parts(f); return `<th scope="col">${f === "original" ? "Original" : MODELS[key].name}${variant ? `<span class="var">${variant}</span>` : ""}</th>`; }).join("")}</tr></thead><tbody>`;
     RECS.forEach(([rid, short], r) => {
-      html += `<tr><td class="rec">${short}</td>${S.v.map(([f, l], c) =>
-        `<td><button type="button" class="cell${f === "original" ? " orig" : ""}" data-s="${s}" data-r="${r}" data-c="${c}" aria-label="${short} · ${l}"><span class="fill"></span><span class="lbl">${ICON_PLAY}</span></button></td>`).join("")}</tr>`;
+      html += `<tr><td class="rec">${short}</td>${S.v.map((f, c) =>
+        `<td><button type="button" class="cell${f === "original" ? " orig" : ""}" data-s="${s}" data-r="${r}" data-c="${c}" aria-label="${short} · ${nameOf(f)}"><span class="fill"></span><span class="lbl">${ICON_PLAY}</span></button></td>`).join("")}</tr>`;
     });
     sec.innerHTML = html + "</tbody></table></div>";
     root.append(sec);
@@ -204,7 +631,7 @@ function build() {
 function btnAt(s, r, c) { return document.querySelector(`button.cell[data-s="${s}"][data-r="${r}"][data-c="${c}"]`); }
 
 function select(s, r, c, fromClick) {
-  const S = SECTIONS[s], [rid, short] = RECS[r], [file, label] = S.v[c];
+  const S = SECTIONS[s], [rid, short] = RECS[r], file = S.v[c], label = nameOf(file);
   const a = audioFor(rid, file);
   if (cur && cur.audio === a && cur.s === s) { // same button: toggle
     if (fromClick) { a.paused ? a.play() : a.pause(); }
@@ -220,7 +647,7 @@ function select(s, r, c, fromClick) {
   a.loop = false;
   try { a.currentTime = 0; } catch (_) {}
   a.play().catch(() => {});
-  S.v.forEach(([f]) => audioFor(rid, f)); // preload the rest of the row
+  S.v.forEach((f) => audioFor(rid, f)); // preload the rest of the row
   $("nowt").innerHTML = `<b>${short}</b> · ${S.title} · ${label}`;
   $("pp").disabled = false; $("seek").disabled = false;
 }
@@ -249,7 +676,7 @@ setIcon($("pp"), false);
 $("pp").addEventListener("click", () => { if (cur) cur.audio.paused ? cur.audio.play() : cur.audio.pause(); });
 $("seek").addEventListener("input", (e) => { if (cur) cur.audio.currentTime = +e.target.value; });
 document.addEventListener("keydown", (e) => {
-  if (!cur || e.target.matches("input[type=range], input[type=checkbox]")) return;
+  if (!cur || e.target.matches("input[type=range], input[type=checkbox], summary")) return;
   const S = SECTIONS[cur.s];
   const moves = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] };
   if (e.key === " " && !e.target.closest("button")) { e.preventDefault(); cur.audio.paused ? cur.audio.play() : cur.audio.pause(); return; }
@@ -259,6 +686,7 @@ document.addEventListener("keydown", (e) => {
   const r = Math.min(RECS.length - 1, Math.max(0, cur.r + dr)), c = Math.min(S.v.length - 1, Math.max(0, cur.c + dc));
   if (r !== cur.r || c !== cur.c) { select(cur.s, r, c, false); cur.btn.focus({ preventScroll: true }); }
 });
+buildCatalog();
 build();
 requestAnimationFrame(tick);
 </script>

@@ -20,15 +20,15 @@ from tesis.data.gaps import REPO
 OUT = REPO / "analysis" / "results" / "slides"
 FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
 VERSIONS = {
-    "original": "Original", "ddsp_v2": "DDSP", "structured_v2": "Estructurado",
-    "structured_v2_bodyir": "Estructurado + cuerpo", "ddsp_v2_nonoise": "DDSP sin ruido",
-    "structured_v2_bodyir_nonoise": "Estructurado + cuerpo, sin ruido", "structured_v4_body": "Sin reverb",
+    "original": "Original", "ddsp_v2": "D1 DDSP", "structured_v2": "Estructurado",
+    "structured_v2_bodyir": "Estructurado + cuerpo", "ddsp_v2_nonoise": "D1 · entrenado sin ruido",
+    "structured_v2_bodyir_nonoise": "S1 + cuerpo · entrenado sin ruido", "structured_v4_body": "Sin reverb",
     "structured_v4_body_reverb": "Con reverb", "ddsp_v5_audio": "DDSP + audio",
-    "structured_v5_body_audio": "Estructurado + audio (loss lineal, con ruido)",
-    "structured_v5_body_audio-noise": "Solo el ruido residual (+20 dB)",
-    "structured_v6_mel_noise": "Loss mel, con ruido", "structured_v6_mel_nonoise": "Loss mel, sin ruido",
-    "e6-structured_v5_body_audio_nonoise_strongD": "Adversarial, 3000 pasos",
-    "adv9k-step2000": "Adversarial, 2000 pasos", "e6-structured_v5_body_audio_nonoise_strongD_9k": "Adversarial, 9000 pasos",
+    "structured_v5_body_audio": "M1 Base",
+    "structured_v5_body_audio-noise": "M1 Base · solo el ruido +20 dB",
+    "structured_v6_mel_noise": "M1 · loss mel", "structured_v6_mel_nonoise": "Loss mel, sin ruido",
+    "e6-structured_v5_body_audio_nonoise_strongD": "M1 sin ruido + adv",
+    "adv9k-step2000": "M1 sin ruido + adv · 2000 pasos", "e6-structured_v5_body_audio_nonoise_strongD_9k": "M1 sin ruido + adv · 9000 pasos",
     "e6-structured_v5_body_audio_noise_strongD": "Adversarial con ruido, 3000 pasos",
     "e6-structured_v5_body_audio_noise_strongD-noise": "Adversarial con ruido: solo el ruido (+20 dB)",
     "e6-structured_v5_body_audio_noise_strongD_9k": "Adversarial con ruido, 9000 pasos",
@@ -64,6 +64,14 @@ VERSIONS = {
     "e6-structured_v9_timbre32_noise_strongD_9k": "Timbre 32 + adversarial, 9000 pasos",
     "structured_v9_timbre32late": "Timbre 32 + lectura tardía",
     "structured_v9_t32_simple": "Timbre 32 simplificado (sin dos decaimientos ni clic)",
+    "structured_v9_t32_no_gate": "M2 + timbre 32",
+    "structured_v9_t32_no_gate-nonoise": "M2 + timbre 32, ruido apagado",
+    "e6-structured_v9_t32_no_gate_noise_strongD": "M2 + timbre 32 + adv",
+    "e6-structured_v9_t32_no_gate_noise_strongD-nonoise": "M2 + timbre 32 + adv, ruido apagado",
+    "structured_v9_base_t32": "M1 + timbre 32",
+    "structured_v9_base_t32-nonoise": "M1 + timbre 32, ruido apagado",
+    "e6-structured_v9_base_t32_noise_strongD": "M1 + timbre 32 + adv",
+    "e6-structured_v9_base_t32_noise_strongD-nonoise": "M1 + timbre 32 + adv, ruido apagado",
 }
 DECK_CLIPS = {
     "023_Ypswc": ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir_nonoise"],
