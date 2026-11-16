@@ -25,3 +25,5 @@
 11:53:15 end adv structured_v10_m1_burst_strings_noise_strongD exit 0
 11:53:15 stage3 done
 11:53:46 start _v10_m2_strings_seed1
+11:54:06 start _v10_m1_burst_floor_strings
+11:54:26 start _v10_m2_strings_bilstm

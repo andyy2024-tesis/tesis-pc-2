@@ -292,5 +292,19 @@
    "median_db": 2.1,
    "share_above_6db": 0.33
   }
+ },
+ "e6/structured_v10_m1_burst_strings_noise_strongD": {
+  "0-700": {
+   "median_db": -1.7,
+   "share_above_6db": 0.27
+  },
+  "700-4k": {
+   "median_db": 5.8,
+   "share_above_6db": 0.49
+  },
+  "4k-11k": {
+   "median_db": 6.8,
+   "share_above_6db": 0.54
+  }
  }
 }

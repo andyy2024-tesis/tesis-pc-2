@@ -23,6 +23,12 @@
   "n": 85,
   "wind": -19.9
  },
+ "e6/structured_v10_m1_burst_strings_noise_strongD": {
+  "mean": 5.803,
+  "median": 5.839,
+  "n": 85,
+  "wind": -18.9
+ },
  "e6/structured_v10_m2_strings_noise_strongD": {
   "mean": 5.724,
   "median": 5.72,

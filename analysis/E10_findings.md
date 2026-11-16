@@ -160,3 +160,20 @@ Readings:
   the GRU's memory is enough.
 - Strings + adv is the best adversarial model so far (5.72 vs 5.87 for M2 + timbre 32 + adv and 5.93 for the favourite),
   but the adversarial training brings the harmonic ticks back (23). Queued: the same with the rise penalty (lane G).
+
+### Stage 3 adversarial candidates (same recipe: 3000 steps, complex D)
+
+| model | loss | wind | snare | room (700-4k / 4-11k) | ticks |
+|---|---|---|---|---|---|
+| M1 + timbre 32 + adv (favourite) | 5.93 | -19.0 | +14.2 / +12.3 | +8.0 / +8.5 | 5 |
+| M1 + timbre 32 + per-note attack + adv | 5.87 | -19.9 | +5.5 / +5.3 | +4.6 / +5.5 | 4 |
+| M1 + timbre 32 + per-note attack + strings + adv | 5.80 | -18.9 | +6.8 / +7.3 | +5.8 / +6.8 | 6 |
+| M2 + timbre 32 + adv | 5.87 | -21.1 | -2.2 / -4.3 | -2.1 / +1.8 | 42 |
+| M2 + timbre 32 + strings + adv | 5.72 | -20.0 | -4.0 / -4.4 | -1.8 / +2.1 | 23 |
+| M2 + timbre 32 + strings + adv + rise penalty | **5.73** | -20.4 | | -2.1 / +2.1 | **8** |
+
+Strongest candidate by the numbers: M2 + timbre 32 + strings + adv with the rise penalty (lowest adversarial loss tied,
+no snare, noise at the room's level up to 4 kHz, few ticks). M1 + per-note attack + strings: strings lower M1's loss
+(5.77 -> 5.69 before adv) but leave its noise as it was. For the ear to decide.
+
+Stage 4 (running, ~13:30): strings with seed 1; M1 + per-note attack + room background + strings; strings + biLSTM.
