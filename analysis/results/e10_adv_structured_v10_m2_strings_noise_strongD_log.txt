@@ -7,3 +7,6 @@ before: {"test_loss": 5.668430793986601, "n_windows": 85, "share_burst_db": -96.
   step   400  D 1.922  spec 5.596  adv 1.079  fm 0.447 (690 s)
   step   500  D 1.870  spec 5.667  adv 1.501  fm 0.484 (904 s)
   step   600  D 1.852  spec 5.844  adv 1.137  fm 0.481 (1111 s)
+  step   700  D 1.854  spec 5.673  adv 1.465  fm 0.515 (1292 s)
+  step   800  D 1.841  spec 5.613  adv 1.495  fm 0.489 (1507 s)
+  step   900  D 1.833  spec 5.620  adv 1.366  fm 0.485 (1722 s)

@@ -10,3 +10,4 @@
 05:43:17 end _v10_m2_floor exit 0
 05:44:47 end _v10_m2_bilstm exit 0
 05:48:17 end _v10_m2_slow exit 0
+09:16:50 all done

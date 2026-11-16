@@ -179,3 +179,16 @@ done structured_v10_m1_burst_floor
 done structured_v10_m1_burst_floor:nonoise
 done structured_v10_m1_burst_floor {"023_Ypswc": {"strings": -0.0, "burst": -34.6, "body": -22.1, "floor": -42.2, "noise": -36.5}, "176_mM1wc": {"strings": 0.0, "burst": -35.7, "body": -18.2, "floor": -59.7, "noise": -31.8}, "276_jw1wc": {"strings": -0.1, "burst": -40.5, "body": -20.5, "floor": -46.2, "noise": -39.4}, "277_Pw1wc": {"strings": -0.0, "burst": -36.1, "body": -21.0, "floor": -50.2, "noise": -41.1}, "306_7c1wc": {"strings": -0.1, "burst": -32.0, "body": -16.2, "floor": -69.7, "noise": -37.1}}
 09:13:59 done structured_v10_m1_burst_floor
+09:16:59 evaluate structured_v10_m2_strings_xvoice
+structured_v10_m2_strings_xvoice {"mean": 5.644, "median": 5.567, "n": 85, "wind": -22.2}
+structured_v10_m2_strings_xvoice {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 124.3, "1-4k": 128.6, "4-12k": 131.7}, "strings": {"0-1k": 7.4, "1-4k": 10.5, "4-12k": 23.3}, "body": {"0-1k": 22.7, "1-4k": 19.5, "4-12k": 25.3}, "click": {"0-1k": 141.8, "1-4k": 146.7, "4-12k": 149.8}, "floor": {"0-1k": -2.5, "1-4k": 0.7, "4-12k": -1.1}, "noise": {"0-1k": -6.5, "1-4k": -1.9, "4-12k": -3.1}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -104.9, "1-4k": -85.6, "4-12k": -63.7}, "strings": {"0-1k": -0.9, "1-4k": -0.8, "4-12k": -2.6}, "body": {"0-1k": -15.2, "1-4k": -17.6, "4-12k": -12.8}, "click": {"0-1k": -74.9, "1-4k": -49.5, "4-12k": -22.0}, "floor": {"0-1k": -60.7, "1-4k": -41.3, "4-12k": -31.4}, "noise": {"0-1k": -42.9, "1-4k": -35.0, "4-12k": -28.2}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.02, "4-12k": 0.02}}
+structured_v10_m2_strings_xvoice {"0-700": {"median_db": -9.0, "share_above_6db": 0.17}, "700-4k": {"median_db": -1.1, "share_above_6db": 0.27}, "4k-11k": {"median_db": 1.2, "share_above_6db": 0.31}}
+structured_v10_m2_strings_xvoice base 4
+structured_v10_m2_strings_xvoice no_detune 5
+structured_v10_m2_strings_xvoice no_delta 3
+structured_v10_m2_strings_xvoice no_dev 5
+done structured_v10_m2_strings_xvoice
+done structured_v10_m2_strings_xvoice:nonoise
+done structured_v10_m2_strings_xvoice {"023_Ypswc": {"strings": -0.0, "burst": -108.6, "click": -66.1, "body": -22.1, "floor": -45.4, "noise": -34.4}, "176_mM1wc": {"strings": 0.0, "burst": -99.3, "click": -57.2, "body": -18.2, "floor": -52.5, "noise": -30.2}, "276_jw1wc": {"strings": -0.0, "burst": -99.5, "click": -63.3, "body": -21.2, "floor": -47.3, "noise": -34.7}, "277_Pw1wc": {"strings": -0.0, "burst": -104.6, "click": -64.6, "body": -26.9, "floor": -55.7, "noise": -33.9}, "306_7c1wc": {"strings": -0.1, "burst": -100.6, "click": -54.6, "body": -17.5, "floor": -67.4, "noise": -31.5}}
+09:24:48 done structured_v10_m2_strings_xvoice
+09:24:48 auto_eval finished

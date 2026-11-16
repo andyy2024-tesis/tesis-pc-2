@@ -222,5 +222,19 @@
    "median_db": 5.5,
    "share_above_6db": 0.48
   }
+ },
+ "structured_v10_m2_strings_xvoice": {
+  "0-700": {
+   "median_db": -9.0,
+   "share_above_6db": 0.17
+  },
+  "700-4k": {
+   "median_db": -1.1,
+   "share_above_6db": 0.27
+  },
+  "4k-11k": {
+   "median_db": 1.2,
+   "share_above_6db": 0.31
+  }
  }
 }

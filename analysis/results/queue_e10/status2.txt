@@ -13,3 +13,6 @@
 08:55:43 start adv structured_v10_m2_strings_noise_strongD
 09:01:36 end _v10_m1_burst_floor exit 0
 09:01:43 start _v10_m2_strings_attn
+09:16:27 end _v10_m2_strings_xvoice exit 0
+09:16:43 start _v10_m1_burst_strings
+09:16:50 stage2 done
