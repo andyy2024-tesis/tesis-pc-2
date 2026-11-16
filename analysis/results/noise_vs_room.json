@@ -194,5 +194,33 @@
    "median_db": 3.4,
    "share_above_6db": 0.37
   }
+ },
+ "e6/structured_v9_t32_no_gate_noise_strongD_contact_rise": {
+  "0-700": {
+   "median_db": -6.0,
+   "share_above_6db": 0.19
+  },
+  "700-4k": {
+   "median_db": -1.5,
+   "share_above_6db": 0.24
+  },
+  "4k-11k": {
+   "median_db": 1.7,
+   "share_above_6db": 0.32
+  }
+ },
+ "structured_v10_m1_burst_floor": {
+  "0-700": {
+   "median_db": -13.3,
+   "share_above_6db": 0.03
+  },
+  "700-4k": {
+   "median_db": -0.0,
+   "share_above_6db": 0.28
+  },
+  "4k-11k": {
+   "median_db": 5.5,
+   "share_above_6db": 0.48
+  }
  }
 }

@@ -1,0 +1,9 @@
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+before: {"test_loss": 5.668430793986601, "n_windows": 85, "share_burst_db": -96.92433462507833, "share_strings_db": -0.10710394116219998, "share_body_db": -19.127671153508604, "share_click_db": -59.35670930044505, "share_floor_db": -39.850833289468824, "share_noise_db": -19.197063259034927, "quiet_noise_db": -22.899168014526367}
+  step   100  D 1.980  spec 0.000  adv 0.000  fm 0.000 (137 s)
+  step   200  D 1.949  spec 0.000  adv 0.000  fm 0.000 (277 s)
+  step   300  D 1.935  spec 5.552  adv 1.270  fm 0.457 (487 s)
+  step   400  D 1.922  spec 5.596  adv 1.079  fm 0.447 (690 s)
+  step   500  D 1.870  spec 5.667  adv 1.501  fm 0.484 (904 s)
+  step   600  D 1.852  spec 5.844  adv 1.137  fm 0.481 (1111 s)

@@ -7,3 +7,5 @@ structured_v10_m2_slow
 e6/structured_v10_m1_burst_noise_strongD
 structured_v10_m2_attn
 structured_v10_m2_strings
+e6/structured_v9_t32_no_gate_noise_strongD_contact_rise
+structured_v10_m1_burst_floor

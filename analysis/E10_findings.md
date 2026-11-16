@@ -131,3 +131,17 @@ Readings:
 - Windowed causal attention (the user's idea 2) beats the GRU by 0.06 and, unlike the biLSTM, would work in real time.
 - The favourite + per-note attack: same recipe, 0.06 better, snare down ~8 dB, noise ~3 dB closer to the room.
 - Stage 3 (queued): M2 + strings + adv, M2 + strings + attention, M1 + per-note attack + strings (+ adv).
+
+### The tick fix and M1 + per-note attack + room background
+
+| model | loss | wind | snare | share | room | ticks |
+|---|---|---|---|---|---|---|
+| M2 + timbre 32 + adv | 5.87 | -21.1 | | | -2.1 / +1.8 (32 %) | 42 |
+| same recipe + contact noise + rise penalty (20) | 5.87 | -19.9 | | | -1.5 / +1.7 (32 %) | **6** |
+| M1 + timbre 32 + per-note attack | 5.77 | -21.7 | +6.2 / +5.4 | 16-19 % | +7.2 / +7.4 (57 %) | 4 |
+| + room background | 5.81 | **-25.7** | **-1.9 / +2.0** | 2-7 % | 0.0 / +5.5 (48 %) | 4 |
+
+- Ticks: 42 -> 6 at the same loss. The contact noise stayed almost silent (-58 dB vs the original in the attack, 4-12 kHz):
+  the rise penalty did the work, and the adversarial training did not move those events into another part.
+- M1 + per-note attack + room background: the snare is gone (the noise rises at most 2 dB after plucks), the wind drops
+  4 dB and up to 4 kHz the noise sits at the room's level; above 4 kHz it is still ~5 dB over. Costs 0.04 of loss.

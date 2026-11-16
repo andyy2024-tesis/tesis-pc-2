@@ -9,3 +9,7 @@
 07:23:28 start _v10_m1_burst_floor
 07:28:46 end _v10_m2_strings exit 0
 07:28:46 start _v10_m2_strings_xvoice
+08:55:20 end adv structured_v9_t32_no_gate_noise_strongD_contact_rise exit 0
+08:55:43 start adv structured_v10_m2_strings_noise_strongD
+09:01:36 end _v10_m1_burst_floor exit 0
+09:01:43 start _v10_m2_strings_attn
