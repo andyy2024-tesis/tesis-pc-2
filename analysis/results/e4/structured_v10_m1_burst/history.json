@@ -9,5 +9,38 @@
   "share_body_db": -15.772522055222957,
   "share_floor_db": -49.772627353399045,
   "share_noise_db": -31.597768821141727
+ },
+ {
+  "step": 2000,
+  "train_loss": 5.879661679267883,
+  "test_loss": 5.980495183608111,
+  "n_windows": 85,
+  "share_burst_db": -34.64062134080402,
+  "share_strings_db": -0.11781854099419022,
+  "share_body_db": -17.523557593739888,
+  "share_floor_db": -48.43992711813826,
+  "share_noise_db": -20.595026032187004
+ },
+ {
+  "step": 3000,
+  "train_loss": 5.765776336193085,
+  "test_loss": 5.785087198369643,
+  "n_windows": 85,
+  "share_burst_db": -35.6207341330693,
+  "share_strings_db": -0.09450569339547311,
+  "share_body_db": -17.56184166063601,
+  "share_floor_db": -46.864004189775955,
+  "share_noise_db": -24.318433788745292
+ },
+ {
+  "step": 4000,
+  "train_loss": 5.46279901266098,
+  "test_loss": 5.773777608310475,
+  "n_windows": 85,
+  "share_burst_db": -36.18653893070592,
+  "share_strings_db": -0.10502411972902656,
+  "share_body_db": -17.114433182877963,
+  "share_floor_db": -46.5225633615034,
+  "share_noise_db": -23.771659325016174
  }
 ]

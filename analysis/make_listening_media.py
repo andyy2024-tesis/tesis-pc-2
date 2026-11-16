@@ -74,6 +74,9 @@ VERSIONS = {
     "structured_v9_base_t32-nonoise": "M1 + timbre 32, ruido apagado",
     "e6-structured_v9_base_t32_noise_strongD": "M1 + timbre 32 + adv",
     "e6-structured_v9_base_t32_noise_strongD-nonoise": "M1 + timbre 32 + adv, ruido apagado",
+    # experiment 10 (names on the page come from build_listening_catalog.py; these label the deck clips only)
+    **{k + s: k for k in ["structured_v10_m1_burst", "structured_v10_m2_burst", "structured_v10_m2_lstm"]
+       for s in ("", "-nonoise")},
 }
 DECK_CLIPS = {
     "023_Ypswc": ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir_nonoise"],

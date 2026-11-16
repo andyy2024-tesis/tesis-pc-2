@@ -126,6 +126,7 @@ table.cat tr.away th, table.cat tr.away td { color: var(--muted); font-weight: 4
     <p class="eyebrow">Tesis · DDSP para guitarra</p>
     <h1>Audios de todos los experimentos</h1>
     <p class="lede">Cada botón toca una sola versión de un fragmento de test de 9 s. Las versiones de una misma grabación tienen la misma ganancia, así que los niveles y el ruido se pueden comparar. La fila es la grabación (023, 176, 276, 277, 306); la columna, la versión.</p>
+    <p class="lede" id="pages"></p>
     <div class="opts">
       <span><kbd>←</kbd> <kbd>→</kbd> versión · <kbd>↑</kbd> <kbd>↓</kbd> grabación · <kbd>Espacio</kbd> pausa</span>
     </div>
@@ -153,7 +154,7 @@ table.cat tr.away th, table.cat tr.away td { color: var(--muted); font-weight: 4
 </div>
 
 <script>
-/*STEMS*/const STEMS = {"e6-structured_v9_t32_no_gate_noise_strongD":{"023_Ypswc":{"strings":-0.0,"burst":-123.3,"click":-63.2,"body":-23.6,"floor":-46.9,"noise":-34.2},"176_mM1wc":{"strings":-0.0,"burst":-112.7,"click":-54.7,"body":-16.2,"floor":-56.6,"noise":-27.3},"276_jw1wc":{"strings":-0.1,"burst":-116.5,"click":-60.5,"body":-18.2,"floor":-57.6,"noise":-34.9},"277_Pw1wc":{"strings":-0.0,"burst":-119.6,"click":-62.3,"body":-23.4,"floor":-55.6,"noise":-34.6},"306_7c1wc":{"strings":-0.1,"burst":-107.0,"click":-52.0,"body":-15.8,"floor":-72.3,"noise":-28.0}},"e6-structured_v5_body_audio_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-80.4,"body":-20.1,"floor":-51.5,"noise":-32.1},"176_mM1wc":{"strings":-0.1,"burst":-63.3,"body":-13.4,"floor":-60.8,"noise":-28.3},"276_jw1wc":{"strings":-0.1,"burst":-67.4,"body":-16.2,"floor":-67.6,"noise":-34.9},"277_Pw1wc":{"strings":-0.1,"burst":-56.9,"body":-14.5,"floor":-68.0,"noise":-34.2},"306_7c1wc":{"strings":-0.2,"burst":-56.8,"body":-13.9,"floor":-70.9,"noise":-28.3}},"structured_v9_base_t32":{"023_Ypswc":{"strings":-0.0,"burst":-82.6,"body":-22.6,"floor":-54.5,"noise":-33.1},"176_mM1wc":{"strings":-0.0,"burst":-73.3,"body":-18.1,"floor":-61.4,"noise":-28.5},"276_jw1wc":{"strings":-0.1,"burst":-75.0,"body":-19.7,"floor":-68.4,"noise":-33.4},"277_Pw1wc":{"strings":-0.0,"burst":-73.1,"body":-21.5,"floor":-68.5,"noise":-33.1},"306_7c1wc":{"strings":-0.1,"burst":-66.4,"body":-18.7,"floor":-71.4,"noise":-28.1}},"e6-structured_v9_base_t32_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-83.2,"body":-19.1,"floor":-53.9,"noise":-32.0},"176_mM1wc":{"strings":-0.1,"burst":-76.8,"body":-14.3,"floor":-61.0,"noise":-24.5},"276_jw1wc":{"strings":-0.1,"burst":-80.7,"body":-16.5,"floor":-67.7,"noise":-30.3},"277_Pw1wc":{"strings":-0.1,"burst":-72.5,"body":-16.1,"floor":-67.9,"noise":-30.8},"306_7c1wc":{"strings":-0.2,"burst":-67.3,"body":-13.8,"floor":-70.9,"noise":-25.1}},"structured_v9_t32_no_gate":{"023_Ypswc":{"strings":-0.0,"burst":-103.8,"click":-64.7,"body":-25.5,"floor":-47.5,"noise":-34.0},"176_mM1wc":{"strings":-0.0,"burst":-97.6,"click":-56.9,"body":-17.4,"floor":-56.8,"noise":-29.3},"276_jw1wc":{"strings":-0.1,"burst":-100.4,"click":-61.9,"body":-19.2,"floor":-57.7,"noise":-34.7},"277_Pw1wc":{"strings":-0.0,"burst":-103.9,"click":-63.7,"body":-24.9,"floor":-55.9,"noise":-33.9},"306_7c1wc":{"strings":-0.1,"burst":-93.0,"click":-53.1,"body":-16.8,"floor":-72.5,"noise":-30.1}}};/*END STEMS*/
+/*STEMS*/const STEMS = {"e6-structured_v9_t32_no_gate_noise_strongD":{"023_Ypswc":{"strings":-0.0,"burst":-123.3,"click":-63.2,"body":-23.6,"floor":-46.9,"noise":-34.2},"176_mM1wc":{"strings":-0.0,"burst":-112.7,"click":-54.7,"body":-16.2,"floor":-56.6,"noise":-27.3},"276_jw1wc":{"strings":-0.1,"burst":-116.5,"click":-60.5,"body":-18.2,"floor":-57.6,"noise":-34.9},"277_Pw1wc":{"strings":-0.0,"burst":-119.6,"click":-62.3,"body":-23.4,"floor":-55.6,"noise":-34.6},"306_7c1wc":{"strings":-0.1,"burst":-107.0,"click":-52.0,"body":-15.8,"floor":-72.3,"noise":-28.0}},"e6-structured_v5_body_audio_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-80.4,"body":-20.1,"floor":-51.5,"noise":-32.1},"176_mM1wc":{"strings":-0.1,"burst":-63.3,"body":-13.4,"floor":-60.8,"noise":-28.3},"276_jw1wc":{"strings":-0.1,"burst":-67.4,"body":-16.2,"floor":-67.6,"noise":-34.9},"277_Pw1wc":{"strings":-0.1,"burst":-56.9,"body":-14.5,"floor":-68.0,"noise":-34.2},"306_7c1wc":{"strings":-0.2,"burst":-56.8,"body":-13.9,"floor":-70.9,"noise":-28.3}},"structured_v9_base_t32":{"023_Ypswc":{"strings":-0.0,"burst":-82.6,"body":-22.6,"floor":-54.5,"noise":-33.1},"176_mM1wc":{"strings":-0.0,"burst":-73.3,"body":-18.1,"floor":-61.4,"noise":-28.5},"276_jw1wc":{"strings":-0.1,"burst":-75.0,"body":-19.7,"floor":-68.4,"noise":-33.4},"277_Pw1wc":{"strings":-0.0,"burst":-73.1,"body":-21.5,"floor":-68.5,"noise":-33.1},"306_7c1wc":{"strings":-0.1,"burst":-66.4,"body":-18.7,"floor":-71.4,"noise":-28.1}},"e6-structured_v9_base_t32_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-83.2,"body":-19.1,"floor":-53.9,"noise":-32.0},"176_mM1wc":{"strings":-0.1,"burst":-76.8,"body":-14.3,"floor":-61.0,"noise":-24.5},"276_jw1wc":{"strings":-0.1,"burst":-80.7,"body":-16.5,"floor":-67.7,"noise":-30.3},"277_Pw1wc":{"strings":-0.1,"burst":-72.5,"body":-16.1,"floor":-67.9,"noise":-30.8},"306_7c1wc":{"strings":-0.2,"burst":-67.3,"body":-13.8,"floor":-70.9,"noise":-25.1}},"structured_v9_t32_no_gate":{"023_Ypswc":{"strings":-0.0,"burst":-103.8,"click":-64.7,"body":-25.5,"floor":-47.5,"noise":-34.0},"176_mM1wc":{"strings":-0.0,"burst":-97.6,"click":-56.9,"body":-17.4,"floor":-56.8,"noise":-29.3},"276_jw1wc":{"strings":-0.1,"burst":-100.4,"click":-61.9,"body":-19.2,"floor":-57.7,"noise":-34.7},"277_Pw1wc":{"strings":-0.0,"burst":-103.9,"click":-63.7,"body":-24.9,"floor":-55.9,"noise":-33.9},"306_7c1wc":{"strings":-0.1,"burst":-93.0,"click":-53.1,"body":-16.8,"floor":-72.5,"noise":-30.1}},"structured_v10_m1_burst":{"023_Ypswc":{"strings":-0.0,"burst":-36.2,"body":-22.7,"floor":-54.6,"noise":-31.3},"176_mM1wc":{"strings":-0.0,"burst":-36.3,"body":-18.0,"floor":-61.0,"noise":-29.7},"276_jw1wc":{"strings":-0.1,"burst":-41.2,"body":-19.1,"floor":-68.2,"noise":-34.3},"277_Pw1wc":{"strings":-0.0,"burst":-35.9,"body":-20.8,"floor":-68.1,"noise":-35.5},"306_7c1wc":{"strings":-0.1,"burst":-31.8,"body":-17.1,"floor":-71.5,"noise":-31.9}},"structured_v10_m2_burst":{"023_Ypswc":{"strings":-0.0,"burst":-34.6,"click":-65.7,"body":-24.6,"floor":-47.6,"noise":-29.9},"176_mM1wc":{"strings":-0.0,"burst":-38.1,"click":-57.1,"body":-17.7,"floor":-55.5,"noise":-28.3},"276_jw1wc":{"strings":-0.0,"burst":-40.6,"click":-64.3,"body":-21.0,"floor":-60.1,"noise":-31.5},"277_Pw1wc":{"strings":-0.0,"burst":-40.4,"click":-64.5,"body":-24.9,"floor":-54.1,"noise":-29.4},"306_7c1wc":{"strings":-0.1,"burst":-30.4,"click":-53.7,"body":-16.9,"floor":-72.6,"noise":-26.3}},"structured_v10_m2_lstm":{"023_Ypswc":{"strings":-0.0,"burst":-103.4,"click":-64.4,"body":-22.6,"floor":-47.2,"noise":-33.3},"176_mM1wc":{"strings":-0.0,"burst":-95.6,"click":-57.1,"body":-19.0,"floor":-54.6,"noise":-26.8},"276_jw1wc":{"strings":-0.1,"burst":-97.6,"click":-61.1,"body":-19.9,"floor":-49.0,"noise":-29.7},"277_Pw1wc":{"strings":-0.0,"burst":-102.4,"click":-62.9,"body":-23.6,"floor":-53.3,"noise":-33.0},"306_7c1wc":{"strings":-0.1,"burst":-95.4,"click":-53.5,"body":-16.3,"floor":-70.9,"noise":-31.4}}};/*END STEMS*/
 const RECS = [["023_Ypswc", "023"], ["176_mM1wc", "176"], ["276_jw1wc", "276"], ["277_Pw1wc", "277"], ["306_7c1wc", "306"]];
 const ADV3K = "e6-structured_v5_body_audio_nonoise_strongD", ADV9K = "e6-structured_v5_body_audio_nonoise_strongD_9k";
 const ADVN = "e6-structured_v5_body_audio_noise_strongD";
@@ -500,12 +501,144 @@ const MODELS = {
 "loss": 5.865,
 "wind": -21.1,
 "live": true
+},
+"structured_v10_m2_burst": {
+"name": "M2 + timbre 32 + ataque por nota",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "La ráfaga de ataque deja de ser un solo espectro por grabación con un decaimiento global: cada nota tiene su propio nivel y su propio decaimiento en cada banda, según su altura, volumen, timbre y la grabación.",
+"loss": 5.773,
+"wind": -17.9
+},
+"structured_v10_m1_burst": {
+"name": "M1 + timbre 32 + ataque por nota",
+"parent": "structured_v9_base_t32",
+"rel": "rec",
+"change": "El mismo ataque por nota, sobre M1 + timbre 32, donde el ruido hace de «tambor».",
+"loss": 5.774,
+"wind": -21.7
+},
+"structured_v10_m2_slow": {
+"name": "M2 + timbre 32 + ruido lento",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "El ruido residual solo puede cambiar lento: sus bandas se suavizan en 200 ms, así que no puede seguir cada ataque ni hacer ráfagas.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m2_floor": {
+"name": "M2 + timbre 32 + fondo medido",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "El ruido residual es gratis hasta el fondo medido de cada grabación (lo más bajo que se oye entre los parciales mientras suena la pieza) y se penaliza por encima.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m2_burst_slow": {
+"name": "M2 + timbre 32 + ataque por nota + ruido lento",
+"parent": "structured_v10_m2_burst",
+"rel": "rec",
+"change": "Ataque por nota y ruido lento juntos.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m1_burst_floor": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido",
+"parent": "structured_v10_m1_burst",
+"rel": "rec",
+"change": "Ataque por nota y fondo medido, sobre M1.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m2_burst_slow_floor": {
+"name": "M2 + timbre 32 + ataque por nota + ruido lento + fondo medido",
+"parent": "structured_v10_m2_burst_slow",
+"rel": "rec",
+"change": "Las tres cosas juntas.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m2_burst_floor": {
+"name": "M2 + timbre 32 + ataque por nota + fondo medido",
+"parent": "structured_v10_m2_burst",
+"rel": "rec",
+"change": "Ataque por nota y fondo medido, sin ruido lento.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m2_lstm": {
+"name": "M2 + timbre 32 · LSTM",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "La red recurrente es una LSTM en vez de una GRU (como en Jonason), del mismo tamaño.",
+"loss": 5.799,
+"wind": -19.0
+},
+"structured_v10_m2_bilstm": {
+"name": "M2 + timbre 32 · LSTM bidireccional",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "Una LSTM que también lee hacia atrás: cada cuadro ve lo que viene. Mismo tamaño total; no sirve en tiempo real.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m2_attn": {
+"name": "M2 + timbre 32 · atención",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "En vez de la GRU, dos capas de self-attention: cada cuadro de cada voz mira los últimos 64 cuadros (640 ms) de esa misma voz.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m2_xvoice": {
+"name": "M2 + timbre 32 · atención entre voces",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "Después de la GRU, una capa de self-attention entre las 6 voces en cada cuadro: cada voz ve lo que hacen las otras.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m2_strings": {
+"name": "M2 + timbre 32 + cuerdas",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "Cada voz es una cuerda, según la tablatura alineada al MIDI (99 % de las notas). La red sabe qué cuerda y qué traste; la inarmonicidad es la medida en cada cuerda y sube con el traste (las entorchadas resultaron 3–4 veces menos rígidas que lo que decía la ley única).",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v10_m2_strings_xvoice": {
+"name": "M2 + timbre 32 + cuerdas · atención entre cuerdas",
+"parent": "structured_v10_m2_strings",
+"rel": "rec",
+"change": "Además, una capa de self-attention entre las 6 cuerdas en cada cuadro.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"e6-structured_v9_t32_no_gate_noise_strongD_contact_rise": {
+"name": "M2 + timbre 32 + adv · contacto",
+"parent": "structured_v9_t32_no_gate",
+"rel": "cont",
+"change": "Como M2 + timbre 32 + adv, con un ruido de contacto por voz (dedo o uña tocando la cuerda) y una penalización a las subidas rápidas de los armónicos agudos: así imitaba el adversarial ese contacto, con los «agudos cortos».",
+"loss": null,
+"wind": null,
+"pending": true
 }
 };
 /*MODELS-END*/
 const LIVE_SECTION = "timbre-sin-compuerta";
 const VARIANTS = { "-nonoise": "ruido apagado", "-noise": "solo el ruido +20 dB" };
-const SECTIONS = [
+const ALL_SECTIONS = [
   { id: "rondas", title: "D1 vs S1 vs S1 + cuerpo", tag: "Paso 4 · Rondas 1–2",
     note: "Modelos solo con la partitura: MIDI + loudness por nota leído de la mezcla.",
     v: ["original", "ddsp_v2", "structured_v2", "structured_v2_bodyir"],
@@ -580,7 +713,22 @@ const SECTIONS = [
         "structured_v9_t32_no_gate", "structured_v9_t32_no_gate-nonoise",
         "e6-structured_v9_t32_no_gate_noise_strongD", "e6-structured_v9_t32_no_gate_noise_strongD-nonoise"],
     heard: "Con el ruido apagado no hay ninguno de los artefactos de antes: los armónicos suenan limpios. Empiezo a pensar que el ruido casi no aporta al sonido y solo evita que otras partes aprendan lo que no deben durante el entrenamiento. Con el ruido encendido siempre está ese viento molesto: compensa algo que no hemos identificado. 023: todos superan a M1 + adv; el timbre ayudó mucho y, cuando suena más de una cuerda, se oye más color; sin un ganador claro. 176: más o menos igual. 276: mi favorito es M1 + timbre 32 + adv; los que tienen adv suenan un poco mejor. 277: los que tienen adv suenan un poco mejor; mis favoritos son M1 + timbre 32 + adv y M2 + timbre 32 + adv. 306: los que tienen adv tienen más color; mi favorito es M2 + timbre 32 + adv y M1 + timbre 32 + adv también suena muy bien. M2 + timbre 32 + adv a veces tiene armónicos raros: en 306 y 277 se oyen agudos cortos y aislados, también con el ruido apagado." },
+  { id: "ataque-por-nota", page: 2, title: "El ataque de cada nota y el ruido", tag: "Ataque y ruido · Noche 15–16 nov",
+    note: "Antes, la ráfaga de ataque tenía un solo espectro por grabación y un decaimiento global, y quedó apagada en todos los modelos. Ahora cada nota tiene su propio nivel y su propio decaimiento en cada banda, según su altura, volumen, timbre y la grabación. En M1 + timbre 32, el ataque por nota se queda con el ataque: el ruido pasa de poner el 99–100 % de la energía no armónica del ataque (sobre 1 kHz) al 16–19 %, y sube 6 dB después de cada pulsación en vez de 12 (el «tambor» baja a la mitad). Loss 5.77 vs 5.82. Pero entre notas, el ruido de M1 sigue unos 7 dB por encima del fondo medido de la sala. En M2 el cuerpo ya ponía el ataque y el ruido no tenía tambor: el ataque por nota queda por debajo del cuerpo, la loss empata (5.77 vs 5.79) y el ruido en los pasajes más silenciosos sube 3 dB. Clic en el nombre de un modelo para oír sus partes: «Ataque (ráfaga)» es la parte nueva.",
+    v: ["original", "structured_v9_base_t32", "structured_v10_m1_burst", "structured_v9_t32_no_gate", "structured_v10_m2_burst"],
+    panel: ["structured_v10_m1_burst-nonoise", "structured_v10_m2_burst-nonoise"] },
+  { id: "redes", page: 3, title: "La red: GRU, LSTM y atención", tag: "Redes · Noche 15–16 nov",
+    note: "Mismo M2 + timbre 32, mismas entradas y salidas; solo cambia la red que sigue cada voz en el tiempo. LSTM (como en Jonason), del mismo tamaño: loss 5.80 vs 5.79 de la GRU, un empate (entre semillas, las corridas varían 0.03). Tiene menos «agudos cortos» en los armónicos (4 vs 10 en los cinco fragmentos), y el ruido queda igual respecto al fondo de la sala.",
+    v: ["original", "structured_v9_t32_no_gate", "structured_v10_m2_lstm"],
+    panel: ["structured_v10_m2_lstm-nonoise"] },
 ];
+// One artifact version holds at most 511 files, so the sections are split over pages built from this same file
+// (analysis/make_listen_pages.py sets PAGE_NO); each page shows the sections with its number (default 1).
+const PAGE_NO = 1;
+const PAGES = { 1: { n: "Experimentos 1–18", url: "https://claude.ai/artifact/8AJSUqLvQbAw55TdxwdRcm" },
+  2: { n: "Ataque y ruido (noche 15–16 nov)", url: "https://claude.ai/artifact/CharViVv9YEoxmrz9mNHuv" },
+  3: { n: "Redes, cuerdas y contacto (noche 15–16 nov)", url: "https://claude.ai/artifact/XT2s6ociQR3JRjnnbYRhN3" } };
+const SECTIONS = ALL_SECTIONS.filter((S) => (S.page || 1) === PAGE_NO);
 const fmtLoss = (m) => m.pending ? "en entrenamiento" : m.loss.toFixed(2) + (m.findings ? " †" : "");
 const fmtWind = (m) => m.pending ? "—" : m.wind === null ? "sin ruido" : m.wind.toFixed(1).replace("-", "−") + " dB";
 const REL = { rec: "desde cero", cont: "continúa" };
@@ -612,7 +760,10 @@ function treeOf(parent) {
 
 function buildCatalog() {
   $("tree").innerHTML = treeOf(null);
-  $("live").innerHTML = ORDER.filter((k) => MODELS[k].fav || MODELS[k].live).map((k) => { const m = MODELS[k]; return `<li><a href="#${LIVE_SECTION}">${m.name}</a>${m.fav ? ' <span class="tagm">favorito</span>' : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}</span></li>`; }).join("");
+  const liveHref = PAGE_NO === 1 ? `#${LIVE_SECTION}` : PAGES[1].url;
+  $("live").innerHTML = ORDER.filter((k) => MODELS[k].fav || MODELS[k].live).map((k) => { const m = MODELS[k]; return `<li><a href="${liveHref}">${m.name}</a>${m.fav ? ' <span class="tagm">favorito</span>' : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}</span></li>`; }).join("");
+  const others = Object.entries(PAGES).filter(([n, p]) => +n !== PAGE_NO && p.url);
+  $("pages").innerHTML = others.length ? "Otras páginas: " + others.map(([, p]) => `<a href="${p.url}" target="_blank" rel="noopener">${p.n}</a>`).join(" · ") : "";
 }
 
 const ICON_PLAY = '<svg class="ico" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z" fill="currentColor"/></svg>';
@@ -631,7 +782,7 @@ const PART_NAMES = { strings: "Armónicos", sympathetic: "Simpática", burst: "A
   contact: "Contacto", body: "Cuerpo", squeak: "Roce", reverb: "Sala", floor: "Piso de ruido", noise: "Ruido residual" };
 const PART_ORDER = Object.keys(PART_NAMES);
 const OFF_DB = -80;
-const ALL_FILES = new Set(SECTIONS.flatMap((S) => S.v));
+const ALL_FILES = new Set(SECTIONS.flatMap((S) => S.v.concat(S.panel || []))); // panel: files shown only in the parts panel
 const fmtDb = (x) => (Math.round(x)).toString().replace("-", "−");
 
 function cellBtn(grid, r, c, file, name, ctx, extra = "") {
