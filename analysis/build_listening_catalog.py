@@ -83,6 +83,7 @@ C = [
     dict(n="M2 + timbre 32 + cuerdas · semilla 1", run="structured_v10_m2_strings_seed1", p="structured_v10_m2_strings", rel="rec", diff={}, change="Lo mismo que M2 + timbre 32 + cuerdas con otra semilla: ¿la mejora de las cuerdas se repite?"),
     dict(n="M1 + timbre 32 + ataque por nota + fondo medido + cuerdas", run="structured_v10_m1_burst_floor_strings", p="structured_v10_m1_burst_floor", rel="rec", diff=dict(strings=True), change="El M1 sin tambor y con menos viento, más las cuerdas."),
     dict(n="M2 + timbre 32 + cuerdas · LSTM bidireccional", run="structured_v10_m2_strings_bilstm", p="structured_v10_m2_strings", rel="rec", diff=dict(backbone="bilstm"), change="Cuerdas con la LSTM bidireccional en vez de la GRU (no sirve en tiempo real)."),
+    dict(n="M1 + timbre 32 + ataque por nota + fondo medido + cuerdas + adv", run="e6/structured_v10_m1_burst_floor_strings_noise_strongD", p="structured_v10_m1_burst_floor_strings", rel="cont", meta=dict(overrides={}, d_kind="complex", **ADV), change="La receta del favorito sobre el M1 sin tambor, con menos viento y con cuerdas."),
 ]
 
 

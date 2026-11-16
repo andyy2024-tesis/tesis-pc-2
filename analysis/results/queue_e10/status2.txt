@@ -27,3 +27,5 @@
 11:53:46 start _v10_m2_strings_seed1
 11:54:06 start _v10_m1_burst_floor_strings
 11:54:26 start _v10_m2_strings_bilstm
+13:23:18 end _v10_m1_burst_floor_strings exit 0
+13:23:40 start adv structured_v10_m1_burst_floor_strings_noise_strongD
