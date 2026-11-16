@@ -52,7 +52,9 @@ def load_run(run, ids, overrides=None):
     cfg = NetConfig(sr=SR, structured=c["variant"] == "structured", **{**c["overrides"], **(overrides or {})})
     recs, splits = e.load_recordings(ids + c.get("extra_ids", []), cfg, n_eval=len(ids))  # extras: training only
     m = GuitarNet(cfg, len(recs)).cuda()
-    m.load_state_dict(upgrade_state_dict(torch.load(OUT / run / "model.pt")))
+    # parts added by the overrides (e.g. contact for a fine-tune) start from their initial values
+    missing, unexpected = m.load_state_dict(upgrade_state_dict(torch.load(OUT / run / "model.pt")), strict=False)
+    assert not unexpected and all(k.startswith(("contact_out", "rec_contact")) for k in missing), (missing, unexpected)
     m.eval()
     return m, (recs, splits)
 

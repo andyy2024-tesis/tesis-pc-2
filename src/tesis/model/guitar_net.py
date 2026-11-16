@@ -44,6 +44,9 @@ from tesis.synth.dsp import filter_noise, filtered_noise, frames_to_samples, log
 
 N_FEAT = 7
 OPEN_STRINGS = np.array([40, 45, 50, 55, 59, 64])  # E2 A2 D3 G3 B3 E4
+# log B of each open string (string 1 = high E ... 6 = low E), measured on 797 clean notes of the 20 recordings with the
+# fret law fixed (analysis/inharmonicity_strings.py): the wound basses (4-6) are 3-4x less stiff than one pitch law says
+STRING_LOG_B = {1: -10.15, 2: -9.85, 3: -9.65, 4: -11.08, 5: -11.39, 6: -10.79}
 
 
 @dataclass
@@ -93,10 +96,29 @@ class NetConfig:
     note_timbre: bool = False  # structured: per-note attack timbre read from the audio, input of the note MLP
     timbre_k: int = 16
     timbre_late: bool = False
+    # experiment 10 (attack vs noise, network backbones)
+    rich_burst: bool = False  # structured: per-note attack noise with its own level and decay in every band (replaces burst)
+    rich_burst_len: float = 0.15  # s after the onset
+    rich_burst_lead: float = 0.01  # s before the onset (fades in)
+    slow_noise: float = 0.0  # s; > 0: the catch-all noise's band levels are smoothed over this long (no gusts, no hits)
+    room_floor: bool = False  # noise penalty only above each recording's measured background (Recording.room_floor)
+    room_floor_weight: float = 0.1  # per nat of noise above the background, averaged over bands and frames
+    backbone: str = "gru"  # gru | lstm | bilstm (sees the future: offline only) | attn (windowed causal self-attention)
+    attn_frames: int = 64  # attn: how many past frames each frame can see (10 ms each)
+    attn_layers: int = 2
+    cross_voice: bool = False  # self-attention across the voices at every frame, after the backbone
+    delta_rise: float = 0.0  # weight of a penalty on fast rises of the GRU correction in partials >= 16 (except 40 ms
+    #   after an onset): a plucked string's high partials don't jump up mid-note (the adversarial M2 made ticks that way)
+    contact: bool = False  # per-voice short noise from the GRU: finger or nail touching the string (damping it,
+    #   preparing the next pluck); per-recording spectrum
+    contact_bands: int = 16
+    strings: bool = False  # voices are the six strings from the tablature (data/processed/.../strings, see
+    #   analysis/tab_strings.py); the GRU and the note MLP know the string and fret; inharmonicity per string with
+    #   the fret law B = B_open(string) * 2^(fret/6) (analysis/inharmonicity_strings.py)
 
     @property
     def n_feat(self):
-        return N_FEAT + 2 * int(self.audio_feats)
+        return N_FEAT + 2 * int(self.audio_feats) + 7 * int(self.strings)
 
     @property
     def n_bands(self):
@@ -105,6 +127,97 @@ class NetConfig:
 
 def inv_softplus(x):
     return x + torch.log(-torch.expm1(-x))
+
+
+class WindowedAttention(nn.Module):
+    """Pre-norm transformer layers over time, per voice: frame i attends to frames i - n + 1 .. i (causal window),
+    with ALiBi distance penalties (each head prefers a different reach)."""
+
+    def __init__(self, d, n_frames, n_layers, heads=4):
+        super().__init__()
+        self.n, self.heads = n_frames, heads
+        self.layers = nn.ModuleList([nn.ModuleDict(dict(
+            ln1=nn.LayerNorm(d), att=nn.MultiheadAttention(d, heads, batch_first=True),
+            ln2=nn.LayerNorm(d), ff=nn.Sequential(nn.Linear(d, 2 * d), nn.GELU(), nn.Linear(2 * d, d))))
+            for _ in range(n_layers)])
+        self.register_buffer("slopes", torch.tensor([2.0 ** (-8 * (h + 1) / heads) for h in range(heads)]) * 8 / n_frames)
+
+    def mask(self, F, dev):
+        i = torch.arange(F, device=dev)
+        dist = (i[:, None] - i[None]).float()  # query - key
+        ok = (dist >= 0) & (dist < self.n)
+        bias = -self.slopes[:, None, None] * dist[None]
+        return torch.where(ok[None], bias, torch.full_like(bias, float("-inf")))  # (heads, F, F)
+
+    def forward(self, x):  # (V, F, d)
+        V, F, _ = x.shape
+        m = self.mask(F, x.device).repeat(V, 1, 1)  # (V * heads, F, F)
+        for l in self.layers:
+            y = l["ln1"](x)
+            x = x + l["att"](y, y, y, attn_mask=m, need_weights=False)[0]
+            x = x + l["ff"](l["ln2"](x))
+        return x
+
+
+class CrossVoice(nn.Module):
+    """One pre-norm transformer layer across the voices at every frame (each voice sees what the others do)."""
+
+    def __init__(self, d, heads=4):
+        super().__init__()
+        self.ln1, self.ln2 = nn.LayerNorm(d), nn.LayerNorm(d)
+        self.att = nn.MultiheadAttention(d, heads, batch_first=True)
+        self.ff = nn.Sequential(nn.Linear(d, 2 * d), nn.GELU(), nn.Linear(2 * d, d))
+
+    def forward(self, h):  # (V, F, d)
+        x = h.transpose(0, 1)  # (F, V, d): batch = frames, sequence = voices
+        y = self.ln1(x)
+        x = x + self.att(y, y, y, need_weights=False)[0]
+        x = x + self.ff(self.ln2(x))
+        return x.transpose(0, 1)
+
+
+def room_floor_bands(y, sr, onset, end, freqs, n_bands, n_fft_noise, hop_noise, q=10):
+    """Each recording's steady background (room tone, mic hiss) in the catch-all noise's units.
+
+    STFT of the whole recording (2048 samples, hop 512); bins within 3 % (at least 25 Hz) of a partial of any note that
+    is sounding are masked out, and each bin's background is the q-th percentile of its remaining frames (minimum
+    statistics). Then mapped to the noise's log bands and calibrated: band magnitudes that make filtered_noise produce
+    exactly this background. Returns (n_bands,) magnitudes.
+    """
+    n_fft, hop = 2048, 512
+    x = torch.as_tensor(y).float()
+    P = (torch.stft(x, n_fft, hop, window=torch.hann_window(n_fft), return_complex=True).abs() ** 2).numpy()  # (bins, T)
+    fb = np.fft.rfftfreq(n_fft, 1 / sr)
+    tf = np.arange(P.shape[1]) * hop
+    # only while the piece plays (YouTube recordings have talk or applause around it), never digital silence
+    tot = P.sum(0)
+    keep = (tf >= onset.min() - 0.5 * sr) & (tf <= onset.max() + 2.0 * sr) & (tot > 1e-6 * np.median(tot))
+    P = P[:, keep]
+    tf = tf[keep]
+    mask = np.zeros(P.shape, bool)
+    for n in range(len(onset)):
+        a, b = np.searchsorted(tf, onset[n] - hop), np.searchsorted(tf, end[n] + 0.3 * sr)
+        if b <= a:
+            continue
+        f = freqs[n][freqs[n] < sr / 2]
+        near = (np.abs(fb[:, None] - f[None]) < np.maximum(0.03 * f[None], 25.0)).any(1)
+        mask[near, a:b] = True
+    bg = np.empty(len(fb))
+    for k in range(len(fb)):
+        v = P[k, ~mask[k]]
+        bg[k] = np.percentile(v if len(v) > 50 else P[k], q)
+    # the noise's own response: constant unit band magnitudes, measured with the same STFT
+    W = log_band_matrix(n_bands, n_fft_noise // 2 + 1, sr)
+    g = torch.Generator().manual_seed(0)
+    Fr = 4 * sr // hop_noise
+    ph = torch.rand((1, n_fft_noise // 2 + 1, Fr + 1), generator=g) * 2 * math.pi
+    ref = filtered_noise(torch.ones(1, Fr + 1, n_bands), 4 * sr, n_fft_noise, hop_noise, ph, W)[0]
+    Pr = (torch.stft(ref, n_fft, hop, window=torch.hann_window(n_fft), return_complex=True).abs() ** 2).mean(1).numpy()
+    ratio = np.sqrt(bg / np.maximum(Pr, 1e-20))  # per bin: magnitude needed
+    Wb = log_band_matrix(n_bands, len(fb), sr).numpy()  # (bands, bins) interpolation weights
+    lr = np.log(np.maximum(ratio, 1e-12))
+    band = (Wb * lr[None]).sum(1) / np.maximum(Wb.sum(1), 1e-9)  # weighted mean of log magnitudes
+    return np.exp(band).astype(np.float32)
 
 
 class Recording:
@@ -127,6 +240,11 @@ class Recording:
         f0 = 440 * 2 ** ((self.pitch - 69 + tuning_cents / 100) / 12)
         k = np.arange(1, cfg.k + 1)
         B = np.exp(log_b[0] + log_b[1] * self.pitch) if cfg.structured else np.zeros(len(f0))
+        if cfg.strings:  # voice = string - 1 (set by the loader); per-string inharmonicity with the fret law
+            self.string = notes.string.values.astype(np.int64)  # 1-6
+            self.fret = notes.fret.values.astype(np.float64)
+            B = np.exp(np.array([STRING_LOG_B[s] for s in self.string]) + np.log(2) / 6 * self.fret)
+            self.string_feat = np.concatenate([np.eye(6)[self.string - 1], (self.fret / 12)[:, None]], 1).astype(np.float32)
         self.freqs = f0[:, None] * k * np.sqrt(1 + B[:, None] * k ** 2)
         if cfg.sympathetic:
             self.open_pitch = OPEN_STRINGS
@@ -149,6 +267,7 @@ class Recording:
             self.wound_interval[w[1:]] = np.abs(np.diff(self.pitch[w]))
             self.wound_gap[w[1:]] = np.minimum(np.diff(on[w]) / sr, 5.0)
         self.track_loud = self.track_dev = None  # (V, frames at hop), set by set_tracks
+        self.room_floor = None  # (n_bands,) measured background in noise units (room_floor_bands), if cfg.room_floor
 
     def set_tracks(self, loud_db, dev_cents):
         """Per-voice frame tracks from the audio (see tesis.data.note_tracks), frames centered at i * hop."""
@@ -184,6 +303,8 @@ class Recording:
                           self.conf[n]], -1)
             if cfg.audio_feats:
                 f = np.concatenate([f, tl[v][:, None], td[v][:, None] / 50.0], -1)
+            if cfg.strings:  # which string this voice is, and the current note's fret
+                f = np.concatenate([f, self.string_feat[n]], -1)
             feats[v] = f * act[:, None]
         return feats
 
@@ -196,7 +317,26 @@ class GuitarNet(nn.Module):
         self.rec_emb = nn.Embedding(n_recordings, R)
         nn.init.normal_(self.rec_emb.weight, std=0.1)
         self.inp = nn.Sequential(nn.Linear(2 * cfg.n_feat + R, Hd), nn.LeakyReLU(), nn.Linear(Hd, Hd), nn.LeakyReLU())
-        self.gru = nn.GRU(Hd, Hd, batch_first=True)
+        if cfg.backbone == "gru":
+            self.gru = nn.GRU(Hd, Hd, batch_first=True)
+        elif cfg.backbone == "lstm":
+            self.rnn = nn.LSTM(Hd, Hd, batch_first=True)
+        elif cfg.backbone == "bilstm":  # same output size: half the units each way
+            self.rnn = nn.LSTM(Hd, Hd // 2, batch_first=True, bidirectional=True)
+        elif cfg.backbone == "attn":
+            self.attn = WindowedAttention(Hd, cfg.attn_frames, cfg.attn_layers)
+        else:
+            raise ValueError(cfg.backbone)
+        if cfg.cross_voice:
+            self.xvoice = CrossVoice(Hd)
+        if cfg.contact:
+            self.contact_out = nn.Linear(Hd, 1)
+            nn.init.zeros_(self.contact_out.weight)
+            nn.init.constant_(self.contact_out.bias, -8.0)
+            self.rec_contact = nn.Embedding(n_recordings, cfg.contact_bands)
+            with torch.no_grad():  # start in 2-10 kHz
+                c = torch.tensor(np.geomspace(40.0, cfg.sr / 2, cfg.contact_bands)).float()
+                self.rec_contact.weight[:] = torch.where((c > 2000) & (c < 10000), 0.0, -4.0)
         self.register_buffer("logk", torch.log(torch.arange(1, K + 1).float()))
         out_dim = K if cfg.structured else K + 1
         self.voice_out = nn.Linear(Hd, out_dim)
@@ -205,7 +345,7 @@ class GuitarNet(nn.Module):
         self.noise_out = nn.Sequential(nn.Linear(Hd + R, Hd), nn.LeakyReLU(), nn.Linear(Hd, cfg.n_bands))
         nn.init.constant_(self.noise_out[-1].bias, -8.0)
         if cfg.structured:
-            self.note_mlp = nn.Sequential(nn.Linear(3 + R + cfg.timbre_k * int(cfg.note_timbre) * (1 + int(cfg.timbre_late)), Hd), nn.LeakyReLU(), nn.Linear(Hd, Hd), nn.LeakyReLU(),
+            self.note_mlp = nn.Sequential(nn.Linear(3 + R + cfg.timbre_k * int(cfg.note_timbre) * (1 + int(cfg.timbre_late)) + 7 * int(cfg.strings), Hd), nn.LeakyReLU(), nn.Linear(Hd, Hd), nn.LeakyReLU(),
                                           nn.Linear(Hd, K + 1 + int(cfg.body_ir) + 2 * int(cfg.pluck_click)))
             nn.init.zeros_(self.note_mlp[-1].weight)
             nn.init.zeros_(self.note_mlp[-1].bias)
@@ -221,6 +361,15 @@ class GuitarNet(nn.Module):
             self.rec_burst = nn.Embedding(n_recordings, cfg.burst_bands)
             nn.init.constant_(self.rec_burst.weight, -3.0)
             self.burst_logtau = nn.Parameter(torch.tensor(math.log(0.003)))
+            if cfg.rich_burst:  # per note and band: log level and decay, from the same inputs as the note MLP
+                nb_ = cfg.burst_bands
+                self.burst_mlp = nn.Sequential(nn.Linear(self.note_mlp[0].in_features, 128), nn.LeakyReLU(),
+                                               nn.Linear(128, 128), nn.LeakyReLU(), nn.Linear(128, 2 * nb_))
+                nn.init.zeros_(self.burst_mlp[-1].weight)
+                with torch.no_grad():  # start: decay ~10 ms in every band
+                    self.burst_mlp[-1].bias[:nb_] = 0.0
+                    self.burst_mlp[-1].bias[nb_:] = -3.0
+                self._band_w = {}
             if cfg.body_ir:
                 n_ir = int(cfg.body_ir_len * cfg.sr)
                 g = torch.Generator().manual_seed(0)
@@ -304,6 +453,8 @@ class GuitarNet(nn.Module):
         full = [x, emb[None].expand(len(ii), -1)]
         if self.cfg.note_timbre:
             full.append(torch.as_tensor(rec.timbre[ii], device=dev))
+        if self.cfg.strings:
+            full.append(torch.as_tensor(rec.string_feat[ii], device=dev))
         return x, torch.cat(full, -1)
 
     def sigma(self, pitch, f):
@@ -374,6 +525,35 @@ class GuitarNet(nn.Module):
         wn = torch.randn(1, Ld, generator=gen, device=dev)
         return filter_noise(wn, torch.exp(self.rec_squeak.weight[self._rec])[None], sr)[0] * env
 
+    def rich_bursts(self, rec, s0, Ld, emb, gen):
+        """Per-note attack noise: in each of burst_bands log bands, the note's own level (note inputs + recording
+        color + loudness) and its own exponential decay; fades in over rich_burst_lead before the onset."""
+        cfg, sr, dev = self.cfg, self.cfg.sr, emb.device
+        nb_ = cfg.burst_bands
+        lead, n_b = int(cfg.rich_burst_lead * sr), int(cfg.rich_burst_len * sr)
+        nfft = 2 ** math.ceil(math.log2(Ld))
+        if nfft not in self._band_w:
+            self._band_w[nfft] = log_band_matrix(nb_, nfft // 2 + 1, sr, device=dev)
+        X = torch.fft.rfft(torch.randn(Ld, generator=gen, device=dev), nfft)
+        band_noise = torch.fft.irfft(X[None] * self._band_w[nfft], nfft)[:, :Ld]  # (bands, Ld): sum = white noise
+        ex = np.where((rec.onset + n_b > s0) & (rec.onset - lead < s0 + Ld))[0]
+        if len(ex) == 0:
+            return torch.zeros(Ld, device=dev)
+        x_in, mlp_in = self.note_input(rec, ex, emb)
+        o = self.burst_mlp(mlp_in)
+        lev = o[:, :nb_] + self.rec_burst.weight[self._rec] + 1.151 * x_in[:, 1:2]  # (Ne, bands) log amplitude
+        tau = 5e-4 + 0.2 * torch.sigmoid(o[:, nb_:])  # s
+        t = torch.arange(-lead, n_b, device=dev).float() / sr
+        rise = torch.sin(0.5 * math.pi * ((t + cfg.rich_burst_lead) / cfg.rich_burst_lead).clamp(0, 1)) ** 2
+        shape = torch.where(t < 0, rise, torch.exp(-t.clamp(min=0) / tau[..., None]))  # (Ne, bands, T)
+        vals = torch.exp(lev)[..., None] * shape
+        pos = torch.as_tensor(rec.onset[ex] - lead - s0, device=dev)[:, None] + torch.arange(lead + n_b, device=dev)
+        ok = (pos >= 0) & (pos < Ld)
+        vals = vals * ok[:, None].float()
+        env = torch.zeros(nb_, Ld, device=dev).index_add(1, pos.clamp(0, Ld - 1).flatten(),
+                                                         vals.permute(1, 0, 2).reshape(nb_, -1))
+        return (band_noise * env).sum(0)
+
     def pluck_gate(self, rec, w0, n, dev):
         """(n,) gain in [0, 1] at the noise frames w0 + i * noise_hop: 1 near an onset, 0 far from all of them."""
         cfg, sr = self.cfg, self.cfg.sr
@@ -407,11 +587,20 @@ class GuitarNet(nn.Module):
         gen.manual_seed(noise_seed if noise_seed is not None else int(torch.randint(0, 2 ** 31, (1,))))
         emb = self.rec_emb.weight[rec.idx]
         self._rec = rec.idx
+        self._delta_rise = torch.zeros((), device=dev)
 
         feats = torch.tensor(rec.frame_features(w0, cfg), device=dev)  # (V, F, N_FEAT), frames from w0 - burn
         V, F, _ = feats.shape
         x = torch.cat([feats, feats.mean(0, keepdim=True).expand(V, -1, -1), emb[None, None].expand(V, F, -1)], -1)
-        h_all, _ = self.gru(self.inp(x))  # (V, F, Hd)
+        z = self.inp(x)
+        if cfg.backbone == "gru":
+            h_all, _ = self.gru(z)  # (V, F, Hd)
+        elif cfg.backbone in ("lstm", "bilstm"):
+            h_all, _ = self.rnn(z)
+        else:
+            h_all = self.attn(z)
+        if cfg.cross_voice:
+            h_all = self.xvoice(h_all)
         h = h_all[:, Bn // H:]  # window frames (noise head)
         vout = self.voice_out(h_all[:, (Bn - R) // H:])  # frames covering the dry span [s0, w0 + L]
 
@@ -459,12 +648,19 @@ class GuitarNet(nn.Module):
                 else:
                     decay = -sig[..., None] * ts[:, None, :]
                 log_a = static[..., None] + decay + delta[voice]
-                pluck = nout[:, K] + 1.151 * note_in[:, 1]
-                env = (torch.exp(pluck[:, None] - ts / torch.exp(self.burst_logtau)) * (t_rel >= 0)).sum(0)
-                wn = torch.randn(1, Ld, generator=gen, device=dev)
-                parts["burst"] = filter_noise(wn, torch.exp(self.rec_burst.weight[self._rec])[None], sr)[0] * env
+                if cfg.rich_burst:
+                    parts["burst"] = self.rich_bursts(rec, s0, Ld, emb, gen)
+                else:
+                    pluck = nout[:, K] + 1.151 * note_in[:, 1]
+                    env = (torch.exp(pluck[:, None] - ts / torch.exp(self.burst_logtau)) * (t_rel >= 0)).sum(0)
+                    wn = torch.randn(1, Ld, generator=gen, device=dev)
+                    parts["burst"] = filter_noise(wn, torch.exp(self.rec_burst.weight[self._rec])[None], sr)[0] * env
                 self._delta_reg = (vout ** 2).mean()
                 self._delta_tv = ((vout[:, 1:] - vout[:, :-1]) ** 2).mean()
+                if cfg.delta_rise > 0:  # frames more than 40 ms after the voice's onset (inactive frames have 0)
+                    late = (feats[:, (Bn - R) // H + 1:, 2] > math.log1p(0.04 / 0.05)).float()[..., None]
+                    rise = Fn.relu(vout[:, 1:, 16:] - vout[:, :-1, 16:]) ** 2
+                    self._delta_rise = (rise * late).sum() / (late.sum() * rise.shape[-1] + 1.0)
             else:
                 amp = vout[..., :1] + math.log(0.1)
                 dist = Fn.log_softmax(vout[..., 1:] - self.logk, -1)
@@ -522,6 +718,12 @@ class GuitarNet(nn.Module):
         if cfg.structured and cfg.squeak:
             parts["squeak"] = self.squeaks(rec, s0, Ld, emb, gen)
 
+        if cfg.contact:  # per-voice level every frame, one noise colored per recording
+            lv = self.contact_out(h_all[:, (Bn - R) // H:])[..., 0]  # (V, frames)
+            env = torch.exp(frames_to_samples(lv, Ld)).sum(0)
+            wn = torch.randn(1, Ld, generator=gen, device=dev)
+            parts["contact"] = filter_noise(wn, torch.exp(self.rec_contact.weight[self._rec])[None], sr)[0] * env
+
         if cfg.reverb:
             dry = sum(parts.values())  # (Ld,) instrument signal from s0
             nfft = 2 ** math.ceil(math.log2(Ld + R))
@@ -534,19 +736,33 @@ class GuitarNet(nn.Module):
         if not cfg.noise:
             self._noise_mag = torch.zeros((), device=dev)
             return sum(parts.values()), parts
-        nb = self.noise_out(torch.cat([h.mean(0), emb[None].expand(h.shape[1], -1)], -1))  # (Fw, n_bands)
+        if cfg.slow_noise > 0:  # smooth the band levels over slow_noise seconds (from the whole context, then crop)
+            nb = self.noise_out(torch.cat([h_all.mean(0), emb[None].expand(h_all.shape[1], -1)], -1))  # (F, n_bands)
+            k = max(2, int(round(cfg.slow_noise * sr / H)))
+            w = torch.hann_window(k + 2, periodic=False, device=dev)[1:-1]
+            nbT = Fn.pad(nb.T[:, None], (k // 2, k - 1 - k // 2), mode="replicate")  # (n_bands, 1, F + k - 1)
+            nb = Fn.conv1d(nbT, (w / w.sum())[None, None])[:, 0].T[Bn // H:]  # (Fw, n_bands)
+        else:
+            nb = self.noise_out(torch.cat([h.mean(0), emb[None].expand(h.shape[1], -1)], -1))  # (Fw, n_bands)
         Fn_ = L // cfg.noise_hop + 1
         nb = frames_to_samples(nb.T, Fn_).T  # (Fn_, n_bands)
         if cfg.noise_gate:
             nb = nb + torch.log(self.pluck_gate(rec, w0, Fn_, dev) + 1e-4)[:, None]
         self._noise_mag = torch.exp(nb).mean()
+        if cfg.room_floor:  # free up to the recording's measured background, penalized above it
+            self._noise_excess = Fn.relu(nb - torch.log(torch.as_tensor(rec.room_floor, device=dev))[None]).mean()
         ph = torch.rand((1, cfg.n_fft_noise // 2 + 1, Fn_), generator=gen, device=dev) * 2 * math.pi
         parts["noise"] = filtered_noise(torch.exp(nb)[None], L, cfg.n_fft_noise, cfg.noise_hop, ph,
                                         self.W if cfg.structured else None)[0]
         return sum(parts.values()), parts
 
     def regularizer(self):
-        reg = 1e-3 * self._noise_mag * self.cfg.n_bands + 1e-4 * self._delta_reg
+        if self.cfg.room_floor and self.cfg.noise:
+            reg = self.cfg.room_floor_weight * self._noise_excess + 1e-4 * self._delta_reg
+        else:
+            reg = 1e-3 * self._noise_mag * self.cfg.n_bands + 1e-4 * self._delta_reg
         if self.cfg.delta_tv > 0 and hasattr(self, "_delta_tv"):
             reg = reg + self.cfg.delta_tv * self._delta_tv
+        if self.cfg.delta_rise > 0 and hasattr(self, "_delta_rise"):
+            reg = reg + self.cfg.delta_rise * self._delta_rise
         return reg

@@ -17,7 +17,7 @@ import torch
 from tesis.data.gaps import PROCESSED, REPO
 from tesis.data.loudness import note_loudness_db, partial_freqs
 from tesis.data.note_tracks import voice_tracks
-from tesis.model.guitar_net import GuitarNet, NetConfig, Recording
+from tesis.model.guitar_net import GuitarNet, NetConfig, Recording, room_floor_bands
 from tesis.synth.dsp import MultiScaleMelLoss, MultiScaleSpectralLoss
 from tesis.synth.piece import LOG_B
 
@@ -50,9 +50,13 @@ def load_recordings(ids, cfg, n_eval=None):
         tc = man.loc[rid, "tuning_cents"]
         loud = note_loudness_db(y, SR, notes.onset.values, partial_freqs(notes.pitch.values, tc, LOG_B))
         notes["loud_rel_db"] = loud - np.nanmedian(loud)
+        if cfg.strings:  # one voice per string (analysis/tab_strings.py)
+            st = pd.read_csv(D / "strings" / f"{rid}.csv")
+            notes["string"], notes["fret"] = st.string.values, st.fret.values
+            notes["voice"] = st.string.values - 1
         rec = Recording(i, y, notes, tc, cfg, LOG_B)
         if cfg.audio_feats:
-            cache = D / "tracks" / f"{rid}.npz"
+            cache = D / ("tracks_strings" if cfg.strings else "tracks") / f"{rid}.npz"
             if cache.exists():
                 z = np.load(cache)
                 loud_t, dev_t = z["loud"], z["dev"]
@@ -62,6 +66,15 @@ def load_recordings(ids, cfg, n_eval=None):
                 cache.parent.mkdir(exist_ok=True)
                 np.savez(cache, loud=loud_t, dev=dev_t)
             rec.set_tracks(loud_t, dev_t)
+        if cfg.room_floor:
+            cache = D / "room_floor" / f"{rid}_{cfg.n_bands}_music.npy"
+            if cache.exists():
+                rec.room_floor = np.load(cache)
+            else:
+                rec.room_floor = room_floor_bands(y, SR, rec.onset, rec.end, rec.freqs, cfg.n_bands, cfg.n_fft_noise,
+                                                  cfg.noise_hop)
+                cache.parent.mkdir(exist_ok=True)
+                np.save(cache, rec.room_floor)
         recs.append(rec)
         starts = e2.valid_starts(y, L, cfg.hop)
         # only where the piece is playing: YouTube recordings have talk, applause or room noise before/after
