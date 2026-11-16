@@ -116,3 +116,6 @@ structured_v10_m2_slow no_detune 17
 structured_v10_m2_slow no_delta 1
 structured_v10_m2_slow no_dev 22
 done structured_v10_m2_slow
+done structured_v10_m2_slow:nonoise
+done structured_v10_m2_slow {"023_Ypswc": {"strings": -0.1, "burst": -104.2, "click": -64.9, "body": -20.5, "floor": -49.4, "noise": -30.8}, "176_mM1wc": {"strings": 0.0, "burst": -98.0, "click": -56.5, "body": -16.5, "floor": -56.0, "noise": -29.2}, "276_jw1wc": {"strings": -0.0, "burst": -100.4, "click": -63.4, "body": -20.8, "floor": -60.7, "noise": -33.4}, "277_Pw1wc": {"strings": -0.0, "burst": -99.2, "click": -63.0, "body": -26.4, "floor": -54.6, "noise": -35.3}, "306_7c1wc": {"strings": -0.1, "burst": -92.8, "click": -53.3, "body": -17.0, "floor": -70.3, "noise": -32.5}}
+06:02:47 done structured_v10_m2_slow

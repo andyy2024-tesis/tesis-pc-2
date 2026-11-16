@@ -74,10 +74,15 @@ VERSIONS = {
     "structured_v9_base_t32-nonoise": "M1 + timbre 32, ruido apagado",
     "e6-structured_v9_base_t32_noise_strongD": "M1 + timbre 32 + adv",
     "e6-structured_v9_base_t32_noise_strongD-nonoise": "M1 + timbre 32 + adv, ruido apagado",
-    # experiment 10 (names on the page come from build_listening_catalog.py; these label the deck clips only)
-    **{k + s: k for k in ["structured_v10_m1_burst", "structured_v10_m2_burst", "structured_v10_m2_lstm"]
-       for s in ("", "-nonoise")},
 }
+# Added after page 1 was encoded (experiment 10 on): encoded with --only at page 1's shared gain. Names on the page come
+# from build_listening_catalog.py; these labels are only for deck clips.
+LATER = {k + s: k for k in ["structured_v10_m1_burst", "structured_v10_m2_burst", "structured_v10_m2_lstm",
+                            "structured_v10_m2_slow", "structured_v10_m2_floor", "structured_v10_m2_bilstm",
+                            "structured_v10_m2_strings", "structured_v10_m2_attn", "structured_v10_m2_strings_xvoice",
+                            "structured_v10_m1_burst_floor", "e6-structured_v10_m1_burst_noise_strongD",
+                            "e6-structured_v9_t32_no_gate_noise_strongD_contact_rise"] for s in ("", "-nonoise")}
+VERSIONS.update(LATER)
 DECK_CLIPS = {
     "023_Ypswc": ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir_nonoise"],
     "176_mM1wc": ["original", "structured_v5_body_audio", "structured_v5_body_audio-noise", "adv9k-step2000",
@@ -89,8 +94,9 @@ DECK_CLIPS = {
 
 def load(rid):
     """All versions of one recording at one shared gain."""
-    xs = {v: sf.read(AUDIO / rid / f"{v}.wav", dtype="float32")[0] for v in VERSIONS}
-    gain = 0.89 / max(np.abs(x).max() for v, x in xs.items() if not v.endswith("-noise"))
+    xs = {v: sf.read(AUDIO / rid / f"{v}.wav", dtype="float32")[0] for v in VERSIONS
+          if v not in LATER or (AUDIO / rid / f"{v}.wav").exists()}
+    gain = 0.89 / max(np.abs(x).max() for v, x in xs.items() if not v.endswith("-noise") and v not in LATER)
     return {v: np.clip(x * gain * (10 ** (BOOST_DB / 20) if v.endswith("-noise") else 1), -1, 1) for v, x in xs.items()}
 
 
@@ -130,15 +136,13 @@ def clip(rid, v, x, vmax):
 def main():
     only = sys.argv[sys.argv.index("--only") + 1:] if "--only" in sys.argv else None
     for rid in RECS:
-        if only:  # encode just these versions; the shared gain must not change, or every file would have to be redone
-            old = {v: sf.read(AUDIO / rid / f"{v}.wav", dtype="float32")[0] for v in VERSIONS if v not in only}
-            g_old = 0.89 / max(np.abs(x).max() for v, x in old.items() if not v.endswith("-noise"))
-            xs = load(rid)
-            g_new = 0.89 / max(np.abs(sf.read(AUDIO / rid / f"{v}.wav", dtype="float32")[0]).max()
-                               for v in VERSIONS if not v.endswith("-noise"))
-            assert abs(g_new / g_old - 1) < 1e-6, f"{rid}: a new version is the loudest; re-run without --only"
+        if only:  # encode just these versions at the gain the page-1 files were made with (so those stay valid)
+            g = 0.89 / max(np.abs(sf.read(AUDIO / rid / f"{v}.wav", dtype="float32")[0]).max()
+                           for v in VERSIONS if v not in LATER and not v.endswith("-noise"))
             for v in only:
-                to_aac(xs[v], OUT / "listen" / "audio" / rid / f"{v}.mp4")
+                x = sf.read(AUDIO / rid / f"{v}.wav", dtype="float32")[0] * g
+                assert np.abs(x).max() <= 1.0, f"{rid} {v}: would clip at the shared gain ({np.abs(x).max():.2f})"
+                to_aac(x, OUT / "listen" / "audio" / rid / f"{v}.mp4")
             print(rid, flush=True)
             continue
         xs = load(rid)
