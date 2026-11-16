@@ -180,5 +180,19 @@
    "median_db": 2.3,
    "share_above_6db": 0.34
   }
+ },
+ "structured_v10_m2_strings": {
+  "0-700": {
+   "median_db": -8.8,
+   "share_above_6db": 0.18
+  },
+  "700-4k": {
+   "median_db": 1.1,
+   "share_above_6db": 0.3
+  },
+  "4k-11k": {
+   "median_db": 3.4,
+   "share_above_6db": 0.37
+  }
  }
 }

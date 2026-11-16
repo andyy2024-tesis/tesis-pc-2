@@ -116,3 +116,18 @@ Readings:
 - Backbones: LSTM ties the GRU (5.80 vs 5.79) with fewer ticks (4 vs 10). A bidirectional LSTM (same size, sees the
   future: offline only) is the best loss of the night, 5.70 (-0.08, well beyond the seed spread). Earlier, a GRU of twice
   the size tied (5.77), so it's the look-ahead, not the size.
+
+### Second round (stage 2)
+
+| model | loss | wind | snare | share | room | ticks |
+|---|---|---|---|---|---|---|
+| M2 · windowed attention (2 layers, 64 past frames) | 5.73 | -21.4 | +1.4 / -0.6 | | -0.1 / +2.3 (34 %) | 6 |
+| M2 + strings (one voice per string, string/fret inputs, per-string B) | **5.67** | -22.9 | -2.8 / -3.0 | | +1.1 / +3.4 (37 %) | 4 |
+| M1 + timbre 32 + adv (favourite) | 5.93 | -19.0 | +14.2 / +12.3 | 99-100 % | +8.0 / +8.5 (62 %) | 5 |
+| M1 + timbre 32 + per-note attack + adv | 5.87 | -19.9 | +5.5 / +5.3 | 11-16 % | +4.6 / +5.5 (48 %) | 4 |
+
+- Strings: the largest single gain of the night (-0.12 vs M2 + timbre 32, four times the seed spread), with less wind
+  and fewer ticks. Knowing the string (and with it which partials, how stiff, how it decays) matters more than the network.
+- Windowed causal attention (the user's idea 2) beats the GRU by 0.06 and, unlike the biLSTM, would work in real time.
+- The favourite + per-note attack: same recipe, 0.06 better, snare down ~8 dB, noise ~3 dB closer to the room.
+- Stage 3 (queued): M2 + strings + adv, M2 + strings + attention, M1 + per-note attack + strings (+ adv).

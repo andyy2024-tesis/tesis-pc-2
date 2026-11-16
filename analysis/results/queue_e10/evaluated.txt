@@ -5,3 +5,5 @@ structured_v10_m2_floor
 structured_v10_m2_bilstm
 structured_v10_m2_slow
 e6/structured_v10_m1_burst_noise_strongD
+structured_v10_m2_attn
+structured_v10_m2_strings
