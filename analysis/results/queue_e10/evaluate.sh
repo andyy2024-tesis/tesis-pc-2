@@ -3,6 +3,7 @@
 # harmonics, listening excerpts (mix and noise off) and per-part stems. Usage: evaluate.sh <run> [<run> ...]
 cd /home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export COMPARE_DEV=cpu  # the GPU is full with training (an evaluation ran out of memory at 05:49)
 L=analysis/results/queue_e10/evaluate_log.txt
 for r in "$@"; do
   echo "$(date +%T) evaluate $r" >> $L

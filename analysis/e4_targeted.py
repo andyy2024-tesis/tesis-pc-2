@@ -55,6 +55,7 @@ def load_run(run, ids, overrides=None):
     # parts added by the overrides (e.g. contact for a fine-tune) start from their initial values
     missing, unexpected = m.load_state_dict(upgrade_state_dict(torch.load(OUT / run / "model.pt")), strict=False)
     assert not unexpected and all(k.startswith(("contact_out", "rec_contact")) for k in missing), (missing, unexpected)
+    m._new_params = set(missing)  # a fine-tune gives these a higher learning rate (e6_adversarial --new-lr-mult)
     m.eval()
     return m, (recs, splits)
 

@@ -1,3 +1,5 @@
 structured_v10_m1_burst
 structured_v10_m2_burst
 structured_v10_m2_lstm
+structured_v10_m2_floor
+structured_v10_m2_bilstm

@@ -1,0 +1,40 @@
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/src/tesis/data/note_tracks.py:73: RuntimeWarning: invalid value encountered in divide
+  p = np.where(np.abs(den) > 1e-9, 0.5 * (a - d) / den, 0.0).clip(-0.5, 0.5)
+structured: 20 recordings, 241814 train starts, 85 test windows
+parameters: 0.69 M
+  step   100  train loss 7.501  (142 s)
+  step   200  train loss 6.238  (291 s)
+  step   300  train loss 6.379  (418 s)
+  step   400  train loss 6.426  (612 s)

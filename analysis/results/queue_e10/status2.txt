@@ -1,0 +1,5 @@
+05:43:17 start _v10_m2_strings
+05:44:47 start _v10_m2_attn
+05:48:17 start adv structured_v9_t32_no_gate_noise_strongD_contact_rise
+05:49:25 end adv structured_v9_t32_no_gate_noise_strongD_contact_rise stopped (contact part started too loud; restarted later)
+05:49:48 start adv structured_v10_m1_burst_noise_strongD

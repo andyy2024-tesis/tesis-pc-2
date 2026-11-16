@@ -21,9 +21,9 @@ import torch
 
 sys.path.insert(0, "scripts")
 sys.path.insert(0, "analysis")
-from compare_runs import RES, load  # noqa: E402
+from compare_runs import DEV, RES, load  # noqa: E402
 
-SR, HOP, NFFT, DEV = 24000, 120, 480, "cuda"
+SR, HOP, NFFT = 24000, 120, 480
 BANDS = {"0-1k": (0, 1000), "1-4k": (1000, 4000), "4-12k": (4000, 12000)}
 PRE, ATTACK, FAR_AFTER, FAR_BEFORE = 0.010, 0.060, 0.200, 0.050
 NON_HARMONIC = ["noise", "burst", "click", "contact", "body", "squeak", "floor"]

@@ -96,6 +96,8 @@ def main():
     ap.add_argument("--resume", action="store_true", help="continue from <out_dir>/checkpoint.pt")
     ap.add_argument("--spec-log-weight", type=float, default=1.0,
                     help="weight of the log-magnitude term of the training spectral loss (0: linear term only)")
+    ap.add_argument("--new-lr-mult", type=float, default=30.0,
+                    help="learning-rate multiplier for parts the base run didn't have (from --config)")
     a = ap.parse_args()
     torch.manual_seed(0)
     dev = "cuda"
@@ -106,7 +108,12 @@ def main():
     base, _ = load_run(a.run, ids)  # frozen copy for "before" renders
     model.train()
     disc = MultiResDiscriminator(ch=a.d_ch, kind=a.d_kind).to(dev)
-    opt_g = torch.optim.Adam(model.parameters(), lr=a.lr, betas=(0.5, 0.9))
+    # parts the base run didn't have (e.g. contact) start from scratch: at the fine-tune's lr Adam moves a weight ~lr per
+    # step, too slow to bring a new part from its initial level to a useful one in 3000 steps
+    new = [p for n, p in model.named_parameters() if n in getattr(model, "_new_params", set())]
+    old = [p for n, p in model.named_parameters() if n not in getattr(model, "_new_params", set())]
+    opt_g = torch.optim.Adam([dict(params=old, lr=a.lr)] + ([dict(params=new, lr=a.lr * a.new_lr_mult)] if new else []),
+                             betas=(0.5, 0.9))
     opt_d = torch.optim.Adam(disc.parameters(), lr=a.lr * a.d_lr_mult, betas=(0.5, 0.9))
     mss = MultiScaleSpectralLoss()  # evaluation metric, comparable across runs
     train_spec = MultiScaleSpectralLoss(log_weight=a.spec_log_weight)

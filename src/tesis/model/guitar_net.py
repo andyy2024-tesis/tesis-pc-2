@@ -338,7 +338,7 @@ class GuitarNet(nn.Module):
         if cfg.contact:
             self.contact_out = nn.Linear(Hd, 1)
             nn.init.zeros_(self.contact_out.weight)
-            nn.init.constant_(self.contact_out.bias, -8.0)
+            nn.init.constant_(self.contact_out.bias, -14.0)  # starts silent (~-110 dB): -8 made white noise in empty bands
             self.rec_contact = nn.Embedding(n_recordings, cfg.contact_bands)
             with torch.no_grad():  # start in 2-10 kHz
                 c = torch.tensor(np.geomspace(40.0, cfg.sr / 2, cfg.contact_bands)).float()
