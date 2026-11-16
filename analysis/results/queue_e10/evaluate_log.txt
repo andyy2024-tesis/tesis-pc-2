@@ -217,3 +217,22 @@ done structured_v10_m2_strings_attn:nonoise
 done structured_v10_m2_strings_attn {"023_Ypswc": {"strings": -0.0, "burst": -102.3, "click": -65.9, "body": -21.2, "floor": -45.3, "noise": -35.3}, "176_mM1wc": {"strings": 0.0, "burst": -100.9, "click": -55.9, "body": -19.0, "floor": -49.6, "noise": -29.0}, "276_jw1wc": {"strings": -0.0, "burst": -104.2, "click": -63.2, "body": -20.0, "floor": -45.2, "noise": -34.4}, "277_Pw1wc": {"strings": -0.0, "burst": -103.5, "click": -65.4, "body": -25.0, "floor": -42.6, "noise": -32.2}, "306_7c1wc": {"strings": -0.1, "burst": -102.1, "click": -54.9, "body": -16.0, "floor": -68.0, "noise": -32.4}}
 10:45:18 done structured_v10_m2_strings_attn
 10:47:18 evaluate structured_v10_m1_burst_strings
+structured_v10_m1_burst_strings {"mean": 5.688, "median": 5.68, "n": 85, "wind": -22.7}
+structured_v10_m1_burst_strings {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 192.1, "1-4k": 195.9, "4-12k": 183.4}, "strings": {"0-1k": 7.5, "1-4k": 10.3, "4-12k": 23.9}, "body": {"0-1k": 22.9, "1-4k": 26.9, "4-12k": 21.2}, "floor": {"0-1k": -0.2, "1-4k": 1.6, "4-12k": 0.1}, "noise": {"0-1k": -3.0, "1-4k": 6.4, "4-12k": 6.2}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -37.1, "1-4k": -18.3, "4-12k": -12.1}, "strings": {"0-1k": -0.9, "1-4k": -0.9, "4-12k": -2.0}, "body": {"0-1k": -15.1, "1-4k": -50.2, "4-12k": -57.9}, "floor": {"0-1k": -79.2, "1-4k": -54.2, "4-12k": -36.7}, "noise": {"0-1k": -38.8, "1-4k": -24.6, "4-12k": -18.5}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.19, "4-12k": 0.19}}
+structured_v10_m1_burst_strings {"0-700": {"median_db": -2.2, "share_above_6db": 0.23}, "700-4k": {"median_db": 7.2, "share_above_6db": 0.56}, "4k-11k": {"median_db": 7.5, "share_above_6db": 0.58}}
+structured_v10_m1_burst_strings base 5
+structured_v10_m1_burst_strings no_detune 5
+structured_v10_m1_burst_strings no_delta 3
+structured_v10_m1_burst_strings no_dev 7
+done structured_v10_m1_burst_strings
+done structured_v10_m1_burst_strings:nonoise
+done structured_v10_m1_burst_strings {"023_Ypswc": {"strings": -0.0, "burst": -36.3, "body": -22.5, "floor": -55.1, "noise": -32.6}, "176_mM1wc": {"strings": 0.0, "burst": -36.0, "body": -17.7, "floor": -61.1, "noise": -29.2}, "276_jw1wc": {"strings": -0.1, "burst": -40.9, "body": -19.9, "floor": -69.0, "noise": -35.0}, "277_Pw1wc": {"strings": -0.0, "burst": -36.9, "body": -23.2, "floor": -68.4, "noise": -33.8}, "306_7c1wc": {"strings": -0.1, "burst": -32.0, "body": -17.6, "floor": -71.8, "noise": -30.8}}
+10:52:46 done structured_v10_m1_burst_strings
+11:49:47 evaluate e6/structured_v10_m2_strings_noise_strongD_rise
+e6/structured_v10_m2_strings_noise_strongD_rise {"mean": 5.732, "median": 5.754, "n": 85, "wind": -20.4}
+e6/structured_v10_m2_strings_noise_strongD_rise {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 111.2, "1-4k": 115.7, "4-12k": 118.8}, "strings": {"0-1k": 7.2, "1-4k": 10.3, "4-12k": 24.0}, "body": {"0-1k": 23.2, "1-4k": 22.9, "4-12k": 29.3}, "click": {"0-1k": 141.2, "1-4k": 147.2, "4-12k": 149.4}, "floor": {"0-1k": 1.5, "1-4k": 2.5, "4-12k": -0.9}, "noise": {"0-1k": -7.9, "1-4k": -3.4, "4-12k": -3.8}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -118.0, "1-4k": -98.5, "4-12k": -76.6}, "strings": {"0-1k": -1.2, "1-4k": -1.2, "4-12k": -1.1}, "body": {"0-1k": -14.0, "1-4k": -14.4, "4-12k": -10.0}, "click": {"0-1k": -73.1, "1-4k": -46.5, "4-12k": -20.1}, "floor": {"0-1k": -54.5, "1-4k": -43.6, "4-12k": -32.1}, "noise": {"0-1k": -39.9, "1-4k": -33.2, "4-12k": -26.7}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.01, "4-12k": 0.02}}
+e6/structured_v10_m2_strings_noise_strongD_rise {"0-700": {"median_db": -10.5, "share_above_6db": 0.17}, "700-4k": {"median_db": -2.1, "share_above_6db": 0.22}, "4k-11k": {"median_db": 2.1, "share_above_6db": 0.33}}
+e6/structured_v10_m2_strings_noise_strongD_rise base 8
+e6/structured_v10_m2_strings_noise_strongD_rise no_detune 8
+e6/structured_v10_m2_strings_noise_strongD_rise no_delta 3
+e6/structured_v10_m2_strings_noise_strongD_rise no_dev 8

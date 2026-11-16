@@ -29,6 +29,12 @@
   "n": 85,
   "wind": -20.0
  },
+ "e6/structured_v10_m2_strings_noise_strongD_rise": {
+  "mean": 5.732,
+  "median": 5.754,
+  "n": 85,
+  "wind": -20.4
+ },
  "e6/structured_v5_body_audio_noise_strongD": {
   "mean": 6.118,
   "median": 6.09,
@@ -136,6 +142,12 @@
   "median": 5.85,
   "n": 85,
   "wind": -25.7
+ },
+ "structured_v10_m1_burst_strings": {
+  "mean": 5.688,
+  "median": 5.68,
+  "n": 85,
+  "wind": -22.7
  },
  "structured_v10_m2_attn": {
   "mean": 5.728,

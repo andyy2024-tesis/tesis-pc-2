@@ -12,3 +12,4 @@ structured_v10_m1_burst_floor
 structured_v10_m2_strings_xvoice
 e6/structured_v10_m2_strings_noise_strongD
 structured_v10_m2_strings_attn
+structured_v10_m1_burst_strings

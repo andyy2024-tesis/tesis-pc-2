@@ -1,0 +1,2 @@
+structured: 20 recordings, 241814 train starts, 85 test windows
+parameters: 0.69 M

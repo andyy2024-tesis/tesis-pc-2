@@ -13,7 +13,7 @@ while true; do
     bash $Q/evaluate.sh "$run"
     echo "$run" >> $Q/evaluated.txt
   done
-  grep -q "stage3 done" $Q/status2.txt 2>/dev/null && [ "$(grep -c 'exit 0' $Q/status.txt $Q/status2.txt | awk -F: '{s+=$2} END {print s}')" -le "$(wc -l < $Q/evaluated.txt)" ] && break
+  grep -q "stage4 done" $Q/status2.txt 2>/dev/null && [ "$(grep -c 'exit 0' $Q/status.txt $Q/status2.txt | awk -F: '{s+=$2} END {print s}')" -le "$(wc -l < $Q/evaluated.txt)" ] && break
   sleep 60
 done
 echo "$(date +%T) auto_eval finished" >> $Q/evaluate_log.txt
