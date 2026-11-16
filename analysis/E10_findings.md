@@ -145,3 +145,18 @@ Readings:
   the rise penalty did the work, and the adversarial training did not move those events into another part.
 - M1 + per-note attack + room background: the snare is gone (the noise rises at most 2 dB after plucks), the wind drops
   4 dB and up to 4 kHz the noise sits at the room's level; above 4 kHz it is still ~5 dB over. Costs 0.04 of loss.
+
+### Stage 3: combining what won
+
+| model | loss | wind | room (700-4k / 4-11k) | ticks |
+|---|---|---|---|---|
+| M2 + strings | 5.67 | -22.9 | +1.1 / +3.4 | 4 |
+| M2 + strings + attention across strings | **5.64** | -22.2 | -1.1 / +1.2 | 4 |
+| M2 + strings + windowed attention (instead of the GRU) | 5.71 | | | |
+| M2 + strings + adv | 5.72 | -20.0 | -1.8 / +2.1 | 23 |
+
+- Attention across strings (idea 3) ties strings alone (-0.02): knowing the string is what matters.
+- Strings + windowed attention (5.71) is worse than strings + GRU (5.67): the two gains don't add up; with the string known,
+  the GRU's memory is enough.
+- Strings + adv is the best adversarial model so far (5.72 vs 5.87 for M2 + timbre 32 + adv and 5.93 for the favourite),
+  but the adversarial training brings the harmonic ticks back (23). Queued: the same with the rise penalty (lane G).

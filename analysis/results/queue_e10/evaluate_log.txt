@@ -192,3 +192,16 @@ done structured_v10_m2_strings_xvoice:nonoise
 done structured_v10_m2_strings_xvoice {"023_Ypswc": {"strings": -0.0, "burst": -108.6, "click": -66.1, "body": -22.1, "floor": -45.4, "noise": -34.4}, "176_mM1wc": {"strings": 0.0, "burst": -99.3, "click": -57.2, "body": -18.2, "floor": -52.5, "noise": -30.2}, "276_jw1wc": {"strings": -0.0, "burst": -99.5, "click": -63.3, "body": -21.2, "floor": -47.3, "noise": -34.7}, "277_Pw1wc": {"strings": -0.0, "burst": -104.6, "click": -64.6, "body": -26.9, "floor": -55.7, "noise": -33.9}, "306_7c1wc": {"strings": -0.1, "burst": -100.6, "click": -54.6, "body": -17.5, "floor": -67.4, "noise": -31.5}}
 09:24:48 done structured_v10_m2_strings_xvoice
 09:24:48 auto_eval finished
+10:30:19 evaluate e6/structured_v10_m2_strings_noise_strongD
+e6/structured_v10_m2_strings_noise_strongD {"mean": 5.724, "median": 5.72, "n": 85, "wind": -20.0}
+e6/structured_v10_m2_strings_noise_strongD {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 113.9, "1-4k": 118.3, "4-12k": 121.5}, "strings": {"0-1k": 7.4, "1-4k": 10.2, "4-12k": 23.3}, "body": {"0-1k": 23.4, "1-4k": 22.9, "4-12k": 29.1}, "click": {"0-1k": 141.3, "1-4k": 147.1, "4-12k": 149.4}, "floor": {"0-1k": 1.5, "1-4k": 2.5, "4-12k": -0.9}, "noise": {"0-1k": -8.1, "1-4k": -4.0, "4-12k": -4.4}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -115.3, "1-4k": -95.9, "4-12k": -74.0}, "strings": {"0-1k": -1.2, "1-4k": -1.1, "4-12k": -1.3}, "body": {"0-1k": -13.8, "1-4k": -14.6, "4-12k": -10.1}, "click": {"0-1k": -72.8, "1-4k": -46.4, "4-12k": -19.9}, "floor": {"0-1k": -54.5, "1-4k": -43.6, "4-12k": -32.1}, "noise": {"0-1k": -38.9, "1-4k": -33.2, "4-12k": -27.7}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.01, "4-12k": 0.02}}
+e6/structured_v10_m2_strings_noise_strongD {"0-700": {"median_db": -9.6, "share_above_6db": 0.19}, "700-4k": {"median_db": -1.8, "share_above_6db": 0.23}, "4k-11k": {"median_db": 2.1, "share_above_6db": 0.33}}
+e6/structured_v10_m2_strings_noise_strongD base 23
+e6/structured_v10_m2_strings_noise_strongD no_detune 22
+e6/structured_v10_m2_strings_noise_strongD no_delta 2
+e6/structured_v10_m2_strings_noise_strongD no_dev 20
+done e6/structured_v10_m2_strings_noise_strongD
+done e6/structured_v10_m2_strings_noise_strongD:nonoise
+done e6/structured_v10_m2_strings_noise_strongD {"023_Ypswc": {"strings": -0.1, "burst": -116.4, "click": -63.1, "body": -20.7, "floor": -45.4, "noise": -31.9}, "176_mM1wc": {"strings": -0.1, "burst": -108.7, "click": -53.4, "body": -15.9, "floor": -54.4, "noise": -29.1}, "276_jw1wc": {"strings": -0.1, "burst": -111.8, "click": -60.4, "body": -18.6, "floor": -57.3, "noise": -31.9}, "277_Pw1wc": {"strings": -0.0, "burst": -111.7, "click": -62.5, "body": -23.3, "floor": -39.3, "noise": -35.6}, "306_7c1wc": {"strings": -0.1, "burst": -105.6, "click": -52.4, "body": -15.1, "floor": -69.9, "noise": -31.3}}
+10:37:26 done e6/structured_v10_m2_strings_noise_strongD
+10:38:26 evaluate structured_v10_m2_strings_attn

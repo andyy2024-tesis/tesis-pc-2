@@ -236,5 +236,19 @@
    "median_db": 1.2,
    "share_above_6db": 0.31
   }
+ },
+ "e6/structured_v10_m2_strings_noise_strongD": {
+  "0-700": {
+   "median_db": -9.6,
+   "share_above_6db": 0.19
+  },
+  "700-4k": {
+   "median_db": -1.8,
+   "share_above_6db": 0.23
+  },
+  "4k-11k": {
+   "median_db": 2.1,
+   "share_above_6db": 0.33
+  }
  }
 }

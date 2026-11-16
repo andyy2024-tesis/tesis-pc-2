@@ -83,7 +83,8 @@ LATER = {k + s: k for k in ["structured_v10_m1_burst", "structured_v10_m2_burst"
                             "structured_v10_m1_burst_floor", "e6-structured_v10_m1_burst_noise_strongD",
                             "e6-structured_v9_t32_no_gate_noise_strongD_contact_rise",
                             "e6-structured_v10_m2_strings_noise_strongD", "structured_v10_m2_strings_attn",
-                            "structured_v10_m1_burst_strings", "e6-structured_v10_m1_burst_strings_noise_strongD"] for s in ("", "-nonoise")}
+                            "structured_v10_m1_burst_strings", "e6-structured_v10_m1_burst_strings_noise_strongD",
+                            "e6-structured_v10_m2_strings_noise_strongD_rise"] for s in ("", "-nonoise")}
 VERSIONS.update(LATER)
 DECK_CLIPS = {
     "023_Ypswc": ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir_nonoise"],

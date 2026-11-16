@@ -79,6 +79,7 @@ C = [
     dict(n="M2 + timbre 32 + cuerdas · atención", run="structured_v10_m2_strings_attn", p="structured_v10_m2_strings", rel="rec", diff=dict(backbone="attn"), change="Cuerdas, y en vez de la GRU la self-attention sobre los últimos 64 cuadros de cada cuerda."),
     dict(n="M1 + timbre 32 + ataque por nota + cuerdas", run="structured_v10_m1_burst_strings", p="structured_v10_m1_burst", rel="rec", diff=dict(strings=True), change="El ataque por nota (que le quitó el «tambor» al ruido de M1) más las cuerdas."),
     dict(n="M1 + timbre 32 + ataque por nota + cuerdas + adv", run="e6/structured_v10_m1_burst_strings_noise_strongD", p="structured_v10_m1_burst_strings", rel="cont", meta=dict(overrides={}, d_kind="complex", **ADV), change="La receta del favorito (adversarial de 3000 pasos) sobre M1 + timbre 32 + ataque por nota + cuerdas."),
+    dict(n="M2 + timbre 32 + cuerdas + adv · sin agudos", run="e6/structured_v10_m2_strings_noise_strongD_rise", p="structured_v10_m2_strings", rel="cont", meta=dict(overrides=dict(delta_rise=20.0), d_kind="complex", **ADV), change="Como M2 + timbre 32 + cuerdas + adv, con la penalización a las subidas rápidas de los armónicos agudos que quitó los «agudos cortos»."),
 ]
 
 
