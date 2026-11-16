@@ -177,3 +177,17 @@ no snare, noise at the room's level up to 4 kHz, few ticks). M1 + per-note attac
 (5.77 -> 5.69 before adv) but leave its noise as it was. For the ear to decide.
 
 Stage 4 (running, ~13:30): strings with seed 1; M1 + per-note attack + room background + strings; strings + biLSTM.
+
+### Stage 4
+
+| model | loss |
+|---|---|
+| M2 + strings, seed 0 / seed 1 | 5.67 / 5.72 (mean 5.70; M2 + timbre 32: 5.79) |
+| M2 + strings + bidirectional LSTM | 5.68 (ties strings + GRU) |
+| M1 + per-note attack + room background + strings | 5.70 (without strings 5.81) |
+
+- Strings hold with a second seed: gain 0.07-0.12 (mean 0.09). The two seeds differ by 0.05, more than the 0.03 seen
+  before, so single-run differences below ~0.05 should be read as ties.
+- With strings, neither windowed attention (5.71) nor the biLSTM (5.68) adds anything over the GRU: once the network knows
+  the string, its memory is enough.
+- Strings help M1 + per-note attack + room background as much (-0.11). Its adversarial version is running.

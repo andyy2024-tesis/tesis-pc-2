@@ -253,3 +253,5 @@ done e6/structured_v10_m1_burst_strings_noise_strongD:nonoise
 done e6/structured_v10_m1_burst_strings_noise_strongD {"023_Ypswc": {"strings": -0.0, "burst": -35.2, "body": -18.7, "floor": -54.5, "noise": -29.4}, "176_mM1wc": {"strings": -0.1, "burst": -34.5, "body": -13.1, "floor": -60.4, "noise": -25.0}, "276_jw1wc": {"strings": -0.1, "burst": -39.5, "body": -16.5, "floor": -68.4, "noise": -28.2}, "277_Pw1wc": {"strings": -0.0, "burst": -35.4, "body": -17.8, "floor": -67.7, "noise": -30.2}, "306_7c1wc": {"strings": -0.2, "burst": -30.5, "body": -12.8, "floor": -71.0, "noise": -27.0}}
 12:03:23 done e6/structured_v10_m1_burst_strings_noise_strongD
 12:03:23 auto_eval finished
+13:23:47 evaluate structured_v10_m1_burst_floor_strings
+structured_v10_m1_burst_floor_strings {"mean": 5.701, "median": 5.69, "n": 85, "wind": -25.5}

@@ -149,6 +149,12 @@
   "n": 85,
   "wind": -25.7
  },
+ "structured_v10_m1_burst_floor_strings": {
+  "mean": 5.701,
+  "median": 5.69,
+  "n": 85,
+  "wind": -25.5
+ },
  "structured_v10_m1_burst_strings": {
   "mean": 5.688,
   "median": 5.68,
