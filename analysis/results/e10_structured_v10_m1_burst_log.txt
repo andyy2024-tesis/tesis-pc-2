@@ -8,3 +8,6 @@ parameters: 0.71 M
   step   600  train loss 6.372  (757 s)
   step   700  train loss 6.159  (901 s)
   step   800  train loss 5.967  (1030 s)
+  step   900  train loss 5.936  (1160 s)
+  step  1000  train loss 5.594  (1287 s)
+  EVAL step 1000: {"test_loss": 6.024485963933608, "n_windows": 85, "share_burst_db": -37.655591429012965, "share_strings_db": -0.12040693736913481, "share_body_db": -15.772522055222957, "share_floor_db": -49.772627353399045, "share_noise_db": -31.597768821141727}

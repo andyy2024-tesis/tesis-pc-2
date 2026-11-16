@@ -4,9 +4,11 @@
 - Deck: one short spectrogram video (+ still) per (recording, version) in DECK_CLIPS, in analysis/results/slides/clips/.
 All versions of one recording share one gain (so loudness and noise levels are comparable); the catch-all noise alone
 ("-noise") is boosted by BOOST_DB so it can be heard.
-Usage: uv run python analysis/make_listening_media.py
+Usage: uv run python analysis/make_listening_media.py [--only <version> ...]
+  --only: encode just these versions (new models), checking that the recording's shared gain stays the same.
 """
 import subprocess
+import sys
 
 import imageio_ffmpeg
 import numpy as np
@@ -123,7 +125,19 @@ def clip(rid, v, x, vmax):
 
 
 def main():
+    only = sys.argv[sys.argv.index("--only") + 1:] if "--only" in sys.argv else None
     for rid in RECS:
+        if only:  # encode just these versions; the shared gain must not change, or every file would have to be redone
+            old = {v: sf.read(AUDIO / rid / f"{v}.wav", dtype="float32")[0] for v in VERSIONS if v not in only}
+            g_old = 0.89 / max(np.abs(x).max() for v, x in old.items() if not v.endswith("-noise"))
+            xs = load(rid)
+            g_new = 0.89 / max(np.abs(sf.read(AUDIO / rid / f"{v}.wav", dtype="float32")[0]).max()
+                               for v in VERSIONS if not v.endswith("-noise"))
+            assert abs(g_new / g_old - 1) < 1e-6, f"{rid}: a new version is the loudest; re-run without --only"
+            for v in only:
+                to_aac(xs[v], OUT / "listen" / "audio" / rid / f"{v}.mp4")
+            print(rid, flush=True)
+            continue
         xs = load(rid)
         for v, x in xs.items():
             to_aac(x, OUT / "listen" / "audio" / rid / f"{v}.mp4")
