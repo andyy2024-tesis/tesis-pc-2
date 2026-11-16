@@ -138,7 +138,10 @@
   "wind": -19.0
  },
  "structured_v10_m2_slow": {
-  "error": "OutOfMemoryError: CUDA out of memory. Tried to allocate 924.00 MiB. GPU 0 has a total capacity of 23.51 GiB of which 514.44 MiB is free. Process 591884 has 5.90 GiB memory in use. Process 594244 has 6.14 GiB memory in use. Process 600388 has 7.63 GiB memory in use. Including non-PyTorch memory, this process has 3.07 "
+  "mean": 5.754,
+  "median": 5.761,
+  "n": 85,
+  "wind": -21.5
  },
  "structured_v2": {
   "mean": 6.302,

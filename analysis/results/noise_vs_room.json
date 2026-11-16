@@ -138,5 +138,19 @@
    "median_db": 2.2,
    "share_above_6db": 0.33
   }
+ },
+ "structured_v10_m2_slow": {
+  "0-700": {
+   "median_db": -4.0,
+   "share_above_6db": 0.2
+  },
+  "700-4k": {
+   "median_db": 2.2,
+   "share_above_6db": 0.34
+  },
+  "4k-11k": {
+   "median_db": 4.0,
+   "share_above_6db": 0.4
+  }
  }
 }

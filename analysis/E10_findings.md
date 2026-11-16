@@ -82,3 +82,37 @@ the 85 held-out windows, median dB (share of cells more than 6 dB above):
 
 M2's noise sits at the room's level most of the time, with gusts (a third of the cells 6 dB or more above): the "violent
 wind". M1's noise plays 7-9 dB above the room, most of the time: the snare and more.
+
+## Results (4000 steps from scratch each, 85 held-out windows; seed spread of the loss: 0.03)
+
+Columns: loss; wind = noise in the quietest 20 % of frames (dB vs the original); snare = noise power right after plucks
+over between notes, 1-4 / 4-12 kHz (dB); share = noise's part of the non-harmonic attack energy above 1 kHz; room = noise
+over the room background, median dB 700 Hz-4 kHz / 4-11 kHz (share of cells > 6 dB above, 4-11 kHz); ticks = harmonic
+ticks in the 5 listening excerpts.
+
+| model | loss | wind | snare | share | room | ticks |
+|---|---|---|---|---|---|---|
+| M1 + timbre 32 | 5.82 | -21.5 | +11.6 / +11.5 | 99-100 % | +8.9 / +8.5 (62 %) | |
+| M1 + timbre 32 + per-note attack | **5.77** | -21.7 | +6.2 / +5.4 | 16-19 % | +7.2 / +7.4 (57 %) | 4 |
+| M2 + timbre 32 | 5.79 | -21.3 | -2.3 / -3.6 | 2 % | +0.8 / +2.9 (35 %) | 10 |
+| M2 + per-note attack | 5.77 | -17.9 | -2.0 / -3.8 | 2 % | +1.5 / +3.2 (37 %) | 15 |
+| M2 + slow noise (200 ms) | 5.75 | -21.5 | +1.0 / -0.4 | 3 % | +2.2 / +4.0 (40 %) | 21 |
+| M2 + room background | 5.82 | -22.4 | -3.3 / -4.2 | 0-1 % | -9.7 / -0.2 (28 %) | 7 |
+| M2 · LSTM | 5.80 | -19.0 | -2.2 / -3.2 | 1-2 % | +0.9 / +3.0 (35 %) | 4 |
+| M2 · bidirectional LSTM | **5.70** | -19.8 | -1.7 / -4.2 | 2 % | +1.2 / +2.2 (33 %) | 7 |
+
+Readings:
+- The decision rule of the plan, on M1 (where the snare is): with a per-note attack (own level and decay per band, from
+  pitch, loudness, timbre and recording), the attack moves out of the noise (99-100 % -> 16-19 % of the attack energy
+  above 1 kHz), the snare halves (+11.6 -> +6.2 dB) and the loss improves 0.05. So the attack was too simple. But between
+  notes M1's noise still sits ~7 dB above the room background: the wind is a separate problem.
+- On M2 the body (to 6 kHz) already plays the attack; the per-note attack stays below it and adds nothing but 3 dB of
+  wind.
+- Room background (idea 6): the noise drops ~10 dB below the room up to 4 kHz, but above 4 kHz 28 % of the cells are still
+  6 dB or more above it, and the wind barely moves (-22.4 vs -21.3). Slow noise doesn't reduce the excess either (the
+  noise can stay high for hundreds of ms), and it doubles the harmonic ticks (21 vs 10; 1 with the GRU correction off): when
+  the noise can't do fast events, the harmonics do them. Fast high events in the original need a part of their own
+  (the contact noise under test).
+- Backbones: LSTM ties the GRU (5.80 vs 5.79) with fewer ticks (4 vs 10). A bidirectional LSTM (same size, sees the
+  future: offline only) is the best loss of the night, 5.70 (-0.08, well beyond the seed spread). Earlier, a GRU of twice
+  the size tied (5.77), so it's the look-ahead, not the size.
