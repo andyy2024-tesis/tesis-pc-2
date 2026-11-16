@@ -536,38 +536,11 @@ const MODELS = {
 "wind": null,
 "pending": true
 },
-"structured_v10_m2_burst_slow": {
-"name": "M2 + timbre 32 + ataque por nota + ruido lento",
-"parent": "structured_v10_m2_burst",
-"rel": "rec",
-"change": "Ataque por nota y ruido lento juntos.",
-"loss": null,
-"wind": null,
-"pending": true
-},
 "structured_v10_m1_burst_floor": {
 "name": "M1 + timbre 32 + ataque por nota + fondo medido",
 "parent": "structured_v10_m1_burst",
 "rel": "rec",
 "change": "Ataque por nota y fondo medido, sobre M1.",
-"loss": null,
-"wind": null,
-"pending": true
-},
-"structured_v10_m2_burst_slow_floor": {
-"name": "M2 + timbre 32 + ataque por nota + ruido lento + fondo medido",
-"parent": "structured_v10_m2_burst_slow",
-"rel": "rec",
-"change": "Las tres cosas juntas.",
-"loss": null,
-"wind": null,
-"pending": true
-},
-"structured_v10_m2_burst_floor": {
-"name": "M2 + timbre 32 + ataque por nota + fondo medido",
-"parent": "structured_v10_m2_burst",
-"rel": "rec",
-"change": "Ataque por nota y fondo medido, sin ruido lento.",
 "loss": null,
 "wind": null,
 "pending": true
@@ -598,15 +571,6 @@ const MODELS = {
 "wind": null,
 "pending": true
 },
-"structured_v10_m2_xvoice": {
-"name": "M2 + timbre 32 · atención entre voces",
-"parent": "structured_v9_t32_no_gate",
-"rel": "rec",
-"change": "Después de la GRU, una capa de self-attention entre las 6 voces en cada cuadro: cada voz ve lo que hacen las otras.",
-"loss": null,
-"wind": null,
-"pending": true
-},
 "structured_v10_m2_strings": {
 "name": "M2 + timbre 32 + cuerdas",
 "parent": "structured_v9_t32_no_gate",
@@ -630,6 +594,15 @@ const MODELS = {
 "parent": "structured_v9_t32_no_gate",
 "rel": "cont",
 "change": "Como M2 + timbre 32 + adv, con un ruido de contacto por voz (dedo o uña tocando la cuerda) y una penalización a las subidas rápidas de los armónicos agudos: así imitaba el adversarial ese contacto, con los «agudos cortos».",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"e6-structured_v10_m1_burst_noise_strongD": {
+"name": "M1 + timbre 32 + ataque por nota + adv",
+"parent": "structured_v10_m1_burst",
+"rel": "cont",
+"change": "La receta del favorito (adversarial de 3000 pasos) sobre M1 + timbre 32 + ataque por nota: el favorito más el ataque por nota.",
 "loss": null,
 "wind": null,
 "pending": true
