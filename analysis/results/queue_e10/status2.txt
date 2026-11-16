@@ -19,3 +19,5 @@
 10:30:03 end adv structured_v10_m2_strings_noise_strongD exit 0
 10:38:02 end _v10_m2_strings_attn exit 0
 10:38:24 start adv structured_v10_m2_strings_noise_strongD_rise
+10:47:05 end _v10_m1_burst_strings exit 0
+10:47:05 start adv structured_v10_m1_burst_strings_noise_strongD

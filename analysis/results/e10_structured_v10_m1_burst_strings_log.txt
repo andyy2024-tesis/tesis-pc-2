@@ -38,3 +38,9 @@ parameters: 0.71 M
   step  3300  train loss 5.804  (4672 s)
   step  3400  train loss 5.444  (4786 s)
   step  3500  train loss 5.723  (4880 s)
+  step  3600  train loss 5.400  (4959 s)
+  step  3700  train loss 5.539  (5071 s)
+  step  3800  train loss 5.650  (5190 s)
+  step  3900  train loss 5.417  (5314 s)
+  step  4000  train loss 5.398  (5413 s)
+  EVAL step 4000: {"test_loss": 5.68966100917143, "n_windows": 85, "share_burst_db": -36.27253136999875, "share_strings_db": -0.11403176706580681, "share_body_db": -17.38573637704018, "share_floor_db": -48.10881268082487, "share_noise_db": -21.30367393063303}

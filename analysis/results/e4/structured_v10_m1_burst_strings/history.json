@@ -31,5 +31,16 @@
   "share_body_db": -17.049457271371327,
   "share_floor_db": -48.38035915855155,
   "share_noise_db": -19.591827099425263
+ },
+ {
+  "step": 4000,
+  "train_loss": 5.397660195827484,
+  "test_loss": 5.68966100917143,
+  "n_windows": 85,
+  "share_burst_db": -36.27253136999875,
+  "share_strings_db": -0.11403176706580681,
+  "share_body_db": -17.38573637704018,
+  "share_floor_db": -48.10881268082487,
+  "share_noise_db": -21.30367393063303
  }
 ]

@@ -179,6 +179,12 @@
   "n": 85,
   "wind": -22.9
  },
+ "structured_v10_m2_strings_attn": {
+  "mean": 5.713,
+  "median": 5.674,
+  "n": 85,
+  "wind": -21.3
+ },
  "structured_v10_m2_strings_xvoice": {
   "mean": 5.644,
   "median": 5.567,
