@@ -280,3 +280,37 @@ changes the count. Zeroing the detune changes few of them. So this detector does
 
 Smoothing the GRU correction at render (no training) costs little loss: M2 + compuerta + timbre 32 with noise off goes 5.78 -> 5.83
 at 100 ms. Whether that removes the buzz has not been listened to.
+
+## Who plays the attack (stems and the "snare")
+
+Listening again, the user heard two things in the catch-all noise: a steady wind, plus a hit at every pluck, "like a snare
+drum". New rule from the user: if the noise holds only wind (room noise), it can be switched off and nothing is lost. If
+it holds attacks, a deterministic part is missing or the noise is stealing work from one.
+
+`analysis/render_stems.py` renders every part of a model separately on the five listening excerpts, using the same windows
+and seeds as the mix; the parts add up to the mix exactly. They are on the listening page: click a model's name in a
+section. `analysis/noise_attack.py` (results in `analysis/results/noise_attack.json`) measures, on the 85 test windows,
+each part's power in attack frames (10 ms before to 60 ms after an onset) against far frames (more than 200 ms after the
+last onset and more than 50 ms before the next), per band.
+
+| model | noise lock 1–4k / 4–12k (dB) | noise in the attack vs original, 1–4k / 4–12k | noise share of non-harmonic attack energy, >1 kHz |
+|---|---|---|---|
+| M1 Base | +12.2 / +12.1 | −18 / −12 dB | 92–100 % |
+| M1 + adv | +11.7 / +11.8 | −18 / −11 dB | 95–100 % |
+| M1 + timbre 32 | +11.6 / +11.5 | −19 / −12 dB | 99–100 % |
+| M1 + timbre 32 + adv | +14.2 / +12.3 | −15 / −11 dB | 99–100 % |
+| M2 + timbre 32 | −2.3 / −3.6 | −35 / −29 dB | 2 % |
+| M2 + timbre 32 + adv | −2.2 / −4.3 | −34 / −28 dB | 1–2 % |
+| original (for reference: how much attack the real audio has) | +9.6 / +17.2 | | |
+
+- In every M1 model the noise plays the attack: above 1 kHz it is about 12 dB louder right after a pluck than between
+  notes, and it carries almost all the non-harmonic attack energy. That is the snare.
+- In M2 the noise is a steady bed that dips at the plucks. The attack goes to M2's body response, which reaches 6 kHz
+  (body_ir_cutoff 6000; in M1 it stops at 600 Hz). The body then sits at −9 to −16 dB of the original in the attack
+  above 1 kHz, against −44 to −59 dB in M1.
+- The dedicated attack burst is practically off in all of them (RMS −57 to −123 dB relative to the mix). It is one
+  fixed spectrum per recording with one decay time for all notes, so training found the noise (M1) or the body (M2)
+  more useful. The click in M2 is −52 to −65 dB.
+- Hypothesis, to check by ear on the Cuerpo stem: M2's body response is the same 0.3 s filter excited at every pluck. If
+  it rings at a few high frequencies, every pluck would add the same short pitched "ping", which could be the short high
+  pitches heard in M2 + timbre 32 + adv.

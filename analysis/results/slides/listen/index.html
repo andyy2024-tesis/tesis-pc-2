@@ -54,6 +54,26 @@ button.cell.orig { border-style: dashed; }
 button.cell.on { border-color: var(--play); }
 button.cell.on.playing { background: var(--play); color: var(--on-play); }
 button.cell.on.playing .fill { background: rgba(255,255,255,.18); }
+th button.colhead { all: unset; box-sizing: border-box; display: block; width: 100%; cursor: pointer; text-align: center; color: var(--fg); font-size: 13px; font-weight: 600; padding: 2px 4px; border-radius: 6px; }
+th button.colhead .hint { display: block; font-weight: 500; font-size: 12px; color: var(--play); text-decoration: underline; text-underline-offset: 2px; }
+th button.colhead .hint::after { content: " ▾"; text-decoration: none; display: inline-block; }
+th button.colhead[aria-expanded="true"] { background: var(--play-soft); }
+th button.colhead[aria-expanded="true"] .hint::after { content: " ▴"; }
+th button.colhead:hover .hint { color: var(--accent); }
+th button.colhead:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; }
+.stems-tip { font-size: 14px; }
+.stems[hidden] { display: none; }
+.stems { border: 1px solid var(--line); border-left: 3px solid var(--play); border-radius: 0 8px 8px 0; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.stems-head { display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; }
+.stems-head h3 { font-family: var(--serif); font-size: 19px; margin: 0 0 4px; }
+.stems-head .note { font-size: 14px; max-width: 72ch; }
+.stems-close { flex: none; font: 500 14px var(--sans); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; min-height: 36px; cursor: pointer; }
+.stems-close:hover { border-color: var(--play); }
+.stems-close:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; }
+table.clips th .sub { display: block; font-weight: 400; font-size: 12px; font-family: var(--mono); color: var(--muted); white-space: nowrap; }
+button.cell.mixcell { border-style: dashed; border-color: var(--play); }
+button.cell.off { cursor: default; color: var(--muted); background: transparent; border-style: dotted; font-size: 12px; }
+button.cell.off:hover { border-color: var(--line); }
 .var { display: block; font-weight: 400; font-style: italic; color: var(--accent); }
 .overview { gap: 20px; }
 .live { display: flex; flex-direction: column; gap: 6px; }
@@ -133,6 +153,7 @@ table.cat tr.away th, table.cat tr.away td { color: var(--muted); font-weight: 4
 </div>
 
 <script>
+/*STEMS*/const STEMS = {"e6-structured_v9_t32_no_gate_noise_strongD":{"023_Ypswc":{"strings":-0.0,"burst":-123.3,"click":-63.2,"body":-23.6,"floor":-46.9,"noise":-34.2},"176_mM1wc":{"strings":-0.0,"burst":-112.7,"click":-54.7,"body":-16.2,"floor":-56.6,"noise":-27.3},"276_jw1wc":{"strings":-0.1,"burst":-116.5,"click":-60.5,"body":-18.2,"floor":-57.6,"noise":-34.9},"277_Pw1wc":{"strings":-0.0,"burst":-119.6,"click":-62.3,"body":-23.4,"floor":-55.6,"noise":-34.6},"306_7c1wc":{"strings":-0.1,"burst":-107.0,"click":-52.0,"body":-15.8,"floor":-72.3,"noise":-28.0}},"e6-structured_v5_body_audio_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-80.4,"body":-20.1,"floor":-51.5,"noise":-32.1},"176_mM1wc":{"strings":-0.1,"burst":-63.3,"body":-13.4,"floor":-60.8,"noise":-28.3},"276_jw1wc":{"strings":-0.1,"burst":-67.4,"body":-16.2,"floor":-67.6,"noise":-34.9},"277_Pw1wc":{"strings":-0.1,"burst":-56.9,"body":-14.5,"floor":-68.0,"noise":-34.2},"306_7c1wc":{"strings":-0.2,"burst":-56.8,"body":-13.9,"floor":-70.9,"noise":-28.3}},"structured_v9_base_t32":{"023_Ypswc":{"strings":-0.0,"burst":-82.6,"body":-22.6,"floor":-54.5,"noise":-33.1},"176_mM1wc":{"strings":-0.0,"burst":-73.3,"body":-18.1,"floor":-61.4,"noise":-28.5},"276_jw1wc":{"strings":-0.1,"burst":-75.0,"body":-19.7,"floor":-68.4,"noise":-33.4},"277_Pw1wc":{"strings":-0.0,"burst":-73.1,"body":-21.5,"floor":-68.5,"noise":-33.1},"306_7c1wc":{"strings":-0.1,"burst":-66.4,"body":-18.7,"floor":-71.4,"noise":-28.1}},"e6-structured_v9_base_t32_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-83.2,"body":-19.1,"floor":-53.9,"noise":-32.0},"176_mM1wc":{"strings":-0.1,"burst":-76.8,"body":-14.3,"floor":-61.0,"noise":-24.5},"276_jw1wc":{"strings":-0.1,"burst":-80.7,"body":-16.5,"floor":-67.7,"noise":-30.3},"277_Pw1wc":{"strings":-0.1,"burst":-72.5,"body":-16.1,"floor":-67.9,"noise":-30.8},"306_7c1wc":{"strings":-0.2,"burst":-67.3,"body":-13.8,"floor":-70.9,"noise":-25.1}},"structured_v9_t32_no_gate":{"023_Ypswc":{"strings":-0.0,"burst":-103.8,"click":-64.7,"body":-25.5,"floor":-47.5,"noise":-34.0},"176_mM1wc":{"strings":-0.0,"burst":-97.6,"click":-56.9,"body":-17.4,"floor":-56.8,"noise":-29.3},"276_jw1wc":{"strings":-0.1,"burst":-100.4,"click":-61.9,"body":-19.2,"floor":-57.7,"noise":-34.7},"277_Pw1wc":{"strings":-0.0,"burst":-103.9,"click":-63.7,"body":-24.9,"floor":-55.9,"noise":-33.9},"306_7c1wc":{"strings":-0.1,"burst":-93.0,"click":-53.1,"body":-16.8,"floor":-72.5,"noise":-30.1}}};/*END STEMS*/
 const RECS = [["023_Ypswc", "023"], ["176_mM1wc", "176"], ["276_jw1wc", "276"], ["277_Pw1wc", "277"], ["306_7c1wc", "306"]];
 const ADV3K = "e6-structured_v5_body_audio_nonoise_strongD", ADV9K = "e6-structured_v5_body_audio_nonoise_strongD_9k";
 const ADVN = "e6-structured_v5_body_audio_noise_strongD";
@@ -552,7 +573,7 @@ const SECTIONS = [
     v: ["original", "structured_v8_gated", "structured_v9_timbre", "structured_v9_timbre32", "structured_v9_timbre32late", "structured_v9_t32_simple", "e6-structured_v9_timbre_noise_strongD", "e6-structured_v9_timbre32_noise_strongD", "e6-structured_v9_timbre32_noise_strongD_9k", "e6-structured_v5_body_audio_noise_strongD"],
     heard: "Todos estos modelos usan la compuerta, así que es difícil juzgarlos: todos tienen artefactos. Por lo que escuché, el timbre suena prometedor; hay que repetirlo sin la compuerta." },
   { id: "timbre-sin-compuerta", title: "El timbre de cada ataque, sin compuerta", tag: "Fenómenos",
-    note: "El timbre de 32 armónicos, con el ruido residual sonando todo el tiempo, sobre M1 y sobre M2, con y sin adversarial. Cada uno aparece también con el ruido apagado, sin reentrenar. Si los armónicos siguen limpios con el ruido apagado, el ruido ayuda durante el entrenamiento y no solo al escuchar. M1 + adv queda como referencia. Por métricas, el timbre baja la pérdida unas 0.2 en M1, M1 + adv y M2. En M1 el viento empeora unos 4 dB; en M2 casi no cambia. Medido después: en estos modelos la corrección de la GRU cambia menos de 1 dB cada 10 ms; en M2 · entrenado sin ruido y en M2 + compuerta + timbre 32, unos 14 dB.",
+    note: "El timbre de 32 armónicos, con el ruido residual sonando todo el tiempo, sobre M1 y sobre M2, con y sin adversarial. Cada uno aparece también con el ruido apagado, sin reentrenar. Si los armónicos siguen limpios con el ruido apagado, el ruido ayuda durante el entrenamiento y no solo al escuchar. M1 + adv queda como referencia. Por métricas, el timbre baja la pérdida unas 0.2 en M1, M1 + adv y M2. En M1 el viento empeora unos 4 dB; en M2 casi no cambia. Medido después: en estos modelos la corrección de la GRU cambia menos de 1 dB cada 10 ms; en M2 · entrenado sin ruido y en M2 + compuerta + timbre 32, unos 14 dB. Medido sobre las partes (85 ventanas de test): en M1 + adv, M1 + timbre 32 y M1 + timbre 32 + adv, el ruido residual suena 11–14 dB más fuerte justo después de cada ataque que entre notas, por encima de 1 kHz, y pone el 92–100 % de la energía no armónica del ataque: es el «tambor» que se oye en el ruido. En los dos M2 + timbre 32 el ruido es un fondo parejo (2–6 dB más bajo en los ataques que entre notas); el ataque lo pone su cuerpo, que en M2 llega hasta 6 kHz (en M1, hasta 600 Hz). En todos, la ráfaga de ataque quedó prácticamente apagada.",
     v: ["original", "e6-structured_v5_body_audio_noise_strongD",
         "structured_v9_base_t32", "structured_v9_base_t32-nonoise",
         "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v9_base_t32_noise_strongD-nonoise",
@@ -606,6 +627,24 @@ function audioFor(rid, file) {
   return cache.get(key);
 }
 
+const PART_NAMES = { strings: "Armónicos", sympathetic: "Simpática", burst: "Ataque (ráfaga)", click: "Clic", body: "Cuerpo",
+  squeak: "Roce", reverb: "Sala", floor: "Piso de ruido", noise: "Ruido residual" };
+const PART_ORDER = Object.keys(PART_NAMES);
+const OFF_DB = -80;
+const ALL_FILES = new Set(SECTIONS.flatMap((S) => S.v));
+const fmtDb = (x) => (Math.round(x)).toString().replace("-", "−");
+
+function cellBtn(grid, r, c, file, name, ctx, extra = "") {
+  return `<button type="button" class="cell${extra}" data-grid="${grid}" data-r="${r}" data-c="${c}" data-file="${file}" data-name="${name}" data-ctx="${ctx}" aria-label="${RECS[r][1]} · ${name}"><span class="fill"></span><span class="lbl">${ICON_PLAY}</span></button>`;
+}
+
+function colHead(s, f) {
+  if (f === "original") return `<th scope="col">Original</th>`;
+  const { key, variant } = parts(f), label = `${MODELS[key].name}${variant ? `<span class="var">${variant}</span>` : ""}`;
+  if (!STEMS[key]) return `<th scope="col">${label}</th>`;
+  return `<th scope="col"><button type="button" class="colhead" data-s="${s}" data-key="${key}" aria-expanded="false" aria-controls="stems-${s}">${label}<span class="hint">partes</span></button></th>`;
+}
+
 function build() {
   const toc = $("toc"), root = $("sections");
   SECTIONS.forEach((S, s) => {
@@ -614,41 +653,87 @@ function build() {
     let html = `<div class="sec-head"><p class="sec-num">${String(s + 1).padStart(2, "0")} · ${S.tag}</p><h2>${S.title}</h2><p class="note">${S.note}</p></div>`;
     if (S.heard) html += `<p class="heard"><b>Lo que escuché:</b> ${S.heard}</p>`;
     html += timeline(S);
-    html += `<div class="grid-scroll"><table class="clips"><thead><tr><th class="rec" scope="col">Grabación</th>${S.v.map((f) => { const { key, variant } = parts(f); return `<th scope="col">${f === "original" ? "Original" : MODELS[key].name}${variant ? `<span class="var">${variant}</span>` : ""}</th>`; }).join("")}</tr></thead><tbody>`;
+    if (S.v.some((f) => f !== "original" && STEMS[parts(f).key])) html += `<p class="note stems-tip">Clic en el nombre de un modelo para escuchar cada una de sus partes por separado.</p>`;
+    html += `<div class="grid-scroll"><table class="clips"><thead><tr><th class="rec" scope="col">Grabación</th>${S.v.map((f) => colHead(s, f)).join("")}</tr></thead><tbody>`;
     RECS.forEach(([rid, short], r) => {
-      html += `<tr><td class="rec">${short}</td>${S.v.map((f, c) =>
-        `<td><button type="button" class="cell${f === "original" ? " orig" : ""}" data-s="${s}" data-r="${r}" data-c="${c}" aria-label="${short} · ${nameOf(f)}"><span class="fill"></span><span class="lbl">${ICON_PLAY}</span></button></td>`).join("")}</tr>`;
+      html += `<tr><td class="rec">${short}</td>${S.v.map((f, c) => `<td>${cellBtn("s" + s, r, c, f, nameOf(f), S.title, f === "original" ? " orig" : "")}</td>`).join("")}</tr>`;
     });
-    sec.innerHTML = html + "</tbody></table></div>";
+    html += `</tbody></table></div><div class="stems" id="stems-${s}" hidden></div>`;
+    sec.innerHTML = html;
     root.append(sec);
   });
   root.addEventListener("click", (e) => {
-    const b = e.target.closest("button.cell"); if (!b) return;
-    select(+b.dataset.s, +b.dataset.r, +b.dataset.c, true);
+    const h = e.target.closest("button.colhead"); if (h) { toggleStems(+h.dataset.s, h.dataset.key); return; }
+    const x = e.target.closest("button.stems-close"); if (x) { closeStems(+x.dataset.s, true); return; }
+    const b = e.target.closest("button.cell"); if (b && !b.disabled) select(b, true);
   });
 }
 
-function btnAt(s, r, c) { return document.querySelector(`button.cell[data-s="${s}"][data-r="${r}"][data-c="${c}"]`); }
+function closeStems(s, focusHead) {
+  const panel = $("stems-" + s), key = panel.dataset.key;
+  if (cur && panel.contains(cur.btn)) stopCur();
+  panel.hidden = true; panel.innerHTML = ""; delete panel.dataset.key;
+  document.querySelectorAll(`button.colhead[data-s="${s}"]`).forEach((b) => b.setAttribute("aria-expanded", "false"));
+  if (focusHead && key) { const h = document.querySelector(`button.colhead[data-s="${s}"][data-key="${key}"]`); if (h) h.focus(); }
+}
 
-function select(s, r, c, fromClick) {
-  const S = SECTIONS[s], [rid, short] = RECS[r], file = S.v[c], label = nameOf(file);
-  const a = audioFor(rid, file);
-  if (cur && cur.audio === a && cur.s === s) { // same button: toggle
+function toggleStems(s, key) {
+  const panel = $("stems-" + s);
+  if (panel.dataset.key === key) { closeStems(s, false); return; }
+  closeStems(s, false);
+  const S = SECTIONS[s], name = MODELS[key].name, st = STEMS[key];
+  const present = PART_ORDER.filter((p) => RECS.some(([rid]) => st[rid] && p in st[rid]));
+  const cols = [{ file: key, head: "Mezcla", sub: "" }];
+  if (ALL_FILES.has(key + "-nonoise")) cols.push({ file: key + "-nonoise", head: "Sin ruido", sub: "" });
+  present.forEach((p) => {
+    const lv = RECS.map(([rid]) => st[rid] && st[rid][p]).filter((x) => x !== undefined);
+    const on = lv.filter((x) => x >= OFF_DB);
+    const sub = !on.length ? "apagado" : (Math.max(...on) - Math.min(...on) < 1 ? `${fmtDb(on[0])} dB` : `${fmtDb(Math.max(...on))} a ${fmtDb(Math.min(...on))} dB`);
+    cols.push({ part: p, head: PART_NAMES[p], sub });
+  });
+  const ctx = `${S.title} · partes de ${name}`;
+  let html = `<div class="stems-head"><div><h3>Partes de ${name}</h3><p class="note">Cada parte suena sola; sumadas dan la mezcla. Cada una está subida al volumen de la mezcla para que se oiga; debajo del nombre, su nivel real respecto a la mezcla (en las cinco grabaciones). Sin ruido: la mezcla con el ruido residual apagado. Apagado: el entrenamiento dejó esa parte por debajo de −80 dB; no hay nada que oír.</p></div><button type="button" class="stems-close" data-s="${s}" aria-label="Cerrar partes de ${name}">Cerrar</button></div>`;
+  html += `<div class="grid-scroll"><table class="clips"><thead><tr><th class="rec" scope="col">Grabación</th>${cols.map((c) => `<th scope="col">${c.head}${c.sub ? `<span class="sub">${c.sub}</span>` : ""}</th>`).join("")}</tr></thead><tbody>`;
+  RECS.forEach(([rid, short], r) => {
+    html += `<tr><td class="rec">${short}</td>${cols.map((c, j) => {
+      if (!c.part) return `<td>${cellBtn("p" + s, r, j, c.file, nameOf(c.file), S.title, " mixcell")}</td>`;
+      const lv = st[rid] && st[rid][c.part];
+      if (lv === undefined) return `<td><button type="button" class="cell off" disabled data-grid="p${s}" data-r="${r}" data-c="${j}" aria-label="${short} · ${PART_NAMES[c.part]}: no suena en este fragmento">—</button></td>`;
+      if (lv < OFF_DB) return `<td><button type="button" class="cell off" disabled data-grid="p${s}" data-r="${r}" data-c="${j}" aria-label="${short} · ${PART_NAMES[c.part]}: apagado">apagado</button></td>`;
+      return `<td>${cellBtn("p" + s, r, j, `stems/${key}/${c.part}`, `${name} · ${PART_NAMES[c.part]} (real ${fmtDb(lv)} dB)`, ctx)}</td>`;
+    }).join("")}</tr>`;
+  });
+  panel.innerHTML = html + "</tbody></table></div>";
+  panel.dataset.key = key; panel.hidden = false;
+  document.querySelector(`button.colhead[data-s="${s}"][data-key="${key}"]`).setAttribute("aria-expanded", "true");
+  panel.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function btnAt(grid, r, c) { return document.querySelector(`button.cell[data-grid="${grid}"][data-r="${r}"][data-c="${c}"]`); }
+
+function stopCur() {
+  if (!cur) return;
+  cur.audio.pause(); cur.btn.classList.remove("on", "playing"); setIcon(cur.btn, false);
+  cur.btn.querySelector(".fill").style.width = "0";
+  cur = null;
+  $("nowt").textContent = "Elige una versión para escuchar"; $("pp").disabled = true; $("seek").disabled = true; setIcon($("pp"), false);
+}
+
+function select(btn, fromClick) {
+  const r = +btn.dataset.r, [rid, short] = RECS[r];
+  const a = audioFor(rid, btn.dataset.file);
+  if (cur && cur.btn === btn) { // same button: toggle
     if (fromClick) { a.paused ? a.play() : a.pause(); }
     return;
   }
-  if (cur) {
-    cur.audio.pause(); cur.btn.classList.remove("on", "playing"); setIcon(cur.btn, false);
-    cur.btn.querySelector(".fill").style.width = "0";
-  }
-  const btn = btnAt(s, r, c);
-  cur = { s, r, c, btn, audio: a };
+  if (cur) { cur.audio.pause(); cur.btn.classList.remove("on", "playing"); setIcon(cur.btn, false); cur.btn.querySelector(".fill").style.width = "0"; }
+  cur = { btn, audio: a };
   btn.classList.add("on");
   a.loop = false;
   try { a.currentTime = 0; } catch (_) {}
   a.play().catch(() => {});
-  S.v.forEach((f) => audioFor(rid, f)); // preload the rest of the row
-  $("nowt").innerHTML = `<b>${short}</b> · ${S.title} · ${label}`;
+  document.querySelectorAll(`button.cell[data-grid="${btn.dataset.grid}"][data-r="${r}"][data-file]`).forEach((b) => audioFor(rid, b.dataset.file)); // preload the rest of the row
+  $("nowt").innerHTML = `<b>${short}</b> · ${btn.dataset.ctx} · ${btn.dataset.name}`;
   $("pp").disabled = false; $("seek").disabled = false;
 }
 
@@ -676,15 +761,15 @@ setIcon($("pp"), false);
 $("pp").addEventListener("click", () => { if (cur) cur.audio.paused ? cur.audio.play() : cur.audio.pause(); });
 $("seek").addEventListener("input", (e) => { if (cur) cur.audio.currentTime = +e.target.value; });
 document.addEventListener("keydown", (e) => {
-  if (!cur || e.target.matches("input[type=range], input[type=checkbox], summary")) return;
-  const S = SECTIONS[cur.s];
+  if (!cur || e.target.matches("input[type=range], input[type=checkbox], summary, button.colhead, button.stems-close")) return;
   const moves = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] };
   if (e.key === " " && !e.target.closest("button")) { e.preventDefault(); cur.audio.paused ? cur.audio.play() : cur.audio.pause(); return; }
   if (!(e.key in moves)) return;
   e.preventDefault();
-  const [dr, dc] = moves[e.key];
-  const r = Math.min(RECS.length - 1, Math.max(0, cur.r + dr)), c = Math.min(S.v.length - 1, Math.max(0, cur.c + dc));
-  if (r !== cur.r || c !== cur.c) { select(cur.s, r, c, false); cur.btn.focus({ preventScroll: true }); }
+  const [dr, dc] = moves[e.key], g = cur.btn.dataset.grid;
+  let r = +cur.btn.dataset.r, c = +cur.btn.dataset.c, b;
+  do { r += dr; c += dc; b = btnAt(g, r, c); } while (b && b.disabled);
+  if (b) { select(b, false); b.focus({ preventScroll: true }); }
 });
 buildCatalog();
 build();
