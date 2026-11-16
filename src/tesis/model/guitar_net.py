@@ -176,20 +176,15 @@ class CrossVoice(nn.Module):
         return x.transpose(0, 1)
 
 
-def room_floor_bands(y, sr, onset, end, freqs, n_bands, n_fft_noise, hop_noise, q=10):
-    """Each recording's steady background (room tone, mic hiss) in the catch-all noise's units.
-
-    STFT of the whole recording (2048 samples, hop 512); bins within 3 % (at least 25 Hz) of a partial of any note that
-    is sounding are masked out, and each bin's background is the q-th percentile of its remaining frames (minimum
-    statistics). Then mapped to the noise's log bands and calibrated: band magnitudes that make filtered_noise produce
-    exactly this background. Returns (n_bands,) magnitudes.
-    """
-    n_fft, hop = 2048, 512
+def room_background_bins(y, sr, onset, end, freqs, q=10, n_fft=2048, hop=512):
+    """Steady background power per FFT bin (n_fft 2048, hop 512, Hann) while the piece plays: bins within 3 % (at least
+    25 Hz) of a partial of any sounding note are masked out, and each bin's background is the q-th percentile of its
+    remaining frames (minimum statistics). Digital silence and the talk/applause around the piece are excluded.
+    Returns (bin frequencies, power)."""
     x = torch.as_tensor(y).float()
     P = (torch.stft(x, n_fft, hop, window=torch.hann_window(n_fft), return_complex=True).abs() ** 2).numpy()  # (bins, T)
     fb = np.fft.rfftfreq(n_fft, 1 / sr)
     tf = np.arange(P.shape[1]) * hop
-    # only while the piece plays (YouTube recordings have talk or applause around it), never digital silence
     tot = P.sum(0)
     keep = (tf >= onset.min() - 0.5 * sr) & (tf <= onset.max() + 2.0 * sr) & (tot > 1e-6 * np.median(tot))
     P = P[:, keep]
@@ -206,6 +201,17 @@ def room_floor_bands(y, sr, onset, end, freqs, n_bands, n_fft_noise, hop_noise, 
     for k in range(len(fb)):
         v = P[k, ~mask[k]]
         bg[k] = np.percentile(v if len(v) > 50 else P[k], q)
+    return fb, bg
+
+
+def room_floor_bands(y, sr, onset, end, freqs, n_bands, n_fft_noise, hop_noise, q=10):
+    """Each recording's steady background (room tone, mic hiss) in the catch-all noise's units.
+
+    The background per FFT bin (room_background_bins) is mapped to the noise's log bands and calibrated: band magnitudes
+    that make filtered_noise produce exactly this background. Returns (n_bands,) magnitudes.
+    """
+    n_fft, hop = 2048, 512
+    fb, bg = room_background_bins(y, sr, onset, end, freqs, q)
     # the noise's own response: constant unit band magnitudes, measured with the same STFT
     W = log_band_matrix(n_bands, n_fft_noise // 2 + 1, sr)
     g = torch.Generator().manual_seed(0)

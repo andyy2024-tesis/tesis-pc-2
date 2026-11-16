@@ -1,0 +1,72 @@
+{
+ "structured_v9_t32_no_gate": {
+  "0-700": {
+   "median_db": -5.2,
+   "share_above_6db": 0.18
+  },
+  "700-4k": {
+   "median_db": 0.8,
+   "share_above_6db": 0.3
+  },
+  "4k-11k": {
+   "median_db": 2.9,
+   "share_above_6db": 0.35
+  }
+ },
+ "e6/structured_v9_t32_no_gate_noise_strongD": {
+  "0-700": {
+   "median_db": -6.3,
+   "share_above_6db": 0.18
+  },
+  "700-4k": {
+   "median_db": -2.1,
+   "share_above_6db": 0.22
+  },
+  "4k-11k": {
+   "median_db": 1.8,
+   "share_above_6db": 0.32
+  }
+ },
+ "structured_v9_base_t32": {
+  "0-700": {
+   "median_db": -3.4,
+   "share_above_6db": 0.21
+  },
+  "700-4k": {
+   "median_db": 8.9,
+   "share_above_6db": 0.63
+  },
+  "4k-11k": {
+   "median_db": 8.5,
+   "share_above_6db": 0.62
+  }
+ },
+ "e6/structured_v9_base_t32_noise_strongD": {
+  "0-700": {
+   "median_db": -1.9,
+   "share_above_6db": 0.27
+  },
+  "700-4k": {
+   "median_db": 8.0,
+   "share_above_6db": 0.58
+  },
+  "4k-11k": {
+   "median_db": 8.5,
+   "share_above_6db": 0.62
+  }
+ },
+ "e6/structured_v5_body_audio_noise_strongD": {
+  "0-700": {
+   "median_db": -7.8,
+   "share_above_6db": 0.13
+  },
+  "700-4k": {
+   "median_db": 7.2,
+   "share_above_6db": 0.55
+  },
+  "4k-11k": {
+   "median_db": 7.8,
+   "share_above_6db": 0.58
+  }
+ }
+}

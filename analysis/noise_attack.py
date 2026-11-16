@@ -26,7 +26,7 @@ from compare_runs import RES, load  # noqa: E402
 SR, HOP, NFFT, DEV = 24000, 120, 480, "cuda"
 BANDS = {"0-1k": (0, 1000), "1-4k": (1000, 4000), "4-12k": (4000, 12000)}
 PRE, ATTACK, FAR_AFTER, FAR_BEFORE = 0.010, 0.060, 0.200, 0.050
-NON_HARMONIC = ["noise", "burst", "click", "body", "squeak", "floor"]
+NON_HARMONIC = ["noise", "burst", "click", "contact", "body", "squeak", "floor"]
 OUT = RES / "noise_attack.json"
 WIN = torch.hann_window(NFFT, device=DEV)
 FREQ = np.fft.rfftfreq(NFFT, 1 / SR)

@@ -31,7 +31,7 @@ AUDIO = REPO / "analysis" / "results" / "slides" / "audio"
 LISTEN = REPO / "analysis" / "results" / "slides" / "listen"
 FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
 OFF_DB = -80.0  # parts quieter than this (RMS relative to the mix) are reported as off
-ORDER = ["strings", "sympathetic", "burst", "click", "body", "squeak", "reverb", "floor", "noise"]
+ORDER = ["strings", "sympathetic", "burst", "click", "contact", "body", "squeak", "reverb", "floor", "noise"]
 
 
 @torch.no_grad()

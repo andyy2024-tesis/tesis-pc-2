@@ -627,8 +627,8 @@ function audioFor(rid, file) {
   return cache.get(key);
 }
 
-const PART_NAMES = { strings: "Armónicos", sympathetic: "Simpática", burst: "Ataque (ráfaga)", click: "Clic", body: "Cuerpo",
-  squeak: "Roce", reverb: "Sala", floor: "Piso de ruido", noise: "Ruido residual" };
+const PART_NAMES = { strings: "Armónicos", sympathetic: "Simpática", burst: "Ataque (ráfaga)", click: "Clic",
+  contact: "Contacto", body: "Cuerpo", squeak: "Roce", reverb: "Sala", floor: "Piso de ruido", noise: "Ruido residual" };
 const PART_ORDER = Object.keys(PART_NAMES);
 const OFF_DB = -80;
 const ALL_FILES = new Set(SECTIONS.flatMap((S) => S.v));
