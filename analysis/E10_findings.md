@@ -191,3 +191,12 @@ Stage 4 (running, ~13:30): strings with seed 1; M1 + per-note attack + room back
 - With strings, neither windowed attention (5.71) nor the biLSTM (5.68) adds anything over the GRU: once the network knows
   the string, its memory is enough.
 - Strings help M1 + per-note attack + room background as much (-0.11). Its adversarial version is running.
+
+### The favourite's successor
+
+Same adversarial recipe on M1 + timbre 32 + per-note attack + room background + strings
+(`e6/structured_v10_m1_burst_floor_strings_noise_strongD`), against the favourite (`e6/structured_v9_base_t32_noise_strongD`):
+loss 5.78 vs 5.93; wind -22.0 vs -19.0 dB; snare -2.1 / +0.9 vs +14.2 / +12.3 dB; noise share of the attack 2-7 % vs
+99-100 %; noise vs room -1.9 / +4.0 vs +8.0 / +8.5 dB; ticks 5 vs 5. By the numbers it fixes both noise problems the user
+heard (snare, wind) without new artifacts. Candidates for the ear: this one, and M2 + timbre 32 + strings + adv + rise
+penalty (5.73, 8 ticks).

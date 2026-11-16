@@ -14,3 +14,23 @@ before: {"test_loss": 5.7037582790150365, "n_windows": 85, "share_burst_db": -35
   EVAL step 1000: {"test_loss": 5.763223244162167, "n_windows": 85, "share_burst_db": -34.079542462497415, "share_strings_db": -0.24697812341556338, "share_body_db": -13.404137628342836, "share_floor_db": -38.05959678618638, "share_noise_db": -20.424165430742978, "quiet_noise_db": -21.338422775268555}
   step  1100  D 1.809  spec 5.581  adv 1.323  fm 0.576 (964 s)
   step  1200  D 1.787  spec 5.620  adv 1.384  fm 0.604 (1032 s)
+  step  1300  D 1.809  spec 5.594  adv 1.133  fm 0.572 (1100 s)
+  step  1400  D 1.825  spec 5.554  adv 1.229  fm 0.605 (1168 s)
+  step  1500  D 1.811  spec 5.743  adv 1.432  fm 0.606 (1236 s)
+  step  1600  D 1.812  spec 5.604  adv 1.526  fm 0.619 (1304 s)
+  step  1700  D 1.766  spec 5.531  adv 1.357  fm 0.626 (1371 s)
+  step  1800  D 1.765  spec 5.547  adv 1.468  fm 0.658 (1440 s)
+  step  1900  D 1.763  spec 5.697  adv 1.371  fm 0.680 (1507 s)
+  step  2000  D 1.753  spec 5.744  adv 1.409  fm 0.658 (1576 s)
+  EVAL step 2000: {"test_loss": 5.788236017788158, "n_windows": 85, "share_burst_db": -34.22443068830744, "share_strings_db": -0.3113025197966079, "share_body_db": -12.031327725348664, "share_floor_db": -38.324062986802716, "share_noise_db": -22.215626262413593, "quiet_noise_db": -24.15302276611328}
+  step  2100  D 1.755  spec 5.538  adv 1.464  fm 0.644 (1647 s)
+  step  2200  D 1.725  spec 5.631  adv 1.401  fm 0.650 (1715 s)
+  step  2300  D 1.734  spec 5.743  adv 1.460  fm 0.658 (1783 s)
+  step  2400  D 1.700  spec 5.560  adv 1.433  fm 0.678 (1851 s)
+  step  2500  D 1.781  spec 5.285  adv 1.522  fm 0.612 (1919 s)
+  step  2600  D 1.714  spec 5.665  adv 1.496  fm 0.692 (1987 s)
+  step  2700  D 1.770  spec 5.517  adv 1.523  fm 0.637 (2054 s)
+  step  2800  D 1.793  spec 5.229  adv 1.664  fm 0.620 (2122 s)
+  step  2900  D 1.714  spec 5.841  adv 1.449  fm 0.697 (2190 s)
+  step  3000  D 1.710  spec 5.757  adv 1.459  fm 0.714 (2258 s)
+  EVAL step 3000: {"test_loss": 5.783753978504854, "n_windows": 85, "share_burst_db": -33.899803481961264, "share_strings_db": -0.3339272462133428, "share_body_db": -13.003256271850084, "share_floor_db": -38.11723410363567, "share_noise_db": -16.314325975609666, "quiet_noise_db": -22.008441925048828}
