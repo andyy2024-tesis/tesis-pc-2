@@ -152,5 +152,33 @@
    "median_db": 4.0,
    "share_above_6db": 0.4
   }
+ },
+ "e6/structured_v10_m1_burst_noise_strongD": {
+  "0-700": {
+   "median_db": -5.6,
+   "share_above_6db": 0.2
+  },
+  "700-4k": {
+   "median_db": 4.6,
+   "share_above_6db": 0.44
+  },
+  "4k-11k": {
+   "median_db": 5.5,
+   "share_above_6db": 0.48
+  }
+ },
+ "structured_v10_m2_attn": {
+  "0-700": {
+   "median_db": -4.8,
+   "share_above_6db": 0.18
+  },
+  "700-4k": {
+   "median_db": -0.1,
+   "share_above_6db": 0.28
+  },
+  "4k-11k": {
+   "median_db": 2.3,
+   "share_above_6db": 0.34
+  }
  }
 }

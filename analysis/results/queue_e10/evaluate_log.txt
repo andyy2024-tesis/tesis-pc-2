@@ -119,3 +119,22 @@ done structured_v10_m2_slow
 done structured_v10_m2_slow:nonoise
 done structured_v10_m2_slow {"023_Ypswc": {"strings": -0.1, "burst": -104.2, "click": -64.9, "body": -20.5, "floor": -49.4, "noise": -30.8}, "176_mM1wc": {"strings": 0.0, "burst": -98.0, "click": -56.5, "body": -16.5, "floor": -56.0, "noise": -29.2}, "276_jw1wc": {"strings": -0.0, "burst": -100.4, "click": -63.4, "body": -20.8, "floor": -60.7, "noise": -33.4}, "277_Pw1wc": {"strings": -0.0, "burst": -99.2, "click": -63.0, "body": -26.4, "floor": -54.6, "noise": -35.3}, "306_7c1wc": {"strings": -0.1, "burst": -92.8, "click": -53.3, "body": -17.0, "floor": -70.3, "noise": -32.5}}
 06:02:47 done structured_v10_m2_slow
+07:16:48 evaluate e6/structured_v10_m1_burst_noise_strongD
+e6/structured_v10_m1_burst_noise_strongD {"mean": 5.865, "median": 5.82, "n": 85, "wind": -19.9}
+e6/structured_v10_m1_burst_noise_strongD {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 190.9, "1-4k": 198.9, "4-12k": 184.5}, "strings": {"0-1k": 7.1, "1-4k": 10.1, "4-12k": 24.5}, "body": {"0-1k": 22.1, "1-4k": 26.2, "4-12k": 18.9}, "floor": {"0-1k": -3.8, "1-4k": 2.2, "4-12k": 0.1}, "noise": {"0-1k": -3.4, "1-4k": 5.5, "4-12k": 5.3}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -38.3, "1-4k": -15.4, "4-12k": -11.0}, "strings": {"0-1k": -1.6, "1-4k": -1.1, "4-12k": 0.2}, "body": {"0-1k": -12.0, "1-4k": -47.1, "4-12k": -55.7}, "floor": {"0-1k": -75.2, "1-4k": -52.7, "4-12k": -36.3}, "noise": {"0-1k": -37.2, "1-4k": -24.6, "4-12k": -18.3}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.11, "4-12k": 0.16}}
+e6/structured_v10_m1_burst_noise_strongD {"0-700": {"median_db": -5.6, "share_above_6db": 0.2}, "700-4k": {"median_db": 4.6, "share_above_6db": 0.44}, "4k-11k": {"median_db": 5.5, "share_above_6db": 0.48}}
+e6/structured_v10_m1_burst_noise_strongD base 4
+e6/structured_v10_m1_burst_noise_strongD no_detune 4
+e6/structured_v10_m1_burst_noise_strongD no_delta 2
+e6/structured_v10_m1_burst_noise_strongD no_dev 7
+done e6/structured_v10_m1_burst_noise_strongD
+done e6/structured_v10_m1_burst_noise_strongD:nonoise
+done e6/structured_v10_m1_burst_noise_strongD {"023_Ypswc": {"strings": -0.1, "burst": -32.1, "body": -18.9, "floor": -53.8, "noise": -31.7}, "176_mM1wc": {"strings": -0.1, "burst": -32.7, "body": -14.2, "floor": -60.5, "noise": -26.2}, "276_jw1wc": {"strings": -0.1, "burst": -37.4, "body": -16.0, "floor": -67.3, "noise": -32.4}, "277_Pw1wc": {"strings": -0.1, "burst": -33.2, "body": -16.5, "floor": -67.3, "noise": -34.5}, "306_7c1wc": {"strings": -0.2, "burst": -30.3, "body": -13.5, "floor": -70.7, "noise": -28.9}}
+07:25:22 done e6/structured_v10_m1_burst_noise_strongD
+07:26:22 evaluate structured_v10_m2_attn
+structured_v10_m2_attn {"mean": 5.728, "median": 5.756, "n": 85, "wind": -21.4}
+structured_v10_m2_attn {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 125.0, "1-4k": 129.1, "4-12k": 132.2}, "strings": {"0-1k": 7.0, "1-4k": 10.2, "4-12k": 23.2}, "body": {"0-1k": 24.2, "1-4k": 19.1, "4-12k": 25.8}, "click": {"0-1k": 142.5, "1-4k": 147.4, "4-12k": 150.0}, "floor": {"0-1k": -1.6, "1-4k": 1.0, "4-12k": -1.0}, "noise": {"0-1k": -5.7, "1-4k": 1.4, "4-12k": -0.6}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -104.3, "1-4k": -85.1, "4-12k": -63.2}, "strings": {"0-1k": -1.0, "1-4k": -0.8, "4-12k": -2.6}, "body": {"0-1k": -14.7, "1-4k": -17.6, "4-12k": -11.6}, "click": {"0-1k": -73.9, "1-4k": -48.2, "4-12k": -21.5}, "floor": {"0-1k": -60.6, "1-4k": -40.6, "4-12k": -31.0}, "noise": {"0-1k": -40.0, "1-4k": -32.5, "4-12k": -25.8}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.03, "4-12k": 0.03}}
+structured_v10_m2_attn {"0-700": {"median_db": -4.8, "share_above_6db": 0.18}, "700-4k": {"median_db": -0.1, "share_above_6db": 0.28}, "4k-11k": {"median_db": 2.3, "share_above_6db": 0.34}}
+structured_v10_m2_attn base 6
+structured_v10_m2_attn no_detune 6
+structured_v10_m2_attn no_delta 3

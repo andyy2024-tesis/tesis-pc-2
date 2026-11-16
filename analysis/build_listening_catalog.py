@@ -75,6 +75,10 @@ C = [
     dict(n="M2 + timbre 32 + cuerdas · atención entre cuerdas", run="structured_v10_m2_strings_xvoice", p="structured_v10_m2_strings", rel="rec", diff=dict(cross_voice=True), change="Además, una capa de self-attention entre las 6 cuerdas en cada cuadro."),
     dict(n="M2 + timbre 32 + adv · contacto", run="e6/structured_v9_t32_no_gate_noise_strongD_contact_rise", p="structured_v9_t32_no_gate", rel="cont", meta=dict(overrides=dict(contact=True, delta_rise=20.0), d_kind="complex", **ADV), change="Como M2 + timbre 32 + adv, con un ruido de contacto por voz (dedo o uña tocando la cuerda) y una penalización a las subidas rápidas de los armónicos agudos: así imitaba el adversarial ese contacto, con los «agudos cortos»."),
     dict(n="M1 + timbre 32 + ataque por nota + adv", run="e6/structured_v10_m1_burst_noise_strongD", p="structured_v10_m1_burst", rel="cont", meta=dict(overrides={}, d_kind="complex", **ADV), change="La receta del favorito (adversarial de 3000 pasos) sobre M1 + timbre 32 + ataque por nota: el favorito más el ataque por nota."),
+    dict(n="M2 + timbre 32 + cuerdas + adv", run="e6/structured_v10_m2_strings_noise_strongD", p="structured_v10_m2_strings", rel="cont", meta=dict(overrides={}, d_kind="complex", **ADV), change="Adversarial de 3000 pasos sobre M2 + timbre 32 + cuerdas."),
+    dict(n="M2 + timbre 32 + cuerdas · atención", run="structured_v10_m2_strings_attn", p="structured_v10_m2_strings", rel="rec", diff=dict(backbone="attn"), change="Cuerdas, y en vez de la GRU la self-attention sobre los últimos 64 cuadros de cada cuerda."),
+    dict(n="M1 + timbre 32 + ataque por nota + cuerdas", run="structured_v10_m1_burst_strings", p="structured_v10_m1_burst", rel="rec", diff=dict(strings=True), change="El ataque por nota (que le quitó el «tambor» al ruido de M1) más las cuerdas."),
+    dict(n="M1 + timbre 32 + ataque por nota + cuerdas + adv", run="e6/structured_v10_m1_burst_strings_noise_strongD", p="structured_v10_m1_burst_strings", rel="cont", meta=dict(overrides={}, d_kind="complex", **ADV), change="La receta del favorito (adversarial de 3000 pasos) sobre M1 + timbre 32 + ataque por nota + cuerdas."),
 ]
 
 

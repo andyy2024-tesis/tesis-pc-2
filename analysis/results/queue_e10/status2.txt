@@ -3,3 +3,9 @@
 05:48:17 start adv structured_v9_t32_no_gate_noise_strongD_contact_rise
 05:49:25 end adv structured_v9_t32_no_gate_noise_strongD_contact_rise stopped (contact part started too loud; restarted later)
 05:49:48 start adv structured_v10_m1_burst_noise_strongD
+07:15:54 end adv structured_v10_m1_burst_noise_strongD exit 0
+07:15:54 start adv structured_v9_t32_no_gate_noise_strongD_contact_rise
+07:23:28 end _v10_m2_attn exit 0
+07:23:28 start _v10_m1_burst_floor
+07:28:46 end _v10_m2_strings exit 0
+07:28:46 start _v10_m2_strings_xvoice
