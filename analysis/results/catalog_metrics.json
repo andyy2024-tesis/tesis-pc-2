@@ -209,6 +209,18 @@
   "n": 85,
   "wind": -21.3
  },
+ "structured_v10_m2_strings_bilstm": {
+  "mean": 5.683,
+  "median": 5.64,
+  "n": 85,
+  "wind": -20.5
+ },
+ "structured_v10_m2_strings_seed1": {
+  "mean": 5.721,
+  "median": 5.607,
+  "n": 85,
+  "wind": -21.3
+ },
  "structured_v10_m2_strings_xvoice": {
   "mean": 5.644,
   "median": 5.567,

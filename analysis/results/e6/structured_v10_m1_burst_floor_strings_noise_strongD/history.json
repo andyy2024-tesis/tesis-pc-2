@@ -1,0 +1,25 @@
+{
+ "before": {
+  "test_loss": 5.7037582790150365,
+  "n_windows": 85,
+  "share_burst_db": -35.44485427925481,
+  "share_strings_db": -0.10416088740515914,
+  "share_body_db": -16.729338987450035,
+  "share_floor_db": -39.113359151376976,
+  "share_noise_db": -26.872227323499068,
+  "quiet_noise_db": -25.637197494506836
+ },
+ "after": [
+  {
+   "step": 1000,
+   "test_loss": 5.763223244162167,
+   "n_windows": 85,
+   "share_burst_db": -34.079542462497415,
+   "share_strings_db": -0.24697812341556338,
+   "share_body_db": -13.404137628342836,
+   "share_floor_db": -38.05959678618638,
+   "share_noise_db": -20.424165430742978,
+   "quiet_noise_db": -21.338422775268555
+  }
+ ]
+}

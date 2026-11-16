@@ -2,3 +2,15 @@
   WeightNorm.apply(module, name, dim)
 before: {"test_loss": 5.7037582790150365, "n_windows": 85, "share_burst_db": -35.44485427925481, "share_strings_db": -0.10416088740515914, "share_body_db": -16.729338987450035, "share_floor_db": -39.113359151376976, "share_noise_db": -26.872227323499068, "quiet_noise_db": -25.637197494506836}
   step   100  D 1.987  spec 0.000  adv 0.000  fm 0.000 (90 s)
+  step   200  D 1.947  spec 0.000  adv 0.000  fm 0.000 (160 s)
+  step   300  D 1.940  spec 5.567  adv 0.890  fm 0.480 (251 s)
+  step   400  D 1.921  spec 5.635  adv 1.183  fm 0.472 (332 s)
+  step   500  D 1.884  spec 5.666  adv 1.313  fm 0.512 (410 s)
+  step   600  D 1.867  spec 5.844  adv 1.399  fm 0.507 (503 s)
+  step   700  D 1.836  spec 5.701  adv 1.404  fm 0.559 (594 s)
+  step   800  D 1.872  spec 5.601  adv 1.275  fm 0.483 (684 s)
+  step   900  D 1.815  spec 5.619  adv 1.288  fm 0.510 (775 s)
+  step  1000  D 1.805  spec 5.346  adv 1.513  fm 0.554 (868 s)
+  EVAL step 1000: {"test_loss": 5.763223244162167, "n_windows": 85, "share_burst_db": -34.079542462497415, "share_strings_db": -0.24697812341556338, "share_body_db": -13.404137628342836, "share_floor_db": -38.05959678618638, "share_noise_db": -20.424165430742978, "quiet_noise_db": -21.338422775268555}
+  step  1100  D 1.809  spec 5.581  adv 1.323  fm 0.576 (964 s)
+  step  1200  D 1.787  spec 5.620  adv 1.384  fm 0.604 (1032 s)
