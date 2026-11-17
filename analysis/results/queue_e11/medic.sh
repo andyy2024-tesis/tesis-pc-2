@@ -8,6 +8,7 @@ cfg() { case $1 in
   _v11_m1_attn_ahead) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16}" ;;
   _v11_m1_attn_ahead_xvoice) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"cross_voice\": true}" ;;
   _v11_m1_attn_ahead_contact) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"contact\": true, \"contact_init\": -8.0, \"delta_rise\": 20.0}" ;;
+  _v11_m1_attn_ahead_rec) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"rec_all\": true}" ;;
   _v11_m1_strings_oldB) echo "{$M1B, \"strings\": true, \"strings_b\": \"pitch\"}" ;;
   _v11_m1_strings_guitarB) echo "{$M1B, \"strings\": true, \"strings_b\": \"guitar\"}" ;;
   _v11_m1_strings_decay) echo "{$M1B, \"strings\": true, \"decay_cond\": true}" ;;
@@ -28,6 +29,6 @@ while true; do
     esac
   done
   s=$(grep -c " start " $Q/status.txt); e=$(grep -c " end " $Q/status.txt)
-  grep -q "all done" $Q/status.txt && grep -q "strings done" $Q/status.txt && [ "$s" -le "$e" ] && break
+  grep -q "all done" $Q/status.txt && grep -q "strings done" $Q/status.txt && grep -q "rec done" $Q/status.txt && [ "$s" -le "$e" ] && break
   sleep 60
 done

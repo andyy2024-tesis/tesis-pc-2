@@ -96,6 +96,7 @@ LATER = {k + s: k for k in ["structured_v10_m1_burst", "structured_v10_m2_burst"
                             "e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise",
                             "structured_v11_m1_attn_ahead_contact",
                             "e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise",
+                            "structured_v11_m1_attn_ahead_rec", "e6-structured_v11_m1_attn_ahead_rec_noise_strongD_rise",
                             "structured_v11_m1_strings_oldB", "structured_v11_m1_strings_guitarB",
                             "structured_v11_m1_strings_decay", "structured_v11_m1_strings_oldvoices"] for s in ("", "-nonoise")}
 VERSIONS.update(LATER)

@@ -15,7 +15,7 @@ while true; do
     echo "$run" >> $Q/evaluated.txt
   done
   s=$(grep -c " start " $Q/status.txt); e=$(grep -c " end " $Q/status.txt); ok=$(grep -c "exit 0" $Q/status.txt)
-  grep -q "all done" $Q/status.txt && grep -q "strings done" $Q/status.txt && [ "$s" -le "$e" ] && [ "$ok" -le "$(wc -l < $Q/evaluated.txt)" ] && break
+  grep -q "all done" $Q/status.txt && grep -q "strings done" $Q/status.txt && grep -q "rec done" $Q/status.txt && [ "$s" -le "$e" ] && [ "$ok" -le "$(wc -l < $Q/evaluated.txt)" ] && break
   sleep 60
 done
 echo "$(date +%T) auto_eval finished" >> $Q/evaluate_log.txt

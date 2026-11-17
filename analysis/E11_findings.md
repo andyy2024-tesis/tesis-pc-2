@@ -20,6 +20,16 @@ recipe, 3000 steps, complex D, with the rise penalty 20)
 | T2 `structured_v11_m1_attn_ahead` | T1 + 16 future frames (160 ms; offline only) | strums: the biLSTM's edge was seeing ahead |
 | T3 `structured_v11_m1_attn_ahead_xvoice` | T2 + attention across voices every frame | strums: voices see each other's state |
 | T4 `structured_v11_m1_attn_ahead_contact` | T2 + contact part from scratch (starts audible, -8) + rise penalty in training | fast high events get their own part |
+| R `structured_v11_m1_attn_ahead_rec` | T2 + the recording reaches every part that could depend on it (`rec_all`) | different guitars, microphones and rooms |
+
+R, the user's request: audit of what read the recording before: the network input, per-frame correction, note levels,
+per-note attack, noise, floor and body EQ did; the base decay of each partial (pitch and frequency only), the body
+response (one waveform for all guitars, 6-band EQ below 800 Hz: can't move a resonance), the stiffness (one law) and
+the attack time (2 ms) and end-of-note fade (5 ms) did not. Double decay/beating, click and sympathetic strings are not
+in M1. `rec_all`: the decay MLP reads the embedding; a 24-band EQ of the body response (40-800 Hz) from the embedding,
+on top of the table; attack and fade scaled per recording (x0.22-4.5, starting at 1); the stiffness law shifted by the
+guitar's measured offset relative to the average (analysis/inharmonicity_recording.py: residuals against the pooled
+per-string law, shrunk with 3 notes, centered; sd 0.16, range -0.38..+0.24), so the average stiffness stays.
 
 ## Why strings sound synthetic
 

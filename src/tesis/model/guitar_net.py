@@ -122,6 +122,10 @@ class NetConfig:
     #   law over pitch) or "guitar" (measured per recording and string, notes.log_b_open; analysis/inharmonicity_guitar.py)
     strings_voices: bool = True  # strings: one voice per string (False: the old voice assignment, string still known)
     decay_cond: bool = False  # the decay MLP also reads the recording embedding (and string + fret with strings)
+    rec_all: bool = False  # every part that could depend on the guitar, microphone or room reads the recording: the
+    #   decay MLP gets the embedding; the body response a finer EQ from it (24 bands to 800 Hz, on top of the table);
+    #   attack time and end-of-note fade are scaled per recording; the stiffness law is shifted by the guitar's measured
+    #   offset (notes.log_b_offset, analysis/inharmonicity_recording.py)
 
     @property
     def n_feat(self):
@@ -263,6 +267,8 @@ class Recording:
             else:
                 assert cfg.strings_b == "pitch", cfg.strings_b
             self.string_feat = np.concatenate([np.eye(6)[self.string - 1], (self.fret / 12)[:, None]], 1).astype(np.float32)
+        if cfg.rec_all and "log_b_offset" in notes:
+            B = B * np.exp(notes.log_b_offset.values)
         self.freqs = f0[:, None] * k * np.sqrt(1 + B[:, None] * k ** 2)
         if cfg.sympathetic:
             self.open_pitch = OPEN_STRINGS
@@ -355,6 +361,10 @@ class GuitarNet(nn.Module):
             with torch.no_grad():  # start in 2-10 kHz
                 c = torch.tensor(np.geomspace(40.0, cfg.sr / 2, cfg.contact_bands)).float()
                 self.rec_contact.weight[:] = torch.where((c > 2000) & (c < 10000), 0.0, -4.0)
+        if cfg.rec_all:  # per-recording scale of the attack time and of the end-of-note fade (start at 1)
+            self.rec_consts = nn.Linear(R, 2)
+            nn.init.zeros_(self.rec_consts.weight)
+            nn.init.zeros_(self.rec_consts.bias)
         self.register_buffer("logk", torch.log(torch.arange(1, K + 1).float()))
         out_dim = K if cfg.structured else K + 1
         self.voice_out = nn.Linear(Hd, out_dim)
@@ -367,7 +377,7 @@ class GuitarNet(nn.Module):
                                           nn.Linear(Hd, K + 1 + int(cfg.body_ir) + 2 * int(cfg.pluck_click)))
             nn.init.zeros_(self.note_mlp[-1].weight)
             nn.init.zeros_(self.note_mlp[-1].bias)
-            n_dec = 2 + (R + 7 * int(cfg.strings)) * int(cfg.decay_cond)
+            n_dec = 2 + (R + 7 * int(cfg.strings)) * int(cfg.decay_cond or cfg.rec_all)
             self.decay_mlp = nn.Sequential(nn.Linear(n_dec, 64), nn.LeakyReLU(), nn.Linear(64, 1))
             nn.init.zeros_(self.decay_mlp[-1].weight)
             nn.init.zeros_(self.decay_mlp[-1].bias)
@@ -394,6 +404,10 @@ class GuitarNet(nn.Module):
                 g = torch.Generator().manual_seed(0)
                 self.body_ir_wave = nn.Parameter(1e-2 * torch.randn(n_ir, generator=g))  # shared by all recordings
                 self.rec_body_eq = nn.Embedding(n_recordings, cfg.body_eq_bands)
+                if cfg.rec_all:  # finer EQ of the shared response from the embedding: can move a guitar's resonances
+                    self.body_eq_fine = nn.Linear(R, 24)
+                    nn.init.zeros_(self.body_eq_fine.weight)
+                    nn.init.zeros_(self.body_eq_fine.bias)
                 nn.init.zeros_(self.rec_body_eq.weight)
                 t = torch.arange(n_ir) / cfg.sr
                 self.register_buffer("body_ir_env", torch.exp(-t / cfg.body_ir_tau))
@@ -480,7 +494,7 @@ class GuitarNet(nn.Module):
         """Decay rate (1/s) for partial frequencies f (Na, K) of notes with these pitches; with decay_cond, extra (Na, E)
         is the recording embedding (and string + fret) of each note."""
         x = torch.stack([((pitch.float() - 64) / 12)[:, None].expand_as(f), torch.log(f / 1000)], -1)
-        if self.cfg.decay_cond:
+        if self.cfg.decay_cond or self.cfg.rec_all:
             x = torch.cat([x, extra[:, None, :].expand(-1, f.shape[1], -1)], -1)
         sigma0 = 1.5 + 2.0 * f / 1000
         return Fn.softplus(self.decay_mlp(x)[..., 0] + inv_softplus(sigma0))
@@ -496,6 +510,13 @@ class GuitarNet(nn.Module):
         lo = pos.floor().long()
         eq_db = self.rec_body_eq.weight[self._rec]
         eq = eq_db[lo] * (1 - (pos - lo)) + eq_db[lo + 1] * (pos - lo)
+        if cfg.rec_all:
+            nb = 24
+            c2 = torch.log(torch.tensor(np.geomspace(40.0, max(cfg.body_eq_max, 800.0), nb), device=emb.device).float())
+            p2 = ((torch.log(f.clamp(40.0, max(cfg.body_eq_max, 800.0))) - c2[0]) / (c2[1] - c2[0])).clamp(0, nb - 1 - 1e-4)
+            l2 = p2.floor().long()
+            e2 = self.body_eq_fine(emb)
+            eq = eq + e2[l2] * (1 - (p2 - l2)) + e2[l2 + 1] * (p2 - l2)
         return torch.fft.rfft(self.body_ir_wave * self.body_ir_env, n_fft) * lp * torch.exp(eq)
 
     def sympathetic(self, rec, f, amp, n_abs, emb, s0):
@@ -521,7 +542,7 @@ class GuitarNet(nn.Module):
                     torch.exp(1.151 * torch.as_tensor(rec.loud[ex], device=dev).float()) * 0.03)
                 drive = drive + torch.exp(self.symp_kick)[..., None] * kick * sr / 100  # ~10 ms worth of drive
         ex = None
-        if self.cfg.decay_cond:  # open strings: string 6..1 at fret 0
+        if self.cfg.decay_cond or self.cfg.rec_all:  # open strings: string 6..1 at fret 0
             ex = emb[None].expand(len(rec.open_pitch), -1)
             if self.cfg.strings:
                 ex = torch.cat([ex, torch.as_tensor(np.eye(7, dtype=np.float32)[[5, 4, 3, 2, 1, 0]] * (np.arange(7) < 6), device=dev)], -1)
@@ -641,18 +662,19 @@ class GuitarNet(nn.Module):
             voice = torch.as_tensor(rec.voice[idx], device=dev)
             f = torch.as_tensor(rec.freqs[idx], device=dev, dtype=torch.float64)
             t_rel = n_abs[None] - on[:, None]
+            att_sc, fade_sc = torch.exp(1.5 * torch.tanh(self.rec_consts(emb))) if cfg.rec_all else (1.0, 1.0)
             gate = ((t_rel >= 0) & (n_abs[None] < end[:, None])).float() * \
-                ((end[:, None] - n_abs[None]).float() / (cfg.fade * sr)).clamp(max=1)
+                ((end[:, None] - n_abs[None]).float() / (cfg.fade * sr * fade_sc)).clamp(max=1)
             ts = t_rel.clamp(min=0).float() / sr
             if cfg.structured:
-                ramp = (t_rel.float() / (cfg.attack_ms * 1e-3 * sr)).clamp(0, 1)
+                ramp = (t_rel.float() / (cfg.attack_ms * 1e-3 * sr * att_sc)).clamp(0, 1)
                 gate = gate * 0.5 * (1 - torch.cos(math.pi * ramp))
                 note_in, mlp_in = self.note_input(rec, idx, emb)
                 nout = self.note_mlp(mlp_in)
                 tmpl = nout[:, :K] + math.log(0.03) - self.logk + 1.151 * note_in[:, 1:2]  # loud is power dB/10 -> log amplitude
                 static = tmpl + self.body_db(f.float(), emb)
                 ex = None
-                if cfg.decay_cond:
+                if cfg.decay_cond or cfg.rec_all:
                     ex = emb[None].expand(len(idx), -1)
                     if cfg.strings:
                         ex = torch.cat([ex, torch.as_tensor(rec.string_feat[idx], device=dev)], -1)
