@@ -32,3 +32,5 @@ before: {"test_loss": 5.804554720485911, "n_windows": 85, "share_burst_db": -36.
   step  2700  D 1.753  spec 5.448  adv 1.513  fm 0.647 (4319 s)
   step  2800  D 1.793  spec 5.229  adv 1.595  fm 0.627 (4476 s)
   step  2900  D 1.711  spec 5.751  adv 1.369  fm 0.721 (4672 s)
+  step  3000  D 1.671  spec 5.759  adv 1.427  fm 0.724 (4854 s)
+  EVAL step 3000: {"test_loss": 5.882528338712804, "n_windows": 85, "share_burst_db": -34.788162087013205, "share_strings_db": -0.3405574547919442, "share_body_db": -13.566236172751012, "share_floor_db": -35.725279076305455, "share_noise_db": -15.110459980516852, "quiet_noise_db": -25.244247436523438}

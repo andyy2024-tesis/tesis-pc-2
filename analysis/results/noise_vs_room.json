@@ -418,5 +418,19 @@
    "median_db": 3.2,
    "share_above_6db": 0.4
   }
+ },
+ "e6/structured_v11_m1_attn_noise_strongD_rise": {
+  "0-700": {
+   "median_db": -13.6,
+   "share_above_6db": 0.05
+  },
+  "700-4k": {
+   "median_db": -4.3,
+   "share_above_6db": 0.23
+  },
+  "4k-11k": {
+   "median_db": 2.5,
+   "share_above_6db": 0.37
+  }
  }
 }

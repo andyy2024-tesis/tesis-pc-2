@@ -53,6 +53,12 @@
   "n": 85,
   "wind": -20.4
  },
+ "e6/structured_v11_m1_attn_noise_strongD_rise": {
+  "mean": 5.881,
+  "median": 5.869,
+  "n": 85,
+  "wind": -25.3
+ },
  "e6/structured_v5_body_audio_noise_strongD": {
   "mean": 6.118,
   "median": 6.09,

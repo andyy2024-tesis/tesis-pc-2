@@ -74,3 +74,15 @@ share of the attack energy), room (noise over the measured room background, 700-
 Reading so far: each step of the attention line lowers the loss a little (5.80 -> 5.76 -> 5.71); T3 is the first
 attention model below the GRU by more than the seed spread. Letting voices see each other is aimed at strums (277), so
 that sample is the one to judge it on.
+
+### Adversarial (the favourite's recipe + rise penalty 20)
+
+| run | loss | wind | snare | share | room | ticks |
+|---|---|---|---|---|---|---|
+| favourite `e6/structured_v9_base_t32_noise_strongD` | 5.93 | -19.0 | +14.2 / +12.3 | 100-99 % | +8.0 / +8.5 (62 %) | 5 |
+| A0 adv `e6/structured_v10_m1_burst_floor_noise_strongD_rise` | 5.92 | -23.4 | -0.5 / +1.1 | 3-8 % | -1.7 / +4.5 (43 %) | 5 |
+| T1 adv `e6/structured_v11_m1_attn_noise_strongD_rise` | 5.88 | -25.3 | +1.3 / +1.8 | 4-10 % | -4.3 / +2.5 (37 %) | 4 |
+
+T1 adv: the attention keeps its small edge through the adversarial step (5.88 vs 5.92) and has the least hiss so far;
+the noise stays near the room background. The favourite's noise plays the whole attack (99-100 % share, +14 dB snare);
+in every M1 + per-note-attack model the noise's share is under 10 %: the attack part plays it.
