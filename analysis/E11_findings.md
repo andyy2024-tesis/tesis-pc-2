@@ -116,5 +116,6 @@ R (recording everywhere, no adversarial): 5.72 vs T2's 5.76, within the seed spr
 - partial decay: per recording, T60 of the low partials varies about +-20 % (E2 at 200 Hz: 8.4-11.9 s), the high ones
   +-5 % (6 kHz: 0.67-0.72 s): bass sustain is where guitars differ;
 - fine body EQ (24 bands, 40-800 Hz): a shared correction of about 10 dB peak to peak, the same for every recording
-  below 500 Hz (sd 0.2-0.6 dB across recordings), 1-2 dB per-recording differences only at 600-800 Hz. The body's main
-  resonances (around 100 and 200 Hz) did not move per guitar.
+  below 500 Hz (sd 0.2-0.6 dB across recordings), 1-2 dB per-recording differences only at 600-800 Hz: the body
+  response's resonances did not move per guitar. (The strings already had a per-recording colour before: a 24-bin
+  gain table, 50 Hz-22 kHz, per recording, `rec_body_filter`; that may be where each guitar's body went.)
