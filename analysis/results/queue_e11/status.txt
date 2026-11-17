@@ -24,3 +24,8 @@
 06:33:30 end adv structured_v11_m1_attn_ahead_rec_noise_strongD_rise exit 137 stopped (machine rebooted)
 06:33:30 end _v11_m2_rec exit 137 stopped (machine rebooted)
 12:52:36 start adv structured_v11_m1_attn_ahead_contact_noise_strongD_rise (resumed)
+12:55:06 start adv structured_v11_m1_attn_ahead_rec_noise_strongD_rise (resumed)
+12:57:36 start _v11_m2_rec
+13:20:16 end adv structured_v11_m1_attn_ahead_contact_noise_strongD_rise exit 0
+13:20:37 start _v11_m1_strings_oldB
+13:23:07 all done

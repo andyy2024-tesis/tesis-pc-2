@@ -17,3 +17,15 @@ before: {"test_loss": 5.724521362080294, "n_windows": 85, "share_burst_db": -37.
   step  1300  D 1.807  spec 5.533  adv 1.283  fm 0.572 (2703 s)
   step  1400  D 1.838  spec 5.449  adv 1.070  fm 0.564 (2928 s)
   step  1500  D 1.841  spec 5.610  adv 1.302  fm 0.574 (3153 s)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+resumed at step 1000
+  step  1100  D 1.825  spec 5.577  adv 1.275  fm 0.554 (150 s)
+  step  1200  D 1.802  spec 5.633  adv 1.190  fm 0.568 (375 s)
+  step  1300  D 1.832  spec 5.543  adv 1.244  fm 0.575 (600 s)
+  step  1400  D 1.838  spec 5.466  adv 1.249  fm 0.578 (825 s)
+  step  1500  D 1.830  spec 5.614  adv 1.319  fm 0.576 (1051 s)
+  step  1600  D 1.818  spec 5.486  adv 1.504  fm 0.599 (1277 s)
+  step  1700  D 1.789  spec 5.505  adv 1.394  fm 0.620 (1497 s)
+  step  1800  D 1.766  spec 5.533  adv 1.270  fm 0.640 (1707 s)
+  step  1900  D 1.789  spec 5.684  adv 1.179  fm 0.659 (1926 s)

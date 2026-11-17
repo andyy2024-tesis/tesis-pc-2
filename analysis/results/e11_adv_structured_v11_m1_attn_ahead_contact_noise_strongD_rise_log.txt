@@ -29,3 +29,14 @@ before: {"test_loss": 5.730762352662928, "n_windows": 85, "share_burst_db": -36.
 /home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
   WeightNorm.apply(module, name, dim)
 resumed at step 2000
+  step  2100  D 1.694  spec 5.513  adv 1.349  fm 0.675 (66 s)
+  step  2200  D 1.712  spec 5.556  adv 1.367  fm 0.701 (132 s)
+  step  2300  D 1.692  spec 5.638  adv 1.397  fm 0.678 (256 s)
+  step  2400  D 1.721  spec 5.650  adv 1.184  fm 0.709 (440 s)
+  step  2500  D 1.736  spec 5.232  adv 1.577  fm 0.644 (639 s)
+  step  2600  D 1.695  spec 5.633  adv 1.646  fm 0.725 (838 s)
+  step  2700  D 1.733  spec 5.438  adv 1.517  fm 0.667 (1036 s)
+  step  2800  D 1.750  spec 5.254  adv 1.467  fm 0.668 (1235 s)
+  step  2900  D 1.670  spec 5.764  adv 1.468  fm 0.729 (1434 s)
+  step  3000  D 1.663  spec 5.747  adv 1.402  fm 0.734 (1632 s)
+  EVAL step 3000: {"test_loss": 5.8340302242952236, "n_windows": 85, "share_burst_db": -35.263848957326125, "share_strings_db": -0.2587954301463678, "share_body_db": -13.677565303905098, "share_contact_db": -38.22340272673004, "share_floor_db": -31.993994445512854, "share_noise_db": -18.572890662032524, "quiet_noise_db": -24.665620803833008}
