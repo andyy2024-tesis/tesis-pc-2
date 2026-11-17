@@ -106,12 +106,14 @@ class NetConfig:
     backbone: str = "gru"  # gru | lstm | bilstm (sees the future: offline only) | attn (windowed causal self-attention)
     attn_frames: int = 64  # attn: how many past frames each frame can see (10 ms each)
     attn_layers: int = 2
+    attn_ahead: int = 0  # attn: how many future frames each frame can also see (> 0: offline only)
     cross_voice: bool = False  # self-attention across the voices at every frame, after the backbone
     delta_rise: float = 0.0  # weight of a penalty on fast rises of the GRU correction in partials >= 16 (except 40 ms
     #   after an onset): a plucked string's high partials don't jump up mid-note (the adversarial M2 made ticks that way)
     contact: bool = False  # per-voice short noise from the GRU: finger or nail touching the string (damping it,
     #   preparing the next pluck); per-recording spectrum
     contact_bands: int = 16
+    contact_init: float = -14.0  # initial log level: -14 silent (added to a trained model), -8 audible (from scratch)
     strings: bool = False  # voices are the six strings from the tablature (data/processed/.../strings, see
     #   analysis/tab_strings.py); the GRU and the note MLP know the string and fret; inharmonicity per string with
     #   the fret law B = B_open(string) * 2^(fret/6) (analysis/inharmonicity_strings.py)
@@ -130,12 +132,12 @@ def inv_softplus(x):
 
 
 class WindowedAttention(nn.Module):
-    """Pre-norm transformer layers over time, per voice: frame i attends to frames i - n + 1 .. i (causal window),
-    with ALiBi distance penalties (each head prefers a different reach)."""
+    """Pre-norm transformer layers over time, per voice: frame i attends to frames i - n + 1 .. i + ahead (causal window
+    when ahead = 0), with ALiBi distance penalties (each head prefers a different reach)."""
 
-    def __init__(self, d, n_frames, n_layers, heads=4):
+    def __init__(self, d, n_frames, n_layers, heads=4, ahead=0):
         super().__init__()
-        self.n, self.heads = n_frames, heads
+        self.n, self.heads, self.ahead = n_frames, heads, ahead
         self.layers = nn.ModuleList([nn.ModuleDict(dict(
             ln1=nn.LayerNorm(d), att=nn.MultiheadAttention(d, heads, batch_first=True),
             ln2=nn.LayerNorm(d), ff=nn.Sequential(nn.Linear(d, 2 * d), nn.GELU(), nn.Linear(2 * d, d))))
@@ -145,8 +147,8 @@ class WindowedAttention(nn.Module):
     def mask(self, F, dev):
         i = torch.arange(F, device=dev)
         dist = (i[:, None] - i[None]).float()  # query - key
-        ok = (dist >= 0) & (dist < self.n)
-        bias = -self.slopes[:, None, None] * dist[None]
+        ok = (dist >= -self.ahead) & (dist < self.n)
+        bias = -self.slopes[:, None, None] * dist.abs()[None]
         return torch.where(ok[None], bias, torch.full_like(bias, float("-inf")))  # (heads, F, F)
 
     def forward(self, x):  # (V, F, d)
@@ -330,7 +332,7 @@ class GuitarNet(nn.Module):
         elif cfg.backbone == "bilstm":  # same output size: half the units each way
             self.rnn = nn.LSTM(Hd, Hd // 2, batch_first=True, bidirectional=True)
         elif cfg.backbone == "attn":
-            self.attn = WindowedAttention(Hd, cfg.attn_frames, cfg.attn_layers)
+            self.attn = WindowedAttention(Hd, cfg.attn_frames, cfg.attn_layers, ahead=cfg.attn_ahead)
         else:
             raise ValueError(cfg.backbone)
         if cfg.cross_voice:
@@ -338,7 +340,7 @@ class GuitarNet(nn.Module):
         if cfg.contact:
             self.contact_out = nn.Linear(Hd, 1)
             nn.init.zeros_(self.contact_out.weight)
-            nn.init.constant_(self.contact_out.bias, -14.0)  # starts silent (~-110 dB): -8 made white noise in empty bands
+            nn.init.constant_(self.contact_out.bias, cfg.contact_init)  # -14 ~ -110 dB; -8 was white noise at -56 dB
             self.rec_contact = nn.Embedding(n_recordings, cfg.contact_bands)
             with torch.no_grad():  # start in 2-10 kHz
                 c = torch.tensor(np.geomspace(40.0, cfg.sr / 2, cfg.contact_bands)).float()
