@@ -57,3 +57,20 @@ Runs (from M1 + timbre 32 + per-note attack + room background + strings, GRU, 5.
 | S5 `structured_v11_m1_strings_guitarB` | stiffness per guitar and string (analysis/inharmonicity_guitar.py) | does each guitar need its own? |
 | S3 `structured_v11_m1_strings_decay` | the decay MLP also reads string, fret and the recording embedding | the decay knew only pitch and frequency |
 | S2 `structured_v11_m1_strings_oldvoices` | strings known, old voice assignment | is it one voice per string? |
+
+## Results (no adversarial; loss = mean MSS over the 85 held-out windows, seed spread ~0.05)
+
+Measures: wind (dB, lower = less hiss between notes), snare (noise lock to the attack, 1-4k / 4-12k dB), share (noise's
+share of the attack energy), room (noise over the measured room background, 700-4k / 4k-11k median dB, and % of frames
+>6 dB above it), ticks (harmonic clicks away from onsets).
+
+| run | loss | wind | snare | share | room | ticks |
+|---|---|---|---|---|---|---|
+| A0 base, GRU `structured_v10_m1_burst_floor` | 5.81 | -25.7 | -1.9 / +2.0 | 2-7 % | -0.0 / +5.5 (48 %) | 4 |
+| T1 attention `structured_v11_m1_attn` | 5.80 | -24.2 | +1.4 / +1.4 | 4-7 % | -2.3 / +3.5 (40 %) | 5 |
+| T2 + look-ahead `structured_v11_m1_attn_ahead` | 5.76 | -26.8 | +3.9 / +3.7 | 6-12 % | -1.1 / +4.6 (44 %) | 4 |
+| T3 + across voices `structured_v11_m1_attn_ahead_xvoice` | 5.71 | -23.7 | -1.0 / +3.8 | 2-12 % | -3.7 / +3.2 (40 %) | 4 |
+
+Reading so far: each step of the attention line lowers the loss a little (5.80 -> 5.76 -> 5.71); T3 is the first
+attention model below the GRU by more than the seed spread. Letting voices see each other is aimed at strums (277), so
+that sample is the one to judge it on.

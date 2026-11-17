@@ -239,6 +239,24 @@
   "n": 85,
   "wind": -22.2
  },
+ "structured_v11_m1_attn": {
+  "mean": 5.803,
+  "median": 5.797,
+  "n": 85,
+  "wind": -24.2
+ },
+ "structured_v11_m1_attn_ahead": {
+  "mean": 5.757,
+  "median": 5.739,
+  "n": 85,
+  "wind": -26.8
+ },
+ "structured_v11_m1_attn_ahead_xvoice": {
+  "mean": 5.713,
+  "median": 5.666,
+  "n": 85,
+  "wind": -23.7
+ },
  "structured_v2": {
   "mean": 6.302,
   "median": 6.294,
