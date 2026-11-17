@@ -59,6 +59,12 @@
   "n": 85,
   "wind": -24.5
  },
+ "e6/structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise": {
+  "mean": 5.813,
+  "median": 5.764,
+  "n": 85,
+  "wind": -20.5
+ },
  "e6/structured_v11_m1_attn_noise_strongD_rise": {
   "mean": 5.881,
   "median": 5.869,
@@ -268,6 +274,12 @@
   "median": 5.774,
   "n": 85,
   "wind": -26.9
+ },
+ "structured_v11_m1_attn_ahead_rec": {
+  "mean": 5.722,
+  "median": 5.706,
+  "n": 85,
+  "wind": -23.6
  },
  "structured_v11_m1_attn_ahead_xvoice": {
   "mean": 5.713,

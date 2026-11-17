@@ -16,3 +16,7 @@
 05:23:43 end adv structured_v11_m1_attn_ahead_noise_strongD_rise exit 0
 05:24:07 start adv structured_v11_m1_attn_ahead_contact_noise_strongD_rise
 05:27:21 end adv structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise exit 0
+05:39:46 end _v11_m1_attn_ahead_rec exit 0
+05:39:46 start adv structured_v11_m1_attn_ahead_rec_noise_strongD_rise
+05:40:09 tail queued
+05:42:16 start _v11_m2_rec

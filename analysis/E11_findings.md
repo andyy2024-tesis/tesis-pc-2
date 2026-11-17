@@ -75,6 +75,7 @@ on 277 and 306; M2 + strings + adv + rise penalty: 4, all on 306).
 | T2 + look-ahead `structured_v11_m1_attn_ahead` | 5.76 | -26.8 | +3.9 / +3.7 | 6-12 % | -1.1 / +4.6 (44 %) | 0 |
 | T3 + across voices `structured_v11_m1_attn_ahead_xvoice` | 5.71 | -23.7 | -1.0 / +3.8 | 2-12 % | -3.7 / +3.2 (40 %) | 0 |
 | T4 T2 + contact `structured_v11_m1_attn_ahead_contact` | 5.73 | -26.9 | +0.4 / +2.3 | 0-0 % | -24.9 / -21.0 (6 %) | 0 |
+| R T2 + recording everywhere `structured_v11_m1_attn_ahead_rec` | 5.72 | -23.6 | +1.7 / +2.4 | 6-10 % | -1.7 / +4.0 (42 %) | 0 |
 
 Reading so far: each step of the attention line lowers the loss a little (5.80 -> 5.76 -> 5.71); T3 is the first
 attention model below the GRU by more than the seed spread. Letting voices see each other is aimed at strums (277), so
@@ -93,6 +94,7 @@ T2's 5.76.
 | A0 adv `e6/structured_v10_m1_burst_floor_noise_strongD_rise` | 5.92 | -23.4 | -0.5 / +1.1 | 3-8 % | -1.7 / +4.5 (43 %) | 0 |
 | T1 adv `e6/structured_v11_m1_attn_noise_strongD_rise` | 5.88 | -25.3 | +1.3 / +1.8 | 4-10 % | -4.3 / +2.5 (37 %) | 0 |
 | T2 adv `e6/structured_v11_m1_attn_ahead_noise_strongD_rise` | 5.87 | -24.5 | +2.1 / +3.6 | 5-16 % | -2.2 / +4.3 (44 %) | 0 |
+| T3 adv `e6/structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise` | 5.81 | -20.5 | -0.6 / +8.6 | 4-38 % | -5.9 / +2.2 (37 %) | 0 |
 
 T1 adv: the attention keeps its small edge through the adversarial step (5.88 vs 5.92) and has the least hiss so far;
 the noise stays near the room background. The favourite's noise plays the whole attack (99-100 % share, +14 dB snare);
@@ -100,3 +102,19 @@ in every M1 + per-note-attack model the noise's share is under 10 %: the attack 
 
 T2 adv: a tie with T1 adv (5.87 vs 5.88); a little more noise at the attack (up to 16 % of it). Whether the look-ahead
 helps is for the ear on 277.
+
+T3 adv: the best adversarial loss (5.81), but the adversarial step put noise back into the attack above 4 kHz (+8.6 dB
+after each pluck, up to 38 % of the attack there) and raised the wind to -20.5 dB: half-way back to the favourite's
+snare. Across voices helps the loss; whether the ear accepts that extra attack noise is the question.
+
+R (recording everywhere, no adversarial): 5.72 vs T2's 5.76, within the seed spread; less noise at the attack (+1.7 /
++2.4 dB vs +3.9 / +3.7), a little more wind (-23.6 vs -26.8). What it learned (analysis/rec_use.py):
+- attack time: every recording made it shorter, 2 ms -> 0.5-1.5 ms (scale 0.27-0.76): the fixed 2 ms ramp was too slow
+  for all guitars, not just some;
+- end-of-note fade: 4-16 ms depending on the recording (scale 0.8-3.3 of the old 5 ms): this one really differs per
+  recording;
+- partial decay: per recording, T60 of the low partials varies about +-20 % (E2 at 200 Hz: 8.4-11.9 s), the high ones
+  +-5 % (6 kHz: 0.67-0.72 s): bass sustain is where guitars differ;
+- fine body EQ (24 bands, 40-800 Hz): a shared correction of about 10 dB peak to peak, the same for every recording
+  below 500 Hz (sd 0.2-0.6 dB across recordings), 1-2 dB per-recording differences only at 600-800 Hz. The body's main
+  resonances (around 100 and 200 Hz) did not move per guitar.
