@@ -4,3 +4,4 @@ structured_v11_m1_attn_ahead
 structured_v11_m1_attn_ahead_xvoice
 e6/structured_v11_m1_attn_noise_strongD_rise
 structured_v11_m1_attn_ahead_contact
+e6/structured_v11_m1_attn_ahead_noise_strongD_rise

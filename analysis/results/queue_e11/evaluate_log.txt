@@ -70,3 +70,15 @@ done structured_v11_m1_attn_ahead_contact
 done structured_v11_m1_attn_ahead_contact:nonoise
 done structured_v11_m1_attn_ahead_contact {"023_Ypswc": {"strings": -0.0, "burst": -35.8, "contact": -46.6, "body": -23.5, "floor": -41.4, "noise": -37.1}, "176_mM1wc": {"strings": 0.0, "burst": -35.8, "contact": -44.4, "body": -18.3, "floor": -36.0, "noise": -29.6}, "276_jw1wc": {"strings": -0.1, "burst": -41.0, "contact": -42.5, "body": -19.1, "floor": -42.5, "noise": -41.9}, "277_Pw1wc": {"strings": -0.0, "burst": -34.9, "contact": -36.3, "body": -19.9, "floor": -37.6, "noise": -45.3}, "306_7c1wc": {"strings": -0.1, "burst": -32.6, "contact": -34.0, "body": -16.8, "floor": -37.6, "noise": -46.2}}
 04:01:24 done structured_v11_m1_attn_ahead_contact
+05:24:25 evaluate e6/structured_v11_m1_attn_ahead_noise_strongD_rise
+e6/structured_v11_m1_attn_ahead_noise_strongD_rise {"mean": 5.867, "median": 5.893, "n": 85, "wind": -24.5}
+e6/structured_v11_m1_attn_ahead_noise_strongD_rise {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 189.9, "1-4k": 198.0, "4-12k": 184.0}, "strings": {"0-1k": 6.8, "1-4k": 10.2, "4-12k": 24.0}, "body": {"0-1k": 21.8, "1-4k": 23.0, "4-12k": 15.8}, "floor": {"0-1k": -0.3, "1-4k": 1.7, "4-12k": -0.2}, "noise": {"0-1k": -9.8, "1-4k": 2.1, "4-12k": 3.6}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -39.4, "1-4k": -16.2, "4-12k": -11.4}, "strings": {"0-1k": -1.5, "1-4k": -1.2, "4-12k": -1.3}, "body": {"0-1k": -11.6, "1-4k": -35.1, "4-12k": -55.3}, "floor": {"0-1k": -51.9, "1-4k": -35.9, "4-12k": -31.8}, "noise": {"0-1k": -42.3, "1-4k": -29.1, "4-12k": -18.6}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.05, "4-12k": 0.16}}
+e6/structured_v11_m1_attn_ahead_noise_strongD_rise {"0-700": {"median_db": -14.1, "share_above_6db": 0.06}, "700-4k": {"median_db": -2.2, "share_above_6db": 0.26}, "4k-11k": {"median_db": 4.3, "share_above_6db": 0.44}}
+e6/structured_v11_m1_attn_ahead_noise_strongD_rise base 4
+e6/structured_v11_m1_attn_ahead_noise_strongD_rise no_detune 4
+e6/structured_v11_m1_attn_ahead_noise_strongD_rise no_delta 4
+e6/structured_v11_m1_attn_ahead_noise_strongD_rise no_dev 5
+done e6/structured_v11_m1_attn_ahead_noise_strongD_rise
+done e6/structured_v11_m1_attn_ahead_noise_strongD_rise:nonoise
+done e6/structured_v11_m1_attn_ahead_noise_strongD_rise {"023_Ypswc": {"strings": -0.1, "burst": -34.7, "body": -19.1, "floor": -40.8, "noise": -40.9}, "176_mM1wc": {"strings": -0.2, "burst": -34.3, "body": -14.6, "floor": -42.9, "noise": -28.6}, "276_jw1wc": {"strings": -0.1, "burst": -40.0, "body": -16.4, "floor": -42.4, "noise": -36.8}, "277_Pw1wc": {"strings": -0.1, "burst": -34.4, "body": -18.3, "floor": -38.3, "noise": -38.6}, "306_7c1wc": {"strings": -0.2, "burst": -30.6, "body": -13.2, "floor": -63.2, "noise": -30.3}}
+05:30:33 done e6/structured_v11_m1_attn_ahead_noise_strongD_rise

@@ -13,3 +13,6 @@
 03:49:18 end _v11_m1_attn_ahead_contact exit 0
 03:49:34 start adv structured_v11_m1_attn_ahead_noise_strongD_rise
 03:52:04 start adv structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise
+05:23:43 end adv structured_v11_m1_attn_ahead_noise_strongD_rise exit 0
+05:24:07 start adv structured_v11_m1_attn_ahead_contact_noise_strongD_rise
+05:27:21 end adv structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise exit 0

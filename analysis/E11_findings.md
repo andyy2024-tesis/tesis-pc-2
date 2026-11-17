@@ -92,7 +92,11 @@ T2's 5.76.
 | favourite `e6/structured_v9_base_t32_noise_strongD` | 5.93 | -19.0 | +14.2 / +12.3 | 100-99 % | +8.0 / +8.5 (62 %) | 0 |
 | A0 adv `e6/structured_v10_m1_burst_floor_noise_strongD_rise` | 5.92 | -23.4 | -0.5 / +1.1 | 3-8 % | -1.7 / +4.5 (43 %) | 0 |
 | T1 adv `e6/structured_v11_m1_attn_noise_strongD_rise` | 5.88 | -25.3 | +1.3 / +1.8 | 4-10 % | -4.3 / +2.5 (37 %) | 0 |
+| T2 adv `e6/structured_v11_m1_attn_ahead_noise_strongD_rise` | 5.87 | -24.5 | +2.1 / +3.6 | 5-16 % | -2.2 / +4.3 (44 %) | 0 |
 
 T1 adv: the attention keeps its small edge through the adversarial step (5.88 vs 5.92) and has the least hiss so far;
 the noise stays near the room background. The favourite's noise plays the whole attack (99-100 % share, +14 dB snare);
 in every M1 + per-note-attack model the noise's share is under 10 %: the attack part plays it.
+
+T2 adv: a tie with T1 adv (5.87 vs 5.88); a little more noise at the attack (up to 16 % of it). Whether the look-ahead
+helps is for the ear on 277.
