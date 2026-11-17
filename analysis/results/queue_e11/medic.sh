@@ -9,6 +9,8 @@ cfg() { case $1 in
   _v11_m1_attn_ahead_xvoice) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"cross_voice\": true}" ;;
   _v11_m1_attn_ahead_contact) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"contact\": true, \"contact_init\": -8.0, \"delta_rise\": 20.0}" ;;
   _v11_m1_attn_ahead_rec) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"rec_all\": true}" ;;
+  _v11_m2_rec) echo "{\"body_ir\": true, \"audio_feats\": true, \"body_ir_cutoff\": 6000.0, \"body_eq_max\": 8000.0, \"body_eq_bands\": 10, \"pluck_click\": true, \"noise_gate\": false, \"note_timbre\": true, \"timbre_k\": 32, \"two_decay\": true, \"rich_burst\": true, \"rec_all\": true}" ;;
+  _v11_m1_attn_ahead_rec32) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"rec_all\": true, \"rec_dim\": 32}" ;;
   _v11_m1_strings_oldB) echo "{$M1B, \"strings\": true, \"strings_b\": \"pitch\"}" ;;
   _v11_m1_strings_guitarB) echo "{$M1B, \"strings\": true, \"strings_b\": \"guitar\"}" ;;
   _v11_m1_strings_decay) echo "{$M1B, \"strings\": true, \"decay_cond\": true}" ;;
@@ -25,7 +27,7 @@ while true; do
         wait $GATED ;;
       adv\ *) b=${job#adv structured}; b=${b%_noise_strongD_rise}; gate 10000 adv $b; wait $GATED ;;
       *) gate 10000 train $job "$(cfg $job)"; wait $GATED
-         case $job in _v11_m1_strings_*) ;; *) grep -q "end $job exit 0" $Q/status.txt && { gate 10000 adv $job; wait $GATED; } ;; esac ;;
+         case $job in _v11_m1_strings_*|_v11_m2_rec|_v11_m1_attn_ahead_rec32) ;; *) grep -q "end $job exit 0" $Q/status.txt && { gate 10000 adv $job; wait $GATED; } ;; esac ;;
     esac
   done
   s=$(grep -c " start " $Q/status.txt); e=$(grep -c " end " $Q/status.txt)

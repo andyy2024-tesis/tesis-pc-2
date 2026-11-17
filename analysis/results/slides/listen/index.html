@@ -769,6 +769,24 @@ const MODELS = {
 "wind": null,
 "pending": true
 },
+"structured_v11_m2_rec": {
+"name": "M2 + timbre 32 + ataque por nota + grabación en todo",
+"parent": "structured_v10_m2_burst",
+"rel": "rec",
+"change": "M2 con todas sus partes leyendo la grabación: además de lo de «grabación en todo» en M1 (decaimiento, EQ fino del cuerpo, ahora hasta 8 kHz, ataque, apagado y rigidez), el doble decaimiento y el batido, y el espectro del clic. ¿M2 falló porque esas partes eran iguales para todas las guitarras?",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v11_m1_attn_ahead_rec32": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + grabación en todo · embedding 32",
+"parent": "structured_v11_m1_attn_ahead_rec",
+"rel": "rec",
+"change": "El mismo modelo con un embedding de grabación de 32 dimensiones en vez de 16: con 20 grabaciones y 16 dimensiones, las lecturas lineales por grabación no pueden darle a cada una un valor independiente.",
+"loss": null,
+"wind": null,
+"pending": true
+},
 "structured_v11_m1_strings_oldB": {
 "name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · rigidez antigua",
 "parent": "structured_v10_m1_burst_floor_strings",

@@ -123,7 +123,8 @@ class NetConfig:
     strings_voices: bool = True  # strings: one voice per string (False: the old voice assignment, string still known)
     decay_cond: bool = False  # the decay MLP also reads the recording embedding (and string + fret with strings)
     rec_all: bool = False  # every part that could depend on the guitar, microphone or room reads the recording: the
-    #   decay MLP gets the embedding; the body response a finer EQ from it (24 bands to 800 Hz, on top of the table);
+    #   decay MLP and (two_decay) the polarization MLP get the embedding; the body response a finer EQ from it (~5.5
+    #   bands per octave up to body_eq_max, at least 24, on top of the table); (pluck_click) the click an EQ from it;
     #   attack time and end-of-note fade are scaled per recording; the stiffness law is shifted by the guitar's measured
     #   offset (notes.log_b_offset, analysis/inharmonicity_recording.py)
 
@@ -405,14 +406,14 @@ class GuitarNet(nn.Module):
                 self.body_ir_wave = nn.Parameter(1e-2 * torch.randn(n_ir, generator=g))  # shared by all recordings
                 self.rec_body_eq = nn.Embedding(n_recordings, cfg.body_eq_bands)
                 if cfg.rec_all:  # finer EQ of the shared response from the embedding: can move a guitar's resonances
-                    self.body_eq_fine = nn.Linear(R, 24)
+                    self.body_eq_fine = nn.Linear(R, max(24, round(5.5 * math.log2(max(cfg.body_eq_max, 800.0) / 40))))
                     nn.init.zeros_(self.body_eq_fine.weight)
                     nn.init.zeros_(self.body_eq_fine.bias)
                 nn.init.zeros_(self.rec_body_eq.weight)
                 t = torch.arange(n_ir) / cfg.sr
                 self.register_buffer("body_ir_env", torch.exp(-t / cfg.body_ir_tau))
             if cfg.two_decay:  # per (pitch, partial frequency): share of the 2nd polarization, its decay ratio, detune
-                self.pol_mlp = nn.Sequential(nn.Linear(2, 64), nn.LeakyReLU(), nn.Linear(64, 3))
+                self.pol_mlp = nn.Sequential(nn.Linear(2 + R * int(cfg.rec_all), 64), nn.LeakyReLU(), nn.Linear(64, 3))
                 nn.init.zeros_(self.pol_mlp[-1].weight)
                 with torch.no_grad():  # 30 % in the 2nd polarization, decaying 3x slower, 0.6 Hz apart
                     self.pol_mlp[-1].bias.copy_(torch.tensor([math.log(0.3 / 0.7), -0.916, 0.2027]))
@@ -420,6 +421,10 @@ class GuitarNet(nn.Module):
                 n_c = int((cfg.pluck_click_lead + cfg.pluck_click_len) * cfg.sr)
                 g = torch.Generator().manual_seed(2)
                 self.click_wave = nn.Parameter(1e-2 * torch.randn(2, n_c, generator=g))  # shared by all recordings
+                if cfg.rec_all:  # its spectrum per recording (nails, microphone), from the embedding, ~4 bands per octave
+                    self.click_eq = nn.Linear(R, round(4 * math.log2(cfg.sr / 2 / 40)))
+                    nn.init.zeros_(self.click_eq.weight)
+                    nn.init.zeros_(self.click_eq.bias)
                 t = torch.arange(n_c) / cfg.sr - cfg.pluck_click_lead  # 0 = onset
                 pre = torch.exp(-t.abs() / 0.008)  # before the onset: fades in over ~8 ms
                 self.register_buffer("click_env", torch.stack([torch.where(t < 0, pre, torch.exp(-t / 0.004)),
@@ -499,6 +504,15 @@ class GuitarNet(nn.Module):
         sigma0 = 1.5 + 2.0 * f / 1000
         return Fn.softplus(self.decay_mlp(x)[..., 0] + inv_softplus(sigma0))
 
+    @staticmethod
+    def emb_eq(gains, f, f_max, f_min=40.0):
+        """Log gain at frequencies f from per-band values `gains` (log-spaced bands f_min..f_max, linear in between)."""
+        nb = gains.shape[-1]
+        c = torch.log(torch.tensor(np.geomspace(f_min, f_max, nb), device=f.device).float())
+        pos = ((torch.log(f.clamp(f_min, f_max)) - c[0]) / (c[1] - c[0])).clamp(0, nb - 1 - 1e-4)
+        lo = pos.floor().long()
+        return gains[lo] * (1 - (pos - lo)) + gains[lo + 1] * (pos - lo)
+
     def body_ir(self, emb, n_fft):
         """Spectrum (n_fft//2+1,) of the shared pluck response with this recording's EQ, low-passed."""
         cfg = self.cfg
@@ -511,12 +525,7 @@ class GuitarNet(nn.Module):
         eq_db = self.rec_body_eq.weight[self._rec]
         eq = eq_db[lo] * (1 - (pos - lo)) + eq_db[lo + 1] * (pos - lo)
         if cfg.rec_all:
-            nb = 24
-            c2 = torch.log(torch.tensor(np.geomspace(40.0, max(cfg.body_eq_max, 800.0), nb), device=emb.device).float())
-            p2 = ((torch.log(f.clamp(40.0, max(cfg.body_eq_max, 800.0))) - c2[0]) / (c2[1] - c2[0])).clamp(0, nb - 1 - 1e-4)
-            l2 = p2.floor().long()
-            e2 = self.body_eq_fine(emb)
-            eq = eq + e2[l2] * (1 - (p2 - l2)) + e2[l2 + 1] * (p2 - l2)
+            eq = eq + self.emb_eq(self.body_eq_fine(emb), f, max(cfg.body_eq_max, 800.0))
         return torch.fft.rfft(self.body_ir_wave * self.body_ir_env, n_fft) * lp * torch.exp(eq)
 
     def sympathetic(self, rec, f, amp, n_abs, emb, s0):
@@ -682,6 +691,8 @@ class GuitarNet(nn.Module):
                 delta = frames_to_samples(vout.permute(0, 2, 1), Ld)  # (V, K, Ld)
                 if cfg.two_decay:
                     x_p = torch.stack([note_in[:, :1].expand(-1, K), torch.log(f.float() / 1000)], -1)
+                    if cfg.rec_all:
+                        x_p = torch.cat([x_p, emb[None, None].expand(x_p.shape[0], K, -1)], -1)
                     po = self.pol_mlp(x_p)
                     w2 = torch.sigmoid(po[..., 0])
                     r2 = 0.02 + 0.98 * torch.sigmoid(po[..., 1])  # 2nd decay rate / 1st
@@ -767,6 +778,9 @@ class GuitarNet(nn.Module):
                 imp = torch.stack([imp[c].index_add(0, pos, torch.exp(lv[:, c])) for c in range(2)])
             nfft = 2 ** math.ceil(math.log2(2 * (n_c + Ld)))
             kern = torch.fft.rfft(self.click_wave * self.click_env, nfft)
+            if cfg.rec_all:
+                fk = torch.fft.rfftfreq(nfft, 1 / sr).to(dev)
+                kern = kern * torch.exp(self.emb_eq(self.click_eq(emb), fk, sr / 2))
             parts["click"] = torch.fft.irfft((torch.fft.rfft(imp, nfft) * kern).sum(0), nfft)[n_c:n_c + Ld]
 
         if cfg.structured and cfg.squeak:

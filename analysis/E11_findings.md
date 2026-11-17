@@ -31,6 +31,16 @@ on top of the table; attack and fade scaled per recording (x0.22-4.5, starting a
 guitar's measured offset relative to the average (analysis/inharmonicity_recording.py: residuals against the pooled
 per-string law, shrunk with 3 notes, centered; sd 0.16, range -0.38..+0.24), so the average stiffness stays.
 
+Tail (no adversarial, after R's adversarial step starts), in order:
+- M2rec `structured_v11_m2_rec`: M2 + per-note attack (`structured_v10_m2_burst`, 5.77) with `rec_all`, which in M2
+  also reaches the polarization MLP (double decay, beating) and the click (a per-recording EQ from the embedding,
+  ~4 bands per octave); the body's fine EQ goes to 8 kHz there (42 bands). The user's question: did M2 fail because
+  those parts were the same for every guitar? (M2 has no sympathetic strings either.)
+- S1, S5, S3, S2 (below).
+- R32 `structured_v11_m1_attn_ahead_rec32`: R with a 32-dim recording embedding. With 20 recordings and 16 dims, the
+  embeddings span at most 16 directions, so the linear per-recording readouts (and everything that reads the embedding
+  linearly) can't give each recording independent values; 32 >= 20 can. Beyond ~20 nothing more to tell apart.
+
 ## Why strings sound synthetic
 
 Stiffness per guitar: in the per-note fits (analysis/inharmonicity_strings.csv, tab-matched clean notes) a string's log
