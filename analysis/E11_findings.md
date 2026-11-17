@@ -76,6 +76,7 @@ on 277 and 306; M2 + strings + adv + rise penalty: 4, all on 306).
 | T3 + across voices `structured_v11_m1_attn_ahead_xvoice` | 5.71 | -23.7 | -1.0 / +3.8 | 2-12 % | -3.7 / +3.2 (40 %) | 0 |
 | T4 T2 + contact `structured_v11_m1_attn_ahead_contact` | 5.73 | -26.9 | +0.4 / +2.3 | 0-0 % | -24.9 / -21.0 (6 %) | 0 |
 | R T2 + recording everywhere `structured_v11_m1_attn_ahead_rec` | 5.72 | -23.6 | +1.7 / +2.4 | 6-10 % | -1.7 / +4.0 (42 %) | 0 |
+| R32 R + 32-dim embedding `structured_v11_m1_attn_ahead_rec32` | 5.75 | -23.8 | +2.9 / +4.2 | 9-16 % | -0.4 / +5.2 (47 %) | 0 |
 
 Reading so far: each step of the attention line lowers the loss a little (5.80 -> 5.76 -> 5.71); T3 is the first
 attention model below the GRU by more than the seed spread. Letting voices see each other is aimed at strums (277), so
@@ -136,6 +137,7 @@ R adv (resumed from step 1000): 5.82, a tie with T3 adv and T4 adv; no snare, no
 | S1 old stiffness law `structured_v11_m1_strings_oldB` | 5.75 | -24.3 | -2.1 / +1.5 | 2-6 % | +1.5 / +5.6 (48 %) | 2 |
 | S5 stiffness per guitar `structured_v11_m1_strings_guitarB` | 5.69 | -25.8 | -1.4 / +1.9 | 2-7 % | +0.7 / +5.1 (46 %) | 0 |
 | S3 decay knows string, fret, guitar `structured_v11_m1_strings_decay` | 5.72 | -25.0 | -1.4 / +1.2 | 2-5 % | +0.6 / +5.2 (46 %) | 0 |
+| S2 old voices `structured_v11_m1_strings_oldvoices` | 5.73 | -26.1 | -2.0 / +1.5 | 2-7 % | +0.6 / +5.6 (48 %) | 0 |
 
 S1: going back to the old single stiffness law costs 0.05 (the seed spread): the measured per-string stiffness is a
 little better by loss; whether the old law gives the basses their colour is for the ear.
@@ -144,6 +146,10 @@ S5: each guitar's own measured stiffness: 5.69, a tie with the pooled table (5.7
 barely matters; the ear decides whether the basses sound less synthetic.
 
 S3: a decay that also knows the string, the fret and the guitar: 5.72, a tie (5.70).
+
+S2: string and fret known, but notes in the old voices: 5.73, a tie. All four strings variants land within 0.05 of
+each other (5.69-5.75): by loss, none of stiffness law, per-guitar stiffness, string-aware decay or one-voice-per-string
+is what makes the strings model sound synthetic. The loss can't see it; only the ear can tell these apart.
 
 ### M2 with the recording in every part (no adversarial)
 
@@ -156,3 +162,15 @@ M2rec: a tie with M2 + per-note attack (5.75 vs 5.77); the ticks stay (7 vs 10, 
 4.03 s, 4.47 s; 6.36, 6.49, 7.34, 7.70 s). Letting the double decay, beating and click depend on the guitar did not fix
 M2: the ticks are not caused by those parts being the same for every recording. M2 is still behind M1 by ear and noise
 (wind -19.4 vs -24 to -27 dB in the M1 attention models).
+
+R32: 5.75, a tie with R (5.72), a little more noise at the attack. The 16-dim embedding was not the limit.
+
+## Summary for the choice (2026-11-17 evening)
+
+- Base: M1 + timbre 32 + per-note attack + room background, attention that looks ahead. M2 is out (ticks stay with the
+  recording everywhere; more wind).
+- Adversarial finalists, all a tie by loss (5.81-5.83): T3 across voices (best loss, but attack noise above 4 kHz is
+  back), T4 contact (no snare, low wind, 2 ticks on 306), R recording everywhere (no snare, no ticks, more wind).
+  T1/T2 (5.87-5.88) have the cleanest noise. Every one beats the favourite (5.93) and drops its snare.
+- Strings: none of the four changes moves the loss (5.69-5.75); the ear decides. The 32-dim embedding did not help.
+- Listening: page 4 (candidates, networks) and page 5 (recording everywhere, strings).

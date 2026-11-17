@@ -13,3 +13,5 @@ structured_v11_m1_strings_oldB
 structured_v11_m2_rec
 structured_v11_m1_strings_guitarB
 structured_v11_m1_strings_decay
+structured_v11_m1_strings_oldvoices
+structured_v11_m1_attn_ahead_rec32
