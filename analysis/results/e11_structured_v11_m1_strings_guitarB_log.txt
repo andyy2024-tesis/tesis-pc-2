@@ -27,3 +27,6 @@ parameters: 0.71 M
   step  2300  train loss 5.810  (3104 s)
   step  2400  train loss 5.542  (3260 s)
   step  2500  train loss 5.309  (3402 s)
+  step  2600  train loss 5.685  (3576 s)
+  step  2700  train loss 5.547  (3780 s)
+  step  2800  train loss 5.311  (3983 s)

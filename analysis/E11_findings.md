@@ -137,3 +137,15 @@ R adv (resumed from step 1000): 5.82, a tie with T3 adv and T4 adv; no snare, no
 
 S1: going back to the old single stiffness law costs 0.05 (the seed spread): the measured per-string stiffness is a
 little better by loss; whether the old law gives the basses their colour is for the ear.
+
+### M2 with the recording in every part (no adversarial)
+
+| run | loss | wind | snare | share | room | ticks |
+|---|---|---|---|---|---|---|
+| M2 + per-note attack `structured_v10_m2_burst` | 5.77 | -17.9 | -2.0 / -3.8 | 2-2 % | +1.5 / +3.2 (37 %) | 10 |
+| M2rec `structured_v11_m2_rec` | 5.75 | -19.4 | -3.8 / -4.8 | 1-2 % | +0.9 / +2.9 (35 %) | 7 |
+
+M2rec: a tie with M2 + per-note attack (5.75 vs 5.77); the ticks stay (7 vs 10, at the same moments on 277 and 306:
+4.03 s, 4.47 s; 6.36, 6.49, 7.34, 7.70 s). Letting the double decay, beating and click depend on the guitar did not fix
+M2: the ticks are not caused by those parts being the same for every recording. M2 is still behind M1 by ear and noise
+(wind -19.4 vs -24 to -27 dB in the M1 attention models).

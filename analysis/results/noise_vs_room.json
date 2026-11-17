@@ -530,5 +530,19 @@
    "median_db": 5.6,
    "share_above_6db": 0.48
   }
+ },
+ "structured_v11_m2_rec": {
+  "0-700": {
+   "median_db": -4.7,
+   "share_above_6db": 0.19
+  },
+  "700-4k": {
+   "median_db": 0.9,
+   "share_above_6db": 0.3
+  },
+  "4k-11k": {
+   "median_db": 2.9,
+   "share_above_6db": 0.35
+  }
  }
 }

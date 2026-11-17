@@ -305,6 +305,12 @@
   "n": 85,
   "wind": -24.3
  },
+ "structured_v11_m2_rec": {
+  "mean": 5.748,
+  "median": 5.73,
+  "n": 85,
+  "wind": -19.4
+ },
  "structured_v2": {
   "mean": 6.302,
   "median": 6.294,
