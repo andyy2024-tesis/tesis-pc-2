@@ -362,5 +362,19 @@
    "median_db": 4.0,
    "share_above_6db": 0.41
   }
+ },
+ "e6/structured_v10_m1_burst_floor_noise_strongD_rise": {
+  "0-700": {
+   "median_db": -11.2,
+   "share_above_6db": 0.06
+  },
+  "700-4k": {
+   "median_db": -1.7,
+   "share_above_6db": 0.25
+  },
+  "4k-11k": {
+   "median_db": 4.5,
+   "share_above_6db": 0.43
+  }
  }
 }

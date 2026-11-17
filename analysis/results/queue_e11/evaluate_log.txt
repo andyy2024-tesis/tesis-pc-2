@@ -1,0 +1,12 @@
+02:13:07 evaluate e6/structured_v10_m1_burst_floor_noise_strongD_rise
+e6/structured_v10_m1_burst_floor_noise_strongD_rise {"mean": 5.92, "median": 5.924, "n": 85, "wind": -23.4}
+e6/structured_v10_m1_burst_floor_noise_strongD_rise {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 189.3, "1-4k": 198.6, "4-12k": 185.0}, "strings": {"0-1k": 7.2, "1-4k": 10.0, "4-12k": 24.5}, "body": {"0-1k": 21.0, "1-4k": 22.1, "4-12k": 15.9}, "floor": {"0-1k": 0.2, "1-4k": 2.4, "4-12k": 0.3}, "noise": {"0-1k": -11.3, "1-4k": -0.5, "4-12k": 1.1}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -39.9, "1-4k": -15.6, "4-12k": -10.4}, "strings": {"0-1k": -1.6, "1-4k": -1.0, "4-12k": 0.4}, "body": {"0-1k": -12.4, "1-4k": -35.0, "4-12k": -55.7}, "floor": {"0-1k": -58.9, "1-4k": -41.8, "4-12k": -34.5}, "noise": {"0-1k": -43.3, "1-4k": -31.2, "4-12k": -21.3}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.03, "4-12k": 0.08}}
+e6/structured_v10_m1_burst_floor_noise_strongD_rise {"0-700": {"median_db": -11.2, "share_above_6db": 0.06}, "700-4k": {"median_db": -1.7, "share_above_6db": 0.25}, "4k-11k": {"median_db": 4.5, "share_above_6db": 0.43}}
+e6/structured_v10_m1_burst_floor_noise_strongD_rise base 5
+e6/structured_v10_m1_burst_floor_noise_strongD_rise no_detune 5
+e6/structured_v10_m1_burst_floor_noise_strongD_rise no_delta 2
+e6/structured_v10_m1_burst_floor_noise_strongD_rise no_dev 6
+done e6/structured_v10_m1_burst_floor_noise_strongD_rise
+done e6/structured_v10_m1_burst_floor_noise_strongD_rise:nonoise
+done e6/structured_v10_m1_burst_floor_noise_strongD_rise {"023_Ypswc": {"strings": -0.1, "burst": -35.4, "body": -18.8, "floor": -41.3, "noise": -35.2}, "176_mM1wc": {"strings": -0.1, "burst": -32.9, "body": -14.2, "floor": -58.9, "noise": -27.8}, "276_jw1wc": {"strings": -0.1, "burst": -38.9, "body": -17.2, "floor": -45.0, "noise": -36.4}, "277_Pw1wc": {"strings": -0.1, "burst": -33.9, "body": -16.7, "floor": -49.2, "noise": -37.9}, "306_7c1wc": {"strings": -0.2, "burst": -30.1, "body": -12.8, "floor": -69.0, "noise": -31.5}}
+02:20:48 done e6/structured_v10_m1_burst_floor_noise_strongD_rise
