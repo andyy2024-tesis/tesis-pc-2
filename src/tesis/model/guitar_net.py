@@ -117,6 +117,11 @@ class NetConfig:
     strings: bool = False  # voices are the six strings from the tablature (data/processed/.../strings, see
     #   analysis/tab_strings.py); the GRU and the note MLP know the string and fret; inharmonicity per string with
     #   the fret law B = B_open(string) * 2^(fret/6) (analysis/inharmonicity_strings.py)
+    # experiment 11 (why strings sound synthetic)
+    strings_b: str = "string"  # strings: stiffness from "string" (one table for all guitars), "pitch" (the old single
+    #   law over pitch) or "guitar" (measured per recording and string, notes.log_b_open; analysis/inharmonicity_guitar.py)
+    strings_voices: bool = True  # strings: one voice per string (False: the old voice assignment, string still known)
+    decay_cond: bool = False  # the decay MLP also reads the recording embedding (and string + fret with strings)
 
     @property
     def n_feat(self):
@@ -251,7 +256,12 @@ class Recording:
         if cfg.strings:  # voice = string - 1 (set by the loader); per-string inharmonicity with the fret law
             self.string = notes.string.values.astype(np.int64)  # 1-6
             self.fret = notes.fret.values.astype(np.float64)
-            B = np.exp(np.array([STRING_LOG_B[s] for s in self.string]) + np.log(2) / 6 * self.fret)
+            if cfg.strings_b == "string":
+                B = np.exp(np.array([STRING_LOG_B[s] for s in self.string]) + np.log(2) / 6 * self.fret)
+            elif cfg.strings_b == "guitar":
+                B = np.exp(notes.log_b_open.values + np.log(2) / 6 * self.fret)
+            else:
+                assert cfg.strings_b == "pitch", cfg.strings_b
             self.string_feat = np.concatenate([np.eye(6)[self.string - 1], (self.fret / 12)[:, None]], 1).astype(np.float32)
         self.freqs = f0[:, None] * k * np.sqrt(1 + B[:, None] * k ** 2)
         if cfg.sympathetic:
@@ -357,7 +367,8 @@ class GuitarNet(nn.Module):
                                           nn.Linear(Hd, K + 1 + int(cfg.body_ir) + 2 * int(cfg.pluck_click)))
             nn.init.zeros_(self.note_mlp[-1].weight)
             nn.init.zeros_(self.note_mlp[-1].bias)
-            self.decay_mlp = nn.Sequential(nn.Linear(2, 64), nn.LeakyReLU(), nn.Linear(64, 1))
+            n_dec = 2 + (R + 7 * int(cfg.strings)) * int(cfg.decay_cond)
+            self.decay_mlp = nn.Sequential(nn.Linear(n_dec, 64), nn.LeakyReLU(), nn.Linear(64, 1))
             nn.init.zeros_(self.decay_mlp[-1].weight)
             nn.init.zeros_(self.decay_mlp[-1].bias)
             self.body_base = nn.Parameter(torch.zeros(cfg.body_bins))
@@ -465,9 +476,12 @@ class GuitarNet(nn.Module):
             full.append(torch.as_tensor(rec.string_feat[ii], device=dev))
         return x, torch.cat(full, -1)
 
-    def sigma(self, pitch, f):
-        """Decay rate (1/s) for partial frequencies f (Na, K) of notes with these pitches."""
+    def sigma(self, pitch, f, extra=None):
+        """Decay rate (1/s) for partial frequencies f (Na, K) of notes with these pitches; with decay_cond, extra (Na, E)
+        is the recording embedding (and string + fret) of each note."""
         x = torch.stack([((pitch.float() - 64) / 12)[:, None].expand_as(f), torch.log(f / 1000)], -1)
+        if self.cfg.decay_cond:
+            x = torch.cat([x, extra[:, None, :].expand(-1, f.shape[1], -1)], -1)
         sigma0 = 1.5 + 2.0 * f / 1000
         return Fn.softplus(self.decay_mlp(x)[..., 0] + inv_softplus(sigma0))
 
@@ -506,7 +520,12 @@ class GuitarNet(nn.Module):
                     0, torch.as_tensor(rec.onset[ex] - s0, device=dev),
                     torch.exp(1.151 * torch.as_tensor(rec.loud[ex], device=dev).float()) * 0.03)
                 drive = drive + torch.exp(self.symp_kick)[..., None] * kick * sr / 100  # ~10 ms worth of drive
-        sig = self.sigma(torch.as_tensor(rec.open_pitch, device=dev), fo)  # decay of a free string
+        ex = None
+        if self.cfg.decay_cond:  # open strings: string 6..1 at fret 0
+            ex = emb[None].expand(len(rec.open_pitch), -1)
+            if self.cfg.strings:
+                ex = torch.cat([ex, torch.as_tensor(np.eye(7, dtype=np.float32)[[5, 4, 3, 2, 1, 0]] * (np.arange(7) < 6), device=dev)], -1)
+        sig = self.sigma(torch.as_tensor(rec.open_pitch, device=dev), fo, ex)  # decay of a free string
         Ld = amp.shape[-1]
         t = torch.arange(Ld, device=dev) / sr
         h = (1 - torch.exp(-sig / sr))[..., None] * torch.exp(-sig[..., None] * t)  # (S, Ks, Ld), unit DC gain
@@ -632,7 +651,12 @@ class GuitarNet(nn.Module):
                 nout = self.note_mlp(mlp_in)
                 tmpl = nout[:, :K] + math.log(0.03) - self.logk + 1.151 * note_in[:, 1:2]  # loud is power dB/10 -> log amplitude
                 static = tmpl + self.body_db(f.float(), emb)
-                sig = self.sigma(torch.as_tensor(rec.pitch[idx], device=dev), f.float())
+                ex = None
+                if cfg.decay_cond:
+                    ex = emb[None].expand(len(idx), -1)
+                    if cfg.strings:
+                        ex = torch.cat([ex, torch.as_tensor(rec.string_feat[idx], device=dev)], -1)
+                sig = self.sigma(torch.as_tensor(rec.pitch[idx], device=dev), f.float(), ex)
                 delta = frames_to_samples(vout.permute(0, 2, 1), Ld)  # (V, K, Ld)
                 if cfg.two_decay:
                     x_p = torch.stack([note_in[:, :1].expand(-1, K), torch.log(f.float() / 1000)], -1)

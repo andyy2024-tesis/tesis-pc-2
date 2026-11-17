@@ -53,10 +53,15 @@ def load_recordings(ids, cfg, n_eval=None):
         if cfg.strings:  # one voice per string (analysis/tab_strings.py)
             st = pd.read_csv(D / "strings" / f"{rid}.csv")
             notes["string"], notes["fret"] = st.string.values, st.fret.values
-            notes["voice"] = st.string.values - 1
+            if cfg.strings_voices:
+                notes["voice"] = st.string.values - 1
+            if cfg.strings_b == "guitar":  # stiffness of each recording's strings (analysis/inharmonicity_guitar.py)
+                gb = pd.read_csv(REPO / "analysis" / "results" / "inharmonicity_guitar.csv")
+                gb = gb[gb.id == rid].set_index("string").log_b_open
+                notes["log_b_open"] = gb.loc[st.string.values].values
         rec = Recording(i, y, notes, tc, cfg, LOG_B)
         if cfg.audio_feats:
-            cache = D / ("tracks_strings" if cfg.strings else "tracks") / f"{rid}.npz"
+            cache = D / ("tracks_strings" if cfg.strings and cfg.strings_voices else "tracks") / f"{rid}.npz"
             if cache.exists():
                 z = np.load(cache)
                 loud_t, dev_t = z["loud"], z["dev"]

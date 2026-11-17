@@ -8,6 +8,10 @@ cfg() { case $1 in
   _v11_m1_attn_ahead) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16}" ;;
   _v11_m1_attn_ahead_xvoice) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"cross_voice\": true}" ;;
   _v11_m1_attn_ahead_contact) echo "{$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"contact\": true, \"contact_init\": -8.0, \"delta_rise\": 20.0}" ;;
+  _v11_m1_strings_oldB) echo "{$M1B, \"strings\": true, \"strings_b\": \"pitch\"}" ;;
+  _v11_m1_strings_guitarB) echo "{$M1B, \"strings\": true, \"strings_b\": \"guitar\"}" ;;
+  _v11_m1_strings_decay) echo "{$M1B, \"strings\": true, \"decay_cond\": true}" ;;
+  _v11_m1_strings_oldvoices) echo "{$M1B, \"strings\": true, \"strings_voices\": false}" ;;
 esac; }
 while true; do
   grep -E " end .* exit [1-9]" $Q/status.txt | grep -v stopped | sed 's/^[0-9:]* end //; s/ exit [0-9]*$//' | while read -r job; do
@@ -20,10 +24,10 @@ while true; do
         wait $GATED ;;
       adv\ *) b=${job#adv structured}; b=${b%_noise_strongD_rise}; gate 10000 adv $b; wait $GATED ;;
       *) gate 10000 train $job "$(cfg $job)"; wait $GATED
-         tail -1 $Q/status.txt | grep -q "end $job exit 0" && { gate 10000 adv $job; wait $GATED; } ;;
+         case $job in _v11_m1_strings_*) ;; *) grep -q "end $job exit 0" $Q/status.txt && { gate 10000 adv $job; wait $GATED; } ;; esac ;;
     esac
   done
   s=$(grep -c " start " $Q/status.txt); e=$(grep -c " end " $Q/status.txt)
-  grep -q "all done" $Q/status.txt && [ "$s" -le "$e" ] && break
+  grep -q "all done" $Q/status.txt && grep -q "strings done" $Q/status.txt && [ "$s" -le "$e" ] && break
   sleep 60
 done
