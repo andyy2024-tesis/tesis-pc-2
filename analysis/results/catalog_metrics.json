@@ -257,6 +257,12 @@
   "n": 85,
   "wind": -26.8
  },
+ "structured_v11_m1_attn_ahead_contact": {
+  "mean": 5.73,
+  "median": 5.774,
+  "n": 85,
+  "wind": -26.9
+ },
  "structured_v11_m1_attn_ahead_xvoice": {
   "mean": 5.713,
   "median": 5.666,

@@ -3,3 +3,4 @@
 before: {"test_loss": 5.716087302039651, "n_windows": 85, "share_burst_db": -36.05341604736068, "share_strings_db": -0.16987011598341684, "share_body_db": -16.856994520701598, "share_floor_db": -37.33202778960171, "share_noise_db": -17.618173704165045, "quiet_noise_db": -23.396482467651367}
   step   100  D 1.965  spec 0.000  adv 0.000  fm 0.000 (128 s)
   step   200  D 1.947  spec 0.000  adv 0.000  fm 0.000 (261 s)
+  step   300  D 1.947  spec 5.513  adv 1.497  fm 0.497 (476 s)

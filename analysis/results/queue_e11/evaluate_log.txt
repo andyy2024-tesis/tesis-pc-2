@@ -59,3 +59,14 @@ done e6/structured_v11_m1_attn_noise_strongD_rise:nonoise
 done e6/structured_v11_m1_attn_noise_strongD_rise {"023_Ypswc": {"strings": -0.1, "burst": -35.6, "body": -19.2, "floor": -40.6, "noise": -37.3}, "176_mM1wc": {"strings": -0.2, "burst": -34.0, "body": -14.5, "floor": -43.5, "noise": -32.6}, "276_jw1wc": {"strings": -0.1, "burst": -39.3, "body": -16.5, "floor": -42.4, "noise": -36.3}, "277_Pw1wc": {"strings": -0.1, "burst": -35.1, "body": -16.6, "floor": -38.4, "noise": -38.5}, "306_7c1wc": {"strings": -0.2, "burst": -31.1, "body": -12.8, "floor": -42.7, "noise": -32.2}}
 03:55:41 done e6/structured_v11_m1_attn_noise_strongD_rise
 03:55:41 evaluate structured_v11_m1_attn_ahead_contact
+structured_v11_m1_attn_ahead_contact {"mean": 5.73, "median": 5.774, "n": 85, "wind": -26.9}
+structured_v11_m1_attn_ahead_contact {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 193.0, "1-4k": 195.3, "4-12k": 183.9}, "strings": {"0-1k": 7.5, "1-4k": 10.3, "4-12k": 22.9}, "body": {"0-1k": 21.8, "1-4k": 19.9, "4-12k": 14.4}, "contact": {"0-1k": 9.9, "1-4k": 10.1, "4-12k": 8.9}, "floor": {"0-1k": 0.6, "1-4k": 2.0, "4-12k": -0.8}, "noise": {"0-1k": -9.1, "1-4k": 0.4, "4-12k": 2.3}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -36.3, "1-4k": -19.0, "4-12k": -11.6}, "strings": {"0-1k": -1.0, "1-4k": -0.7, "4-12k": -2.1}, "body": {"0-1k": -13.9, "1-4k": -42.7, "4-12k": -59.4}, "contact": {"0-1k": -59.3, "1-4k": -22.5, "4-12k": -15.6}, "floor": {"0-1k": -46.8, "1-4k": -31.1, "4-12k": -29.6}, "noise": {"0-1k": -47.4, "1-4k": -61.1, "4-12k": -34.6}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}
+structured_v11_m1_attn_ahead_contact {"0-700": {"median_db": -15.7, "share_above_6db": 0.03}, "700-4k": {"median_db": -24.9, "share_above_6db": 0.0}, "4k-11k": {"median_db": -21.0, "share_above_6db": 0.06}}
+structured_v11_m1_attn_ahead_contact base 6
+structured_v11_m1_attn_ahead_contact no_detune 6
+structured_v11_m1_attn_ahead_contact no_delta 2
+structured_v11_m1_attn_ahead_contact no_dev 7
+done structured_v11_m1_attn_ahead_contact
+done structured_v11_m1_attn_ahead_contact:nonoise
+done structured_v11_m1_attn_ahead_contact {"023_Ypswc": {"strings": -0.0, "burst": -35.8, "contact": -46.6, "body": -23.5, "floor": -41.4, "noise": -37.1}, "176_mM1wc": {"strings": 0.0, "burst": -35.8, "contact": -44.4, "body": -18.3, "floor": -36.0, "noise": -29.6}, "276_jw1wc": {"strings": -0.1, "burst": -41.0, "contact": -42.5, "body": -19.1, "floor": -42.5, "noise": -41.9}, "277_Pw1wc": {"strings": -0.0, "burst": -34.9, "contact": -36.3, "body": -19.9, "floor": -37.6, "noise": -45.3}, "306_7c1wc": {"strings": -0.1, "burst": -32.6, "contact": -34.0, "body": -16.8, "floor": -37.6, "noise": -46.2}}
+04:01:24 done structured_v11_m1_attn_ahead_contact

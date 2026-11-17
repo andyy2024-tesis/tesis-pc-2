@@ -432,5 +432,19 @@
    "median_db": 2.5,
    "share_above_6db": 0.37
   }
+ },
+ "structured_v11_m1_attn_ahead_contact": {
+  "0-700": {
+   "median_db": -15.7,
+   "share_above_6db": 0.03
+  },
+  "700-4k": {
+   "median_db": -24.9,
+   "share_above_6db": 0.0
+  },
+  "4k-11k": {
+   "median_db": -21.0,
+   "share_above_6db": 0.06
+  }
  }
 }

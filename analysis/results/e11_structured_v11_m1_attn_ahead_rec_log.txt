@@ -5,3 +5,5 @@ parameters: 1.37 M
   step   300  train loss 6.435  (511 s)
   step   400  train loss 6.369  (632 s)
   step   500  train loss 6.292  (796 s)
+  step   600  train loss 6.546  (992 s)
+  step   700  train loss 6.182  (1202 s)

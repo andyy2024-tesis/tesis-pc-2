@@ -62,26 +62,36 @@ Runs (from M1 + timbre 32 + per-note attack + room background + strings, GRU, 5.
 
 Measures: wind (dB, lower = less hiss between notes), snare (noise lock to the attack, 1-4k / 4-12k dB), share (noise's
 share of the attack energy), room (noise over the measured room background, 700-4k / 4k-11k median dB, and % of frames
->6 dB above it), ticks (harmonic clicks away from onsets).
+>6 dB above it), ticks (harmonic clicks away from onsets, inside the excerpt).
+
+Ticks: the detector also fires at the excerpt's cut edges (t = 0 and 9 s) on every model; counting only clicks inside
+the excerpt, every M1 model so far has none, adversarial or not. Real ticks are an M2 thing (M2 + per-note attack: 10,
+on 277 and 306; M2 + strings + adv + rise penalty: 4, all on 306).
 
 | run | loss | wind | snare | share | room | ticks |
 |---|---|---|---|---|---|---|
-| A0 base, GRU `structured_v10_m1_burst_floor` | 5.81 | -25.7 | -1.9 / +2.0 | 2-7 % | -0.0 / +5.5 (48 %) | 4 |
-| T1 attention `structured_v11_m1_attn` | 5.80 | -24.2 | +1.4 / +1.4 | 4-7 % | -2.3 / +3.5 (40 %) | 5 |
-| T2 + look-ahead `structured_v11_m1_attn_ahead` | 5.76 | -26.8 | +3.9 / +3.7 | 6-12 % | -1.1 / +4.6 (44 %) | 4 |
-| T3 + across voices `structured_v11_m1_attn_ahead_xvoice` | 5.71 | -23.7 | -1.0 / +3.8 | 2-12 % | -3.7 / +3.2 (40 %) | 4 |
+| A0 base, GRU `structured_v10_m1_burst_floor` | 5.81 | -25.7 | -1.9 / +2.0 | 2-7 % | -0.0 / +5.5 (48 %) | 0 |
+| T1 attention `structured_v11_m1_attn` | 5.80 | -24.2 | +1.4 / +1.4 | 4-7 % | -2.3 / +3.5 (40 %) | 0 |
+| T2 + look-ahead `structured_v11_m1_attn_ahead` | 5.76 | -26.8 | +3.9 / +3.7 | 6-12 % | -1.1 / +4.6 (44 %) | 0 |
+| T3 + across voices `structured_v11_m1_attn_ahead_xvoice` | 5.71 | -23.7 | -1.0 / +3.8 | 2-12 % | -3.7 / +3.2 (40 %) | 0 |
+| T4 T2 + contact `structured_v11_m1_attn_ahead_contact` | 5.73 | -26.9 | +0.4 / +2.3 | 0-0 % | -24.9 / -21.0 (6 %) | 0 |
 
 Reading so far: each step of the attention line lowers the loss a little (5.80 -> 5.76 -> 5.71); T3 is the first
 attention model below the GRU by more than the seed spread. Letting voices see each other is aimed at strums (277), so
 that sample is the one to judge it on.
 
+T4: the contact part stays on (-34 to -47 dB below the mix, loudest on 306 and 277, the samples with most fast
+events), and the noise part almost switches off: 0 % of the attack, 21-25 dB below the room background. Between the
+per-note attack, the contact and the room background there is nothing left for the noise to do. Loss 5.73, a tie with
+T2's 5.76.
+
 ### Adversarial (the favourite's recipe + rise penalty 20)
 
 | run | loss | wind | snare | share | room | ticks |
 |---|---|---|---|---|---|---|
-| favourite `e6/structured_v9_base_t32_noise_strongD` | 5.93 | -19.0 | +14.2 / +12.3 | 100-99 % | +8.0 / +8.5 (62 %) | 5 |
-| A0 adv `e6/structured_v10_m1_burst_floor_noise_strongD_rise` | 5.92 | -23.4 | -0.5 / +1.1 | 3-8 % | -1.7 / +4.5 (43 %) | 5 |
-| T1 adv `e6/structured_v11_m1_attn_noise_strongD_rise` | 5.88 | -25.3 | +1.3 / +1.8 | 4-10 % | -4.3 / +2.5 (37 %) | 4 |
+| favourite `e6/structured_v9_base_t32_noise_strongD` | 5.93 | -19.0 | +14.2 / +12.3 | 100-99 % | +8.0 / +8.5 (62 %) | 0 |
+| A0 adv `e6/structured_v10_m1_burst_floor_noise_strongD_rise` | 5.92 | -23.4 | -0.5 / +1.1 | 3-8 % | -1.7 / +4.5 (43 %) | 0 |
+| T1 adv `e6/structured_v11_m1_attn_noise_strongD_rise` | 5.88 | -25.3 | +1.3 / +1.8 | 4-10 % | -4.3 / +2.5 (37 %) | 0 |
 
 T1 adv: the attention keeps its small edge through the adversarial step (5.88 vs 5.92) and has the least hiss so far;
 the noise stays near the room background. The favourite's noise plays the whole attack (99-100 % share, +14 dB snare);
