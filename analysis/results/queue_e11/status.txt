@@ -38,3 +38,7 @@
 14:59:41 start _v11_m1_strings_oldvoices
 15:02:11 start _v11_m1_attn_ahead_rec32
 15:46:23 end _v11_m1_strings_guitarB exit 0
+16:39:01 end _v11_m1_strings_decay exit 0
+16:41:14 end _v11_m1_strings_oldvoices exit 0
+16:45:30 end _v11_m1_attn_ahead_rec32 exit 0
+16:45:30 strings done

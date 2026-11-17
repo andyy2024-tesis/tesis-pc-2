@@ -558,5 +558,19 @@
    "median_db": 5.1,
    "share_above_6db": 0.46
   }
+ },
+ "structured_v11_m1_strings_decay": {
+  "0-700": {
+   "median_db": -12.3,
+   "share_above_6db": 0.06
+  },
+  "700-4k": {
+   "median_db": 0.6,
+   "share_above_6db": 0.29
+  },
+  "4k-11k": {
+   "median_db": 5.2,
+   "share_above_6db": 0.46
+  }
  }
 }

@@ -166,3 +166,16 @@ done structured_v11_m1_strings_guitarB
 done structured_v11_m1_strings_guitarB:nonoise
 done structured_v11_m1_strings_guitarB {"023_Ypswc": {"strings": -0.0, "burst": -40.4, "body": -23.7, "floor": -42.1, "noise": -37.8}, "176_mM1wc": {"strings": -0.0, "burst": -36.1, "body": -18.4, "floor": -61.1, "noise": -32.6}, "276_jw1wc": {"strings": -0.0, "burst": -41.3, "body": -20.7, "floor": -46.4, "noise": -38.5}, "277_Pw1wc": {"strings": -0.0, "burst": -36.9, "body": -20.9, "floor": -61.9, "noise": -38.7}, "306_7c1wc": {"strings": -0.1, "burst": -31.8, "body": -17.9, "floor": -71.1, "noise": -36.3}}
 15:52:38 done structured_v11_m1_strings_guitarB
+16:39:39 evaluate structured_v11_m1_strings_decay
+structured_v11_m1_strings_decay {"mean": 5.716, "median": 5.704, "n": 85, "wind": -25.0}
+structured_v11_m1_strings_decay {"frames": {"attack": 8163, "far": 26150}, "lock_db": {"burst": {"0-1k": 189.9, "1-4k": 196.9, "4-12k": 184.4}, "strings": {"0-1k": 7.5, "1-4k": 10.4, "4-12k": 24.0}, "body": {"0-1k": 21.9, "1-4k": 23.4, "4-12k": 15.5}, "floor": {"0-1k": -1.9, "1-4k": 0.7, "4-12k": 0.3}, "noise": {"0-1k": -6.7, "1-4k": -1.4, "4-12k": 1.2}, "original": {"0-1k": 7.2, "1-4k": 9.6, "4-12k": 17.2}}, "attack_level_db": {"burst": {"0-1k": -39.3, "1-4k": -17.3, "4-12k": -11.1}, "strings": {"0-1k": -0.9, "1-4k": -0.8, "4-12k": -1.5}, "body": {"0-1k": -14.3, "1-4k": -45.2, "4-12k": -59.6}, "floor": {"0-1k": -60.7, "1-4k": -48.9, "4-12k": -35.3}, "noise": {"0-1k": -46.2, "1-4k": -34.1, "4-12k": -23.6}, "original": {"0-1k": 0.0, "1-4k": 0.0, "4-12k": 0.0}}, "noise_share_of_attack": {"0-1k": 0.0, "1-4k": 0.02, "4-12k": 0.05}}
+structured_v11_m1_strings_decay {"0-700": {"median_db": -12.3, "share_above_6db": 0.06}, "700-4k": {"median_db": 0.6, "share_above_6db": 0.29}, "4k-11k": {"median_db": 5.2, "share_above_6db": 0.46}}
+structured_v11_m1_strings_decay base 5
+structured_v11_m1_strings_decay no_detune 5
+structured_v11_m1_strings_decay no_delta 3
+structured_v11_m1_strings_decay no_dev 7
+done structured_v11_m1_strings_decay
+done structured_v11_m1_strings_decay:nonoise
+done structured_v11_m1_strings_decay {"023_Ypswc": {"strings": -0.0, "burst": -36.9, "body": -22.8, "floor": -42.3, "noise": -40.5}, "176_mM1wc": {"strings": -0.1, "burst": -36.0, "body": -18.0, "floor": -61.2, "noise": -33.2}, "276_jw1wc": {"strings": -0.1, "burst": -41.1, "body": -20.0, "floor": -48.1, "noise": -38.6}, "277_Pw1wc": {"strings": -0.0, "burst": -36.3, "body": -20.1, "floor": -62.1, "noise": -34.5}, "306_7c1wc": {"strings": -0.1, "burst": -31.7, "body": -17.3, "floor": -70.7, "noise": -33.6}}
+16:44:29 done structured_v11_m1_strings_decay
+16:45:29 evaluate structured_v11_m1_strings_oldvoices

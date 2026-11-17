@@ -299,6 +299,12 @@
   "n": 85,
   "wind": -23.7
  },
+ "structured_v11_m1_strings_decay": {
+  "mean": 5.716,
+  "median": 5.704,
+  "n": 85,
+  "wind": -25.0
+ },
  "structured_v11_m1_strings_guitarB": {
   "mean": 5.693,
   "median": 5.728,
