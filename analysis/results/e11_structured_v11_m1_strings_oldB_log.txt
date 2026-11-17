@@ -2,3 +2,23 @@ structured: 20 recordings, 241814 train starts, 85 test windows
 parameters: 0.71 M
   step   100  train loss 7.393  (171 s)
   step   200  train loss 6.227  (342 s)
+  step   300  train loss 6.366  (493 s)
+  step   400  train loss 6.410  (635 s)
+  step   500  train loss 6.348  (782 s)
+  step   600  train loss 6.404  (931 s)
+  step   700  train loss 6.219  (1080 s)
+  step   800  train loss 5.977  (1229 s)
+  step   900  train loss 6.041  (1378 s)
+  step  1000  train loss 5.629  (1527 s)
+  EVAL step 1000: {"test_loss": 5.984702643226175, "n_windows": 85, "share_burst_db": -34.125997052731336, "share_strings_db": -0.09646645337166333, "share_body_db": -16.749975129063454, "share_floor_db": -45.418260230416, "share_noise_db": -33.79975626295433}
+  step  1100  train loss 5.965  (1687 s)
+  step  1200  train loss 6.003  (1834 s)
+  step  1300  train loss 5.906  (1984 s)
+  step  1400  train loss 5.821  (2132 s)
+  step  1500  train loss 5.961  (2281 s)
+  step  1600  train loss 5.818  (2430 s)
+  step  1700  train loss 5.655  (2576 s)
+  step  1800  train loss 5.725  (2711 s)
+  step  1900  train loss 5.861  (2863 s)
+  step  2000  train loss 5.924  (3020 s)
+  EVAL step 2000: {"test_loss": 5.916706859364229, "n_windows": 85, "share_burst_db": -29.70458637998947, "share_strings_db": -0.0873465499324689, "share_body_db": -17.791576777930462, "share_floor_db": -40.11079328176598, "share_noise_db": -26.746022243870616}

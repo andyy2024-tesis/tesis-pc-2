@@ -29,3 +29,6 @@
 13:20:16 end adv structured_v11_m1_attn_ahead_contact_noise_strongD_rise exit 0
 13:20:37 start _v11_m1_strings_oldB
 13:23:07 all done
+14:04:26 end adv structured_v11_m1_attn_ahead_rec_noise_strongD_rise exit 0
+14:04:39 start _v11_m1_strings_guitarB
+14:07:09 rec done

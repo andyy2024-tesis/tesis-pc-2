@@ -29,3 +29,16 @@ resumed at step 1000
   step  1700  D 1.789  spec 5.505  adv 1.394  fm 0.620 (1497 s)
   step  1800  D 1.766  spec 5.533  adv 1.270  fm 0.640 (1707 s)
   step  1900  D 1.789  spec 5.684  adv 1.179  fm 0.659 (1926 s)
+  step  2000  D 1.782  spec 5.624  adv 1.277  fm 0.640 (2127 s)
+  EVAL step 2000: {"test_loss": 5.802229819578283, "n_windows": 85, "share_burst_db": -35.73134066636606, "share_strings_db": -0.32491027620634433, "share_body_db": -13.93034273625588, "share_floor_db": -36.6115602708486, "share_noise_db": -15.06632157291696, "quiet_noise_db": -20.062923431396484}
+  step  2100  D 1.764  spec 5.486  adv 1.392  fm 0.627 (2339 s)
+  step  2200  D 1.749  spec 5.525  adv 1.395  fm 0.645 (2540 s)
+  step  2300  D 1.747  spec 5.635  adv 1.327  fm 0.647 (2740 s)
+  step  2400  D 1.701  spec 5.624  adv 1.312  fm 0.672 (2941 s)
+  step  2500  D 1.771  spec 5.206  adv 1.600  fm 0.608 (3139 s)
+  step  2600  D 1.709  spec 5.588  adv 1.318  fm 0.696 (3339 s)
+  step  2700  D 1.770  spec 5.456  adv 1.500  fm 0.628 (3539 s)
+  step  2800  D 1.741  spec 5.233  adv 1.516  fm 0.619 (3740 s)
+  step  2900  D 1.690  spec 5.747  adv 1.274  fm 0.699 (3940 s)
+  step  3000  D 1.673  spec 5.709  adv 1.323  fm 0.699 (4137 s)
+  EVAL step 3000: {"test_loss": 5.820869075550752, "n_windows": 85, "share_burst_db": -35.349803402464, "share_strings_db": -0.268409535726717, "share_body_db": -14.116240424768705, "share_floor_db": -36.28305074531815, "share_noise_db": -16.85162298985324, "quiet_noise_db": -21.186912536621094}

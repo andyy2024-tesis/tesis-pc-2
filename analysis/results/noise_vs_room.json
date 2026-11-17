@@ -502,5 +502,19 @@
    "median_db": -16.9,
    "share_above_6db": 0.08
   }
+ },
+ "e6/structured_v11_m1_attn_ahead_rec_noise_strongD_rise": {
+  "0-700": {
+   "median_db": -12.8,
+   "share_above_6db": 0.05
+  },
+  "700-4k": {
+   "median_db": -4.1,
+   "share_above_6db": 0.23
+  },
+  "4k-11k": {
+   "median_db": 3.0,
+   "share_above_6db": 0.39
+  }
  }
 }

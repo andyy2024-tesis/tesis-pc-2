@@ -96,6 +96,7 @@ T2's 5.76.
 | T2 adv `e6/structured_v11_m1_attn_ahead_noise_strongD_rise` | 5.87 | -24.5 | +2.1 / +3.6 | 5-16 % | -2.2 / +4.3 (44 %) | 0 |
 | T3 adv `e6/structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise` | 5.81 | -20.5 | -0.6 / +8.6 | 4-38 % | -5.9 / +2.2 (37 %) | 0 |
 | T4 adv `e6/structured_v11_m1_attn_ahead_contact_noise_strongD_rise` | 5.83 | -24.3 | +0.2 / +2.6 | 0-2 % | -30.2 / -16.9 (8 %) | 2 |
+| R adv `e6/structured_v11_m1_attn_ahead_rec_noise_strongD_rise` | 5.82 | -21.3 | -0.1 / +1.5 | 4-10 % | -4.1 / +3.0 (39 %) | 0 |
 
 T1 adv: the attention keeps its small edge through the adversarial step (5.88 vs 5.92) and has the least hiss so far;
 the noise stays near the room background. The favourite's noise plays the whole attack (99-100 % share, +14 dB snare);
@@ -124,3 +125,5 @@ R (recording everywhere, no adversarial): 5.72 vs T2's 5.76, within the seed spr
 T4 adv (resumed from step 2000 after the 06:33 reboot): 5.83, the second-best adversarial loss, with no snare and low
 wind. The contact part stays on (loudest on 277 and 306, -33 dB) and the adversarial step does not hand the attack back
 to the noise as it did in T3: the contact does that job. Two real ticks, both on 306 (5.27 s, 6.69 s).
+
+R adv (resumed from step 1000): 5.82, a tie with T3 adv and T4 adv; no snare, no ticks, but more wind (-21.3 dB).
