@@ -669,6 +669,123 @@ const MODELS = {
 "change": "La receta del favorito sobre el M1 sin tambor, con menos viento y con cuerdas.",
 "loss": 5.781,
 "wind": -22.0
+},
+"e6-structured_v10_m1_burst_floor_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + adv · sin agudos",
+"parent": "structured_v10_m1_burst_floor",
+"rel": "cont",
+"change": "Control de los candidatos finales: la receta del favorito, con la penalización de los agudos cortos, sobre M1 con ataque por nota y fondo medido (GRU).",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v11_m1_attn": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención",
+"parent": "structured_v10_m1_burst_floor",
+"rel": "rec",
+"change": "La atención con ventana (la que preferiste en M2) en vez de la GRU, ahora sobre M1.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"e6-structured_v11_m1_attn_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención + adv · sin agudos",
+"parent": "structured_v11_m1_attn",
+"rel": "cont",
+"change": "Candidato final: la receta del favorito sobre M1 con atención.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v11_m1_attn_ahead": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa",
+"parent": "structured_v11_m1_attn",
+"rel": "rec",
+"change": "La atención también ve 160 ms hacia adelante en la partitura (como la LSTM bidireccional, que ganó en los rasgueos). Solo sirve fuera de tiempo real.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"e6-structured_v11_m1_attn_ahead_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + adv · sin agudos",
+"parent": "structured_v11_m1_attn_ahead",
+"rel": "cont",
+"change": "Candidato final: la receta del favorito sobre M1 con atención que anticipa.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v11_m1_attn_ahead_xvoice": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + entre voces",
+"parent": "structured_v11_m1_attn_ahead",
+"rel": "rec",
+"change": "Además, en cada instante cada voz ve lo que hacen las otras (para los rasgueos).",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + entre voces + adv · sin agudos",
+"parent": "structured_v11_m1_attn_ahead_xvoice",
+"rel": "cont",
+"change": "Candidato final: la receta del favorito sobre M1 con atención que anticipa y entre voces.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v11_m1_attn_ahead_contact": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + contacto",
+"parent": "structured_v11_m1_attn_ahead",
+"rel": "rec",
+"change": "Una parte propia para los eventos agudos y rápidos (dedo o uña tocando la cuerda), entrenada desde cero, con la penalización de los agudos cortos también en el entrenamiento: los armónicos ya no pueden hacerlos.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + contacto + adv · sin agudos",
+"parent": "structured_v11_m1_attn_ahead_contact",
+"rel": "cont",
+"change": "Candidato final: la receta del favorito sobre M1 con atención que anticipa y la parte de contacto.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v11_m1_strings_oldB": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · rigidez antigua",
+"parent": "structured_v10_m1_burst_floor_strings",
+"rel": "rec",
+"change": "Cuerdas, pero con la ley de rigidez de antes (una recta sobre la altura): los bordones vuelven a ser más inarmónicos.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v11_m1_strings_guitarB": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · rigidez por guitarra",
+"parent": "structured_v10_m1_burst_floor_strings",
+"rel": "rec",
+"change": "La rigidez de cada cuerda medida en cada grabación (cada una es otra guitarra y otro juego de cuerdas), no un promedio de todas.",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v11_m1_strings_decay": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · decaimiento por cuerda",
+"parent": "structured_v10_m1_burst_floor_strings",
+"rel": "rec",
+"change": "El decaimiento de cada parcial también sabe la cuerda, el traste y la grabación (antes solo la altura y la frecuencia).",
+"loss": null,
+"wind": null,
+"pending": true
+},
+"structured_v11_m1_strings_oldvoices": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · voces de antes",
+"parent": "structured_v10_m1_burst_floor_strings",
+"rel": "rec",
+"change": "La red sabe la cuerda y el traste, pero las notas se reparten en voces como antes, no una voz por cuerda.",
+"loss": null,
+"wind": null,
+"pending": true
 }
 };
 /*MODELS-END*/

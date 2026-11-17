@@ -87,7 +87,17 @@ LATER = {k + s: k for k in ["structured_v10_m1_burst", "structured_v10_m2_burst"
                             "e6-structured_v10_m2_strings_noise_strongD_rise",
                             "structured_v10_m2_strings_seed1", "structured_v10_m1_burst_floor_strings",
                             "structured_v10_m2_strings_bilstm",
-                            "e6-structured_v10_m1_burst_floor_strings_noise_strongD"] for s in ("", "-nonoise")}
+                            "e6-structured_v10_m1_burst_floor_strings_noise_strongD",
+                            # experiment 11
+                            "e6-structured_v10_m1_burst_floor_noise_strongD_rise",
+                            "structured_v11_m1_attn", "e6-structured_v11_m1_attn_noise_strongD_rise",
+                            "structured_v11_m1_attn_ahead", "e6-structured_v11_m1_attn_ahead_noise_strongD_rise",
+                            "structured_v11_m1_attn_ahead_xvoice",
+                            "e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise",
+                            "structured_v11_m1_attn_ahead_contact",
+                            "e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise",
+                            "structured_v11_m1_strings_oldB", "structured_v11_m1_strings_guitarB",
+                            "structured_v11_m1_strings_decay", "structured_v11_m1_strings_oldvoices"] for s in ("", "-nonoise")}
 VERSIONS.update(LATER)
 DECK_CLIPS = {
     "023_Ypswc": ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir_nonoise"],
