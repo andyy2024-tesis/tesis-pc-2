@@ -127,3 +127,13 @@ wind. The contact part stays on (loudest on 277 and 306, -33 dB) and the adversa
 to the noise as it did in T3: the contact does that job. Two real ticks, both on 306 (5.27 s, 6.69 s).
 
 R adv (resumed from step 1000): 5.82, a tie with T3 adv and T4 adv; no snare, no ticks, but more wind (-21.3 dB).
+
+### Strings runs (no adversarial)
+
+| run | loss | wind | snare | share | room | ticks |
+|---|---|---|---|---|---|---|
+| strings reference `structured_v10_m1_burst_floor_strings` | 5.70 | -25.5 | -2.2 / +1.0 | 2-6 % | +0.6 / +5.0 (45 %) | 0 |
+| S1 old stiffness law `structured_v11_m1_strings_oldB` | 5.75 | -24.3 | -2.1 / +1.5 | 2-6 % | +1.5 / +5.6 (48 %) | 2 |
+
+S1: going back to the old single stiffness law costs 0.05 (the seed spread): the measured per-string stiffness is a
+little better by loss; whether the old law gives the basses their colour is for the ear.
