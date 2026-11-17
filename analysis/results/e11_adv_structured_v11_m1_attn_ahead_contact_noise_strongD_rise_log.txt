@@ -10,3 +10,22 @@ before: {"test_loss": 5.730762352662928, "n_windows": 85, "share_burst_db": -36.
   step   700  D 1.876  spec 5.733  adv 1.330  fm 0.529 (935 s)
   step   800  D 1.850  spec 5.534  adv 1.188  fm 0.490 (1078 s)
   step   900  D 1.798  spec 5.571  adv 1.184  fm 0.488 (1299 s)
+  step  1000  D 1.804  spec 5.327  adv 1.545  fm 0.553 (1499 s)
+  EVAL step 1000: {"test_loss": 5.803563471401439, "n_windows": 85, "share_burst_db": -34.005030900754875, "share_strings_db": -0.23010600080012975, "share_body_db": -14.193146219773354, "share_contact_db": -37.915719300395516, "share_floor_db": -31.755445216689075, "share_noise_db": -19.101319294474568, "quiet_noise_db": -25.480871200561523}
+  step  1100  D 1.800  spec 5.585  adv 1.310  fm 0.597 (1716 s)
+  step  1200  D 1.797  spec 5.641  adv 1.330  fm 0.622 (1916 s)
+  step  1300  D 1.785  spec 5.560  adv 1.266  fm 0.616 (2116 s)
+  step  1400  D 1.785  spec 5.482  adv 1.329  fm 0.612 (2318 s)
+  step  1500  D 1.805  spec 5.662  adv 1.338  fm 0.612 (2515 s)
+  step  1600  D 1.799  spec 5.537  adv 1.269  fm 0.631 (2714 s)
+  step  1700  D 1.743  spec 5.515  adv 1.460  fm 0.653 (2914 s)
+  step  1800  D 1.743  spec 5.550  adv 1.356  fm 0.684 (3108 s)
+  step  1900  D 1.769  spec 5.705  adv 1.290  fm 0.706 (3304 s)
+  step  2000  D 1.726  spec 5.636  adv 1.314  fm 0.671 (3505 s)
+  EVAL step 2000: {"test_loss": 5.8225158803603225, "n_windows": 85, "share_burst_db": -34.44724640577528, "share_strings_db": -0.28047265793487197, "share_body_db": -13.375184678233795, "share_contact_db": -37.852719459402955, "share_floor_db": -31.935079269972725, "share_noise_db": -18.12318118653041, "quiet_noise_db": -24.280986785888672}
+  step  2100  D 1.711  spec 5.511  adv 1.590  fm 0.666 (3722 s)
+  step  2200  D 1.734  spec 5.569  adv 1.151  fm 0.684 (3921 s)
+  step  2300  D 1.694  spec 5.636  adv 1.461  fm 0.691 (4119 s)
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+resumed at step 2000

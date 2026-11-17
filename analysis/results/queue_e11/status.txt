@@ -20,3 +20,7 @@
 05:39:46 start adv structured_v11_m1_attn_ahead_rec_noise_strongD_rise
 05:40:09 tail queued
 05:42:16 start _v11_m2_rec
+06:33:30 end adv structured_v11_m1_attn_ahead_contact_noise_strongD_rise exit 137 stopped (machine rebooted)
+06:33:30 end adv structured_v11_m1_attn_ahead_rec_noise_strongD_rise exit 137 stopped (machine rebooted)
+06:33:30 end _v11_m2_rec exit 137 stopped (machine rebooted)
+12:52:36 start adv structured_v11_m1_attn_ahead_contact_noise_strongD_rise (resumed)
