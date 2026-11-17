@@ -544,5 +544,19 @@
    "median_db": 2.9,
    "share_above_6db": 0.35
   }
+ },
+ "structured_v11_m1_strings_guitarB": {
+  "0-700": {
+   "median_db": -11.8,
+   "share_above_6db": 0.06
+  },
+  "700-4k": {
+   "median_db": 0.7,
+   "share_above_6db": 0.29
+  },
+  "4k-11k": {
+   "median_db": 5.1,
+   "share_above_6db": 0.46
+  }
  }
 }

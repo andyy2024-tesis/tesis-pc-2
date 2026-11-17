@@ -30,3 +30,17 @@ parameters: 0.71 M
   step  2600  train loss 5.685  (3576 s)
   step  2700  train loss 5.547  (3780 s)
   step  2800  train loss 5.311  (3983 s)
+  step  2900  train loss 5.835  (4160 s)
+  step  3000  train loss 5.670  (4334 s)
+  EVAL step 3000: {"test_loss": 5.737456972458784, "n_windows": 85, "share_burst_db": -35.890583008635126, "share_strings_db": -0.12246256126724968, "share_body_db": -15.937093437833752, "share_floor_db": -39.653856518140046, "share_noise_db": -27.093099066295935}
+  step  3100  train loss 5.557  (4522 s)
+  step  3200  train loss 5.620  (4696 s)
+  step  3300  train loss 5.833  (4869 s)
+  step  3400  train loss 5.471  (5043 s)
+  step  3500  train loss 5.693  (5215 s)
+  step  3600  train loss 5.412  (5389 s)
+  step  3700  train loss 5.564  (5560 s)
+  step  3800  train loss 5.670  (5735 s)
+  step  3900  train loss 5.438  (5911 s)
+  step  4000  train loss 5.422  (6086 s)
+  EVAL step 4000: {"test_loss": 5.696236408458036, "n_windows": 85, "share_burst_db": -36.15502059964066, "share_strings_db": -0.10070326649828498, "share_body_db": -16.911337972911188, "share_floor_db": -39.70164442099652, "share_noise_db": -26.561238330077437}

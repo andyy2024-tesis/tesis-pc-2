@@ -134,9 +134,13 @@ R adv (resumed from step 1000): 5.82, a tie with T3 adv and T4 adv; no snare, no
 |---|---|---|---|---|---|---|
 | strings reference `structured_v10_m1_burst_floor_strings` | 5.70 | -25.5 | -2.2 / +1.0 | 2-6 % | +0.6 / +5.0 (45 %) | 0 |
 | S1 old stiffness law `structured_v11_m1_strings_oldB` | 5.75 | -24.3 | -2.1 / +1.5 | 2-6 % | +1.5 / +5.6 (48 %) | 2 |
+| S5 stiffness per guitar `structured_v11_m1_strings_guitarB` | 5.69 | -25.8 | -1.4 / +1.9 | 2-7 % | +0.7 / +5.1 (46 %) | 0 |
 
 S1: going back to the old single stiffness law costs 0.05 (the seed spread): the measured per-string stiffness is a
 little better by loss; whether the old law gives the basses their colour is for the ear.
+
+S5: each guitar's own measured stiffness: 5.69, a tie with the pooled table (5.70). By loss, the stiffness per guitar
+barely matters; the ear decides whether the basses sound less synthetic.
 
 ### M2 with the recording in every part (no adversarial)
 

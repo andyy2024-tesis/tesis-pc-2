@@ -37,3 +37,4 @@
 14:59:23 end _v11_m2_rec exit 0
 14:59:41 start _v11_m1_strings_oldvoices
 15:02:11 start _v11_m1_attn_ahead_rec32
+15:46:23 end _v11_m1_strings_guitarB exit 0

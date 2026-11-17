@@ -11,3 +11,4 @@ e6/structured_v11_m1_attn_ahead_contact_noise_strongD_rise
 e6/structured_v11_m1_attn_ahead_rec_noise_strongD_rise
 structured_v11_m1_strings_oldB
 structured_v11_m2_rec
+structured_v11_m1_strings_guitarB
