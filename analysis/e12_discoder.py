@@ -4,7 +4,10 @@ Runs in DisCoder's own environment (external/discoder/.venv; its pins clash with
   external/discoder/.venv/bin/python analysis/e12_discoder.py original44k e6-structured_v9_base_t32_noise_strongD ...
 Reads analysis/results/slides/audio/<rid>/<label>.wav (any rate, resampled to 44.1 kHz) and writes
 <rid>/voc-discoder-<label>.wav.
+  ... analysis/e12_discoder.py --npz <in.npz> <out.npz>: vocode every row of in.npz's "x" (44.1 kHz) into out.npz "y"
+  (used by analysis/e12_voc_metrics.py for the 85 held-out windows).
 """
+import os
 import sys
 from pathlib import Path
 
@@ -23,8 +26,19 @@ SR = 44100
 
 
 def main():
-    dev = "cuda"
+    dev = os.environ.get("DISCODER_DEV", "cuda")  # "cpu" when the GPU is busy training
     model = DisCoder.from_pretrained("disco-eth/discoder").eval().to(dev)
+    if sys.argv[1] == "--npz":
+        import numpy as np
+        xs = np.load(sys.argv[2])["x"]
+        outs = []
+        for row in xs:
+            with torch.inference_mode():
+                mel = utils.get_mel_spectrogram_from_config(torch.as_tensor(row, device=dev)[None], model.config)
+                o = model(mel)[0, 0].float().cpu().numpy()
+            outs.append(np.pad(o, (0, max(0, len(row) - len(o))))[:len(row)])
+        np.savez(sys.argv[3], y=np.stack(outs))
+        return
     for rid in LISTEN_IDS:
         for label in sys.argv[1:]:
             y, sr = sf.read(AUDIO / rid / f"{label}.wav", dtype="float32")

@@ -1,0 +1,20 @@
+data: 270 recordings, 13.74 h
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+mpd_reshapes: [2, 3, 5, 7, 11]
+Creating low pass filter ...Low pass filter created, time used = 0.0003 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0008 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0002 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0016 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0002 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0022 seconds
+p2_real: step 0 eval 4.237

@@ -1,0 +1,31 @@
+data: 20 recordings, 0.69 h
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+mpd_reshapes: [2, 3, 5, 7, 11]
+Creating low pass filter ...Low pass filter created, time used = 0.0003 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0008 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0002 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0014 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0001 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0016 seconds
+Traceback (most recent call last):
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/scripts/e12_vocoder.py", line 357, in <module>
+    main()
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/scripts/e12_vocoder.py", line 267, in main
+    sd = torch.load(RES / "e12" / a.init / "last.pt", map_location="cpu", weights_only=False)
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/serialization.py", line 1425, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/serialization.py", line 751, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/serialization.py", line 732, in __init__
+    super().__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: '/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/analysis/results/e12/p2_real/last.pt'

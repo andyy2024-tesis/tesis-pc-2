@@ -103,6 +103,22 @@ C = [
     dict(n="M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · rigidez por guitarra", run="structured_v11_m1_strings_guitarB", p="structured_v10_m1_burst_floor_strings", rel="rec", diff=dict(strings_b="guitar"), change="La rigidez de cada cuerda medida en cada grabación (cada una es otra guitarra y otro juego de cuerdas), no un promedio de todas."),
     dict(n="M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · decaimiento por cuerda", run="structured_v11_m1_strings_decay", p="structured_v10_m1_burst_floor_strings", rel="rec", diff=dict(decay_cond=True), change="El decaimiento de cada parcial también sabe la cuerda, el traste y la grabación (antes solo la altura y la frecuencia)."),
     dict(n="M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · voces de antes", run="structured_v11_m1_strings_oldvoices", p="structured_v10_m1_burst_floor_strings", rel="rec", diff=dict(strings_voices=False), change="La red sabe la cuerda y el traste, pero las notas se reparten en voces como antes, no una voz por cuerda."),
+    # experiment 12: the final DDSP (T4 + strings + the recording in every part, 32), then the neural vocoder
+    dict(n="Final · rigidez compartida", run="structured_v12_final", p="structured_v11_m1_attn_ahead_contact", rel="rec", diff=dict(strings=True, rec_all=True, rec_dim=32, rec_b="none"), change="El modelo final: T4 (atención que anticipa + contacto) + cuerdas de la tablatura + la grabación en todas las partes (embedding de 32). Una tabla de rigidez por cuerda, igual para todas las guitarras."),
+    dict(n="Final · rigidez aprendida", run="structured_v12_final_learnedB", p="structured_v11_m1_attn_ahead_contact", rel="rec", diff=dict(strings=True, rec_all=True, rec_dim=32, rec_b="learned"), change="Igual, pero la rigidez de cada cuerda se corrige por guitarra desde el embedding de la grabación (aprendida, no medida)."),
+    dict(n="Final · rigidez compartida + adv", run="e6/structured_v12_final_noise_strongD_rise", p="structured_v12_final", rel="cont", meta=dict(overrides=dict(delta_rise=20.0), d_kind="complex", **ADV), change="La receta adversarial del favorito (3000 pasos, sin agudos)."),
+    dict(n="Final · rigidez aprendida + adv", run="e6/structured_v12_final_learnedB_noise_strongD_rise", p="structured_v12_final_learnedB", rel="cont", meta=dict(overrides=dict(delta_rise=20.0), d_kind="complex", **ADV), change="La receta adversarial del favorito (3000 pasos, sin agudos). El DDSP final de la tesis."),
+]
+# Vocoder versions (experiment 12): the same audio passed through a neural vocoder. key: file name; src: what went in
+# (a catalog key, "original", or None for a reference); loss on the 85 held-out windows from e12_voc_metrics.json.
+VOC = [
+    dict(n="Original → BigVGAN 24 kHz", key="voc-bigvgan24-original", src="original", change="La grabación real convertida a mel y de vuelta a audio por BigVGAN-v2 preentrenado (24 kHz, sin entrenar en guitarra): el techo de un vocoder de mel."),
+    dict(n="Final + adv → BigVGAN 24 kHz", key="voc-bigvgan24-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El DDSP final por BigVGAN-v2 preentrenado, sin entrenar en guitarra."),
+    dict(n="Original 44.1 kHz", key="original44k", src=None, change="La grabación real en banda completa (44.1 kHz), sin pasar por ningún modelo."),
+    dict(n="Original → BigVGAN 44 kHz", key="voc-bigvgan44-original48", src="original44k", change="La grabación real en banda completa por BigVGAN-v2 preentrenado de 44 kHz."),
+    dict(n="Original → DisCoder", key="voc-discoder-original44k", src="original44k", change="La grabación real en banda completa por DisCoder (vocoder de música, 44.1 kHz, preentrenado)."),
+    dict(n="Final + adv → BigVGAN 44 kHz", key="voc-bigvgan44-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El DDSP final (24 kHz) por BigVGAN-v2 de 44 kHz: tiene que inventar lo que está por encima de 12 kHz."),
+    dict(n="Final + adv → DisCoder", key="voc-discoder-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El DDSP final (24 kHz) por DisCoder: también inventa lo que está por encima de 12 kHz."),
 ]
 
 
@@ -158,6 +174,13 @@ def main():
             loss=m["mean"] if m else None, wind=m["wind"] if m else None,
             **({"fav": True} if e.get("fav") else {}), **({"live": True} if e.get("live") else {}),
             **({"findings": True} if e.get("fixed") else {}), **({"pending": True} if m is None else {}))
+    vm = json.loads((RES / "e12_voc_metrics.json").read_text()) if (RES / "e12_voc_metrics.json").exists() else {}
+    for e in VOC:
+        m = vm.get(e["key"])
+        models[e["key"]] = dict(name=e["n"], parent=e["src"] if e["src"] in models else None,
+                                rel="voc" if e["src"] else None, change=e["change"], loss=m["mean"] if m else None,
+                                wind="na", **({"pending": True} if m is None and e["src"] else {}),
+                                **({"ref": True} if not e["src"] else {}))
     s = PAGE.read_text()
     a, b = "/*MODELS-START*/", "/*MODELS-END*/"
     i, j = s.index(a), s.index(b)

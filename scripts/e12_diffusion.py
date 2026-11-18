@@ -8,6 +8,10 @@ Both use the same denoiser (DiffSinger's WaveNet-style network, ~20M parameters)
                   recording, so the network also knows real guitar mels without DDSP. At inference the reverse process
                   starts from the DDSP mel noised to depth k (instead of from pure noise): k is the dial between
                   trusting the DDSP (small) and freedom (large), swept without retraining.
+                  --param x0res: the network predicts the clean mel as the DDSP mel plus a correction (zero at the
+                  start, so an untrained model returns the DDSP mel); the reverse step uses the DDPM posterior mean.
+                  (First run with --param eps, DiffSinger's noise prediction: after 10k steps its noise error stayed
+                  ~0.15 even at heavy noise, so its clean-mel guess at depth 20 was already worse than the DDSP mel.)
   --kind flow     rectified flow from the DDSP mel (t = 0) to the real mel (t = 1) with a little bridge noise, conditioned
                   on the DDSP mel; pairs only. Inference integrates from the DDSP mel in --flow-steps Euler steps.
   --stems         the condition also has the mel of every DDSP part (as scripts/e12_vocoder.py --stems).
@@ -116,7 +120,7 @@ def condition(h, x, groups, paired):
 
 
 @torch.no_grad()
-def refine(net, sch, kind, cond, start, depth, flow_steps=32, gen=None):
+def refine(net, sch, kind, cond, start, depth, flow_steps=32, gen=None, param="eps"):
     """start: scaled DDSP mel (B, 100, F). Shallow: noise it to step `depth` and run the reverse process to 0.
     Flow: integrate the velocity from t = 0 (DDSP) to 1."""
     if kind == "flow":
@@ -132,9 +136,16 @@ def refine(net, sch, kind, cond, start, depth, flow_steps=32, gen=None):
     x = sch.abar[k].sqrt() * start + (1 - sch.abar[k]).sqrt() * noise
     for i in range(k, -1, -1):
         t = torch.full((x.shape[0],), float(i), device=x.device)
-        eps = net(x, t * 10, cond)  # steps 0..99 -> 0..990 for the embedding
+        out = net(x, t * 10, cond)  # steps 0..99 -> 0..990 for the embedding
         a, ab, b = sch.alpha[i], sch.abar[i], sch.beta[i]
-        x = (x - b / (1 - ab).sqrt() * eps) / a.sqrt()
+        if param == "x0res":  # posterior mean from the predicted clean mel (DDSP mel + correction)
+            x0 = (cond[:, :100] + out).clamp(-1.2, 1.2)
+            if i == 0:
+                return x0
+            abp = sch.abar[i - 1]
+            x = (abp.sqrt() * b / (1 - ab)) * x0 + (a.sqrt() * (1 - abp) / (1 - ab)) * x
+        else:
+            x = (x - b / (1 - ab).sqrt() * out) / a.sqrt()
         if i > 0:
             var = b * (1 - sch.abar[i - 1]) / (1 - ab)
             x = x + var.sqrt() * torch.randn(x.shape, device=x.device, generator=gen)
@@ -145,6 +156,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tag", required=True)
     ap.add_argument("--kind", choices=["shallow", "flow"], default="shallow")
+    ap.add_argument("--param", choices=["eps", "x0res"], default="eps", help="shallow: what the network predicts")
     ap.add_argument("--renders", required=True, help="analysis/results/e12/renders/<name>")
     ap.add_argument("--vocoder", default="p2_real", help="e12 run whose generator turns mels into audio")
     ap.add_argument("--stems", action="store_true")
@@ -156,11 +168,13 @@ def main():
     ap.add_argument("--bridge", type=float, default=0.1, help="flow: bridge noise")
     ap.add_argument("--depths", default="0,20,40,60,80", help="shallow: depths evaluated (of 100)")
     ap.add_argument("--eval-every", type=int, default=10000)
+    ap.add_argument("--eval-only", action="store_true", help="load <tag>/model.pt and only evaluate (e.g. with p2_real)")
     a = ap.parse_args()
     dev = "cuda"
     out = RES / "e12" / a.tag
     out.mkdir(parents=True, exist_ok=True)
-    (out / "config.json").write_text(json.dumps(vars(a), indent=1))
+    if not a.eval_only:
+        (out / "config.json").write_text(json.dumps(vars(a), indent=1))
     h = AttrDict(json.loads((CKPT / "config.json").read_text()))
     renders = RES / "e12" / "renders" / a.renders
     rids = sorted(p.stem for p in renders.glob("*.npz"))
@@ -207,7 +221,7 @@ def main():
                 g = 0.95 / max(float(xx[:, 0].abs().max()), 1e-4)
                 xx = xx * g
                 cond = condition(h, xx, gidx, True)
-                m = refine(net, sch, a.kind, cond, cond[:, :100], d, gen=gen)
+                m = refine(net, sch, a.kind, cond, cond[:, :100], d, gen=gen, param=a.param)
                 with torch.no_grad():
                     o = voc.g(denorm(m))[0, 0, :n].float().cpu().numpy() / g
                 vals.append(mss(torch.tensor(o)[None], torch.tensor(y)[None]).item())
@@ -215,6 +229,10 @@ def main():
         net.train()
         return res
 
+    if a.eval_only:
+        net.load_state_dict(torch.load(out / "model.pt", map_location=dev))
+        say(f"{a.tag}: eval with vocoder {a.vocoder}: {evaluate()}")
+        return
     say(f"{a.tag}: step 0 eval {evaluate()}")
     rng = np.random.default_rng(0)
     t0, hist = time.time(), []
@@ -235,7 +253,8 @@ def main():
             k = torch.randint(0, T_STEPS, (a.batch,), device=dev)
             eps = torch.randn_like(x1)
             ab = sch.abar[k][:, None, None]
-            loss = F.mse_loss(net(ab.sqrt() * x1 + (1 - ab).sqrt() * eps, k.float() * 10, cond), eps)
+            out = net(ab.sqrt() * x1 + (1 - ab).sqrt() * eps, k.float() * 10, cond)
+            loss = F.mse_loss(cond[:, :100] + out, x1) if a.param == "x0res" else F.mse_loss(out, eps)
         else:
             x0 = cond[:, :100]
             t = torch.rand(a.batch, device=dev)

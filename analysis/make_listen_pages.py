@@ -17,7 +17,8 @@ RECS = ["023_Ypswc", "176_mM1wc", "276_jw1wc", "277_Pw1wc", "306_7c1wc"]
 TITLES = {2: ("Ataque y ruido", "El ataque y el ruido: noche del 15 al 16 de noviembre"),
           3: ("Redes y cuerdas", "Redes, cuerdas y contacto: noche del 15 al 16 de noviembre"),
           4: ("Modelo final", "El modelo final: noche del 16 al 17 de noviembre"),
-          5: ("Grabación y cuerdas", "La grabación en todas las partes y las cuerdas: noche del 16 al 17 de noviembre")}
+          5: ("Grabación y cuerdas", "La grabación en todas las partes y las cuerdas: noche del 16 al 17 de noviembre"),
+          6: ("DDSP final y vocoder", "El DDSP final y el vocoder: noche del 17 al 18 de noviembre")}
 
 
 def sections(html):

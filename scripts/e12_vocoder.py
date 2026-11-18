@@ -21,6 +21,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
+from torch.utils.checkpoint import checkpoint
 
 from tesis.data.gaps import PROCESSED, REPO
 from tesis.synth.dsp import MultiScaleSpectralLoss
@@ -43,10 +44,11 @@ EVAL_IDS = pd.read_csv(RES / "e4_recordings.csv").id.tolist()
 class Refiner(nn.Module):
     """BigVGAN generator with optional extra inputs, all starting at zero so step 0 is the loaded vocoder."""
 
-    def __init__(self, h, n_stems=0, inject=False):
+    def __init__(self, h, n_stems=0, inject=False, ckpt=False):
         super().__init__()
         self.g = BigVGAN(h, use_cuda_kernel=False)
         self.h = h
+        self.ckpt = ckpt  # recompute each AMP block in the backward pass: BigVGAN's anti-aliased activations are huge
         self.stem_in = None
         if n_stems:
             self.stem_in = nn.Conv1d(h.num_mels * n_stems, h.upsample_initial_channel, 7, 1, padding=3)
@@ -77,7 +79,8 @@ class Refiner(nn.Module):
                 x = x + s[..., :x.shape[-1]]
             xs = None
             for j in range(g.num_kernels):
-                r = g.resblocks[i * g.num_kernels + j](x)
+                blk = g.resblocks[i * g.num_kernels + j]
+                r = checkpoint(blk, x, use_reentrant=False) if self.ckpt and self.training else blk(x)
                 xs = r if xs is None else xs + r
             x = xs / g.num_kernels
         x = g.conv_post(g.activation_post(x))
@@ -229,6 +232,7 @@ def main():
     ap.add_argument("--seg", type=int, default=32768)
     ap.add_argument("--lr", type=float, default=5e-5)
     ap.add_argument("--eval-every", type=int, default=5000)
+    ap.add_argument("--no-ckpt", action="store_true", help="keep activations (needs far more GPU memory)")
     a = ap.parse_args()
     dev = "cuda"
     out = RES / "e12" / a.tag
@@ -247,7 +251,7 @@ def main():
     inputs = Inputs(a, h, names)
     data = Data(ids, renders)
 
-    G = Refiner(h, n_stems=len(inputs.groups), inject=a.inject != "none").to(dev)
+    G = Refiner(h, n_stems=len(inputs.groups), inject=a.inject != "none", ckpt=not a.no_ckpt).to(dev)
     mpd, cqtd = MultiPeriodDiscriminator(h).to(dev), MultiScaleSubbandCQTDiscriminator(h).to(dev)
     opt_g = torch.optim.AdamW(G.parameters(), a.lr, betas=(h.adam_b1, h.adam_b2))
     # same parameter order as BigVGAN's train.py (CQT discriminator first), so its saved Adam moments fit

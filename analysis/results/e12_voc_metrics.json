@@ -1,0 +1,20 @@
+{
+ "voc-bigvgan24-original": {
+  "mean": 4.238
+ },
+ "voc-bigvgan24-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 6.105
+ },
+ "voc-bigvgan44-original48": {
+  "mean": 4.402
+ },
+ "voc-bigvgan44-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 6.033
+ },
+ "voc-discoder-original44k": {
+  "mean": 4.459
+ },
+ "voc-discoder-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 6.107
+ }
+}

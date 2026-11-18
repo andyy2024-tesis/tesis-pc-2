@@ -99,7 +99,11 @@ LATER = {k + s: k for k in ["structured_v10_m1_burst", "structured_v10_m2_burst"
                             "structured_v11_m1_attn_ahead_rec", "e6-structured_v11_m1_attn_ahead_rec_noise_strongD_rise",
                             "structured_v11_m2_rec", "structured_v11_m1_attn_ahead_rec32",
                             "structured_v11_m1_strings_oldB", "structured_v11_m1_strings_guitarB",
-                            "structured_v11_m1_strings_decay", "structured_v11_m1_strings_oldvoices"] for s in ("", "-nonoise")}
+                            "structured_v11_m1_strings_decay", "structured_v11_m1_strings_oldvoices",
+                            # experiment 12: the final DDSP
+                            "structured_v12_final", "structured_v12_final_learnedB",
+                            "e6-structured_v12_final_noise_strongD_rise",
+                            "e6-structured_v12_final_learnedB_noise_strongD_rise"] for s in ("", "-nonoise")}
 VERSIONS.update(LATER)
 DECK_CLIPS = {
     "023_Ypswc": ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir_nonoise"],

@@ -26,3 +26,6 @@ wheels/
 .claude/
 .env
 /external/
+
+# Experiment 12 vocoder pairs (1.8 GB of DDSP renders; regenerate with scripts/e12_render_ddsp.py)
+/analysis/results/e12/renders/
