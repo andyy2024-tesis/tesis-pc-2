@@ -141,6 +141,14 @@ Queue after V1 (night.sh -> ddsp100_run.sh): V2 (`v2_inject20`, the DDSP wavefor
 (`s_stems20`, the parts as extra mel channels), both on the same pairs from `p2_real`; then the 100-recording DDSP,
 its adversarial fine-tune, its pair renders, and V1 on those pairs (`v1_mix100`).
 
+## V2: the DDSP waveform injected (NSF-style), 20-recording pairs
+
+`v2_inject20`: as V1 (from `p2_real`, same pairs, 6000 steps) plus the DDSP mix waveform entering every upsampling
+stage through zero-initialised strided convolutions. Held-out loss 5.891 (step 0) -> 5.794 / 5.790 / 5.762 at
+2000 / 4000 / 6000, still falling. The first vocoder more than 0.05 better than the raw DDSP (5.82); against V1
+(5.796) a tie. With the waveform the vocoder can copy the DDSP's phase and fine detail instead of inventing them.
+Page 6 section "vocoder-v2". (Page 6 now has 443 files: S fits; the 100-recording results go on a page 7.)
+
 ## Phase 4 and 5 prepared (run after the night queue: `queue_final/phase45.sh`)
 
 Winner rule (the ear has not judged yet; loss differences under 0.05 are ties): V2 or S only replace V1 if at least
