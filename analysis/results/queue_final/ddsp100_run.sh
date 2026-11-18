@@ -2,8 +2,19 @@
 # Experiment 12, the user's idea: the final DDSP (learned stiffness) trained on 100 recordings (the 20 + 80 more whose
 # tab matched, analysis/results/e12_more_ids.txt) so the vocoder gets ~5 h of DDSP/real pairs instead of 0.73 h.
 # 12000 steps (E9: 80 recordings plateau from step 8000), then the same adversarial recipe, then render the pairs.
-# Started by next.sh after V1 (needs ~20 GB).
+# Started by night.sh after V1 (needs ~20 GB). First (added 2026-11-18 06:10) the two other ways of connecting the
+# DDSP to the vocoder on the same 20-recording pairs as V1, so the three compare directly: V2 (the DDSP waveform
+# injected into every upsampling stage, NSF-style) and S (the DDSP parts as extra mel channels).
 source /home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/analysis/results/queue_final/lib.sh
+REN=structured_v12_final_learnedB_noise_strongD_rise
+voc() { # tag args...: from phase 2, 6000 steps on the final DDSP's pairs (as V1)
+  echo "$(date +%T) start $1" >> $Q/status.txt
+  uv run python scripts/e12_vocoder.py --tag $1 --init p2_real --renders $REN --steps 6000 --batch 8 --seg 32768 \
+    --eval-every 2000 "${@:2}" > $R/e12_$1_log.txt 2>&1
+  echo "$(date +%T) end $1 exit $?" >> $Q/status.txt
+}
+voc v2_inject20 --input mix --inject mix
+voc s_stems20 --input mix --stems
 FB="$M1B, \"backbone\": \"attn\", \"attn_ahead\": 16, \"contact\": true, \"contact_init\": -8.0, \"delta_rise\": 20.0, \"strings\": true, \"rec_all\": true, \"rec_dim\": 32, \"rec_b\": \"learned\""
 t100() {
   echo "$(date +%T) start _v12_final_learnedB_data100" >> $Q/status.txt

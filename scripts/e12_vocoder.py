@@ -234,7 +234,7 @@ def main():
     ap.add_argument("--eval-every", type=int, default=5000)
     ap.add_argument("--no-ckpt", action="store_true", help="keep activations (needs far more GPU memory)")
     a = ap.parse_args()
-    dev = "cuda"
+    dev = "cuda" if torch.cuda.is_available() else "cpu"
     out = RES / "e12" / a.tag
     out.mkdir(parents=True, exist_ok=True)
     (out / "config.json").write_text(json.dumps(vars(a), indent=1))
