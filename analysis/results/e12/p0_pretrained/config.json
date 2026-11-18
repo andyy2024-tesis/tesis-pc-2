@@ -1,0 +1,1 @@
+{"tag": "p0_pretrained", "init": "pretrained", "input": "real", "stems": false, "inject": "none", "renders": null, "note": "BigVGAN-v2 24 kHz as released, saved as a Refiner state dict (no training)"}
