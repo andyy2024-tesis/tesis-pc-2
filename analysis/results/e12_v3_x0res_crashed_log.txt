@@ -1,0 +1,34 @@
+data: 20 recordings, 0.69 h
+data: 270 recordings, 13.74 h
+denoiser: 13.5 M parameters
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+Removing weight norm...
+v3_x0res: step 0 eval {'0': 6.092, '20': 6.092, '40': 6.092, '60': 6.092, '80': 6.092}
+  step    500  loss 0.0341  (25 s)
+  step   1000  loss 0.0161  (50 s)
+  step   1500  loss 0.0143  (75 s)
+  step   2000  loss 0.0135  (100 s)
+  step   2500  loss 0.0132  (125 s)
+  step   3000  loss 0.0132  (150 s)
+  step   3500  loss 0.0129  (175 s)
+  step   4000  loss 0.0122  (199 s)
+  step   4500  loss 0.0128  (224 s)
+  step   5000  loss 0.0124  (249 s)
+  step   5500  loss 0.0121  (274 s)
+  step   6000  loss 0.0116  (299 s)
+  step   6500  loss 0.0116  (324 s)
+  step   7000  loss 0.0112  (348 s)
+  step   7500  loss 0.0111  (373 s)
+  step   8000  loss 0.0106  (398 s)
+  step   8500  loss 0.0105  (423 s)
+  step   9000  loss 0.0103  (448 s)
+  step   9500  loss 0.0104  (473 s)
+  step  10000  loss 0.0096  (498 s)
+  EVAL step 10000: {'0': 6.092, '20': 6.282, '40': 6.337, '60': 6.366, '80': 6.386}
+Traceback (most recent call last):
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/scripts/e12_diffusion.py", line 280, in <module>
+    main()
+  File "/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/scripts/e12_diffusion.py", line 275, in main
+    torch.save(net.state_dict(), out / "model.pt")
+TypeError: unsupported operand type(s) for /: 'Tensor' and 'str'

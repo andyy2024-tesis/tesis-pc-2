@@ -12,7 +12,7 @@ Both use the same denoiser (DiffSinger's WaveNet-style network, ~20M parameters)
                   start, so an untrained model returns the DDSP mel); the reverse step uses the DDPM posterior mean.
                   (First run with --param eps, DiffSinger's noise prediction: after 10k steps its noise error stayed
                   ~0.15 even at heavy noise, so its clean-mel guess at depth 20 was already worse than the DDSP mel.)
-  --kind flow     rectified flow from the DDSP mel (t = 0) to the real mel (t = 1) with a little bridge noise, conditioned
+  --kind flow     rectified flow from the DDSP mel (+ --src-noise) (t = 0) to the real mel (t = 1), with bridge noise, conditioned
                   on the DDSP mel; pairs only. Inference integrates from the DDSP mel in --flow-steps Euler steps.
   --stems         the condition also has the mel of every DDSP part (as scripts/e12_vocoder.py --stems).
 Evaluation: the 85 held-out windows, multi-scale spectral loss of the audio vs the real recording (the DDSP measure).
@@ -120,11 +120,11 @@ def condition(h, x, groups, paired):
 
 
 @torch.no_grad()
-def refine(net, sch, kind, cond, start, depth, flow_steps=32, gen=None, param="eps"):
+def refine(net, sch, kind, cond, start, depth, flow_steps=32, gen=None, param="eps", src_noise=0.0):
     """start: scaled DDSP mel (B, 100, F). Shallow: noise it to step `depth` and run the reverse process to 0.
     Flow: integrate the velocity from t = 0 (DDSP) to 1."""
-    if kind == "flow":
-        x = start.clone()
+    if kind == "flow":  # from the DDSP mel plus noise: without it the flow lands on the average real mel (smooth)
+        x = start + src_noise * torch.randn(start.shape, device=start.device, generator=gen)
         for i in range(flow_steps):
             t = torch.full((x.shape[0],), i / flow_steps, device=x.device)
             x = x + net(x, t * 1000, cond) / flow_steps
@@ -166,6 +166,9 @@ def main():
     ap.add_argument("--lr", type=float, default=2e-4)
     ap.add_argument("--unpaired", type=float, default=0.5, help="shallow: share of real-only batches (condition off)")
     ap.add_argument("--bridge", type=float, default=0.1, help="flow: bridge noise")
+    ap.add_argument("--src-noise", type=float, default=0.0,
+                    help="flow: noise added to the DDSP mel at t = 0 (training and inference). With 0, the first flow "
+                         "run kept 27%% of the real mel's frame-to-frame detail (DDSP mel: 90%%)")
     ap.add_argument("--depths", default="0,20,40,60,80", help="shallow: depths evaluated (of 100)")
     ap.add_argument("--eval-every", type=int, default=10000)
     ap.add_argument("--eval-only", action="store_true", help="load <tag>/model.pt and only evaluate (e.g. with p2_real)")
@@ -208,10 +211,10 @@ def main():
 
     def evaluate():
         net.eval()
-        res = {}
+        res = {}  # depth -> [loss, texture]: texture = frame-to-frame variance of the mel / the real mel's (1 = as real)
         gen = torch.Generator(device=dev).manual_seed(0)
         for d in depths:
-            vals = []
+            vals, detail = [], []
             for rid, y, x in wins:
                 nm, arr = x
                 rows = [0] + [1 + nm.index(p) for p in parts]
@@ -221,11 +224,13 @@ def main():
                 g = 0.95 / max(float(xx[:, 0].abs().max()), 1e-4)
                 xx = xx * g
                 cond = condition(h, xx, gidx, True)
-                m = refine(net, sch, a.kind, cond, cond[:, :100], d, gen=gen, param=a.param)
+                m = refine(net, sch, a.kind, cond, cond[:, :100], d, gen=gen, param=a.param, src_noise=a.src_noise)
+                rm = norm(mel(h, F.pad(torch.tensor(y)[None].to(dev), (0, (-n) % 256)) * g))
+                detail.append(float(torch.diff(m, dim=-1).var() / torch.diff(rm, dim=-1).var()))
                 with torch.no_grad():
                     o = voc.g(denorm(m))[0, 0, :n].float().cpu().numpy() / g
                 vals.append(mss(torch.tensor(o)[None], torch.tensor(y)[None]).item())
-            res[str(d)] = round(float(np.mean(vals)), 3)
+            res[str(d)] = [round(float(np.mean(vals)), 3), round(float(np.mean(detail)), 2)]
         net.train()
         return res
 
@@ -253,10 +258,10 @@ def main():
             k = torch.randint(0, T_STEPS, (a.batch,), device=dev)
             eps = torch.randn_like(x1)
             ab = sch.abar[k][:, None, None]
-            out = net(ab.sqrt() * x1 + (1 - ab).sqrt() * eps, k.float() * 10, cond)
-            loss = F.mse_loss(cond[:, :100] + out, x1) if a.param == "x0res" else F.mse_loss(out, eps)
+            pred = net(ab.sqrt() * x1 + (1 - ab).sqrt() * eps, k.float() * 10, cond)
+            loss = F.mse_loss(cond[:, :100] + pred, x1) if a.param == "x0res" else F.mse_loss(pred, eps)
         else:
-            x0 = cond[:, :100]
+            x0 = cond[:, :100] + a.src_noise * torch.randn_like(x1)
             t = torch.rand(a.batch, device=dev)
             tt = t[:, None, None]
             xt = (1 - tt) * x0 + tt * x1 + a.bridge * (tt * (1 - tt)).sqrt() * torch.randn_like(x1)

@@ -86,5 +86,20 @@ clean-mel estimate at depth 20 (MSE 0.023 vs the real mel) is already worse than
 error grows along the reverse chain (values up to +-4 at depth 60). Second run `v3_x0res`: the network predicts the
 clean mel as the DDSP mel plus a correction (zero-initialised, so it starts as the DDSP mel), reverse step by the DDPM
 posterior mean. Then V3b (flow from the DDSP mel; also starts as the identity).
+
+Results (vocoded by the pretrained BigVGAN; identity = the DDSP mel itself, 6.09):
+
+| run | step 10000 | 20000 | 30000 | 40000 |
+|---|---|---|---|---|
+| V3 noise prediction, depth 20 / 40 / 80 | 8.93 / 27.3 / 28.1 | 8.01 / 10.9 / 29.3 | 7.69 / 9.70 / 25.5 | - |
+| V3 x0res (first run), depth 20 / 40 / 80 | 6.28 / 6.34 / 6.39 | (crashed saving: rerun) | | |
+| V3b flow (no source noise) | 6.12 | 6.13 | 6.17 | 6.18 |
+
+Why the flow gets slightly worse: its mels are closer to the real ones (mel MSE 0.0125 vs 0.0145 for the DDSP mel) but
+smooth: their frame-to-frame variation is 27% of the real mel's (DDSP mel: 90%). Trained on MSE from a fixed start,
+the flow learns the average correction, which washes out texture, and the vocoder turns a smooth mel into dull audio.
+Fix being tried: start from the DDSP mel plus noise (`--src-noise 0.3`, bridge 0.3) so the flow has to create texture.
+Every evaluation now also reports the texture ratio. Caveat on the measure: the spectral loss compares with one specific
+recording, so a refiner that adds realistic but different detail is penalised; for these the ear decides.
 Also rendered: BigVGAN-v2 44 kHz (from the full-band 48 kHz excerpt and from the DDSP upsampled) and DisCoder (44.1 kHz,
 music-trained). `analysis/e12_vocode.py`, `analysis/e12_discoder.py` (own environment in external/discoder/.venv).
