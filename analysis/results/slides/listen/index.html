@@ -132,10 +132,10 @@ table.cat tr.away th, table.cat tr.away td { color: var(--muted); font-weight: 4
     </div>
   </header>
   <section class="overview" aria-label="Modelos">
-    <div class="live"><h2>Modelos vivos</h2><p class="note">Los candidatos actuales, con su loss y su viento.</p><ul id="live"></ul></div>
+    <div class="live"><h2>Modelos vivos</h2><p class="note">Los candidatos actuales, con su loss, su viento y su KAD.</p><ul id="live"></ul></div>
     <details class="cat"><summary>Árbol completo de modelos</summary><div class="catbody">
       <p class="catnote"><b>Continúa:</b> sigue entrenando con los pesos del modelo de arriba (los adversariales). <b>Desde cero:</b> misma receta que el de arriba más un cambio, entrenado de nuevo. Un modelo con el ruido apagado no aparece aquí: es el mismo modelo, generado distinto. Entre dos entrenamientos idénticos con otra semilla, la loss se mueve hasta 0.03: una diferencia menor no significa nada.</p>
-      <p class="catnote">Todas las losses son la media sobre las mismas 85 ventanas de test, medidas con el mismo script; las tablas de E4 traían medianas, por eso no coinciden con esas. Viento: ruido residual en el 20 % más silencioso de cada ventana, relativo al original. † Tomada de los resultados; sus pesos no se guardaron.</p>
+      <p class="catnote">Todas las losses son la media sobre las mismas 85 ventanas de test, medidas con el mismo script; las tablas de E4 traían medianas, por eso no coinciden con esas. Viento: ruido residual en el 20 % más silencioso de cada ventana, relativo al original. KAD: qué tan lejos suena del original en general, no nota por nota (Kernel Audio Distance ×100, sobre las mismas 85 ventanas; menor = más real). Dos números: PANNs (cómo suena en general) · EnCodec (el detalle acústico fino). La loss compara con una grabación concreta y premia un promedio liso, así que para el vocoder decide KAD; diferencias de menos de ~0.5 (PANNs) o ~0.1 (EnCodec) pueden ser azar. Medida solo en los modelos de la página 6. † Tomada de los resultados; sus pesos no se guardaron.</p>
       <div id="tree" class="tree"></div></div></details>
   </section>
   <nav id="toc" aria-label="Experimentos"></nav>
@@ -491,7 +491,11 @@ const MODELS = {
 "loss": 5.931,
 "wind": -19.0,
 "fav": true,
-"live": true
+"live": true,
+"kad": [
+1.5366,
+0.1712
+]
 },
 "e6-structured_v9_t32_no_gate_noise_strongD": {
 "name": "M2 + timbre 32 + adv",
@@ -740,7 +744,11 @@ const MODELS = {
 "rel": "cont",
 "change": "Candidato final: la receta del favorito sobre M1 con atención que anticipa y la parte de contacto.",
 "loss": 5.833,
-"wind": -24.3
+"wind": -24.3,
+"kad": [
+1.9924,
+0.2116
+]
 },
 "structured_v11_m1_attn_ahead_rec": {
 "name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + grabación en todo",
@@ -820,7 +828,11 @@ const MODELS = {
 "rel": "rec",
 "change": "Igual, pero la rigidez de cada cuerda se corrige por guitarra desde el embedding de la grabación (aprendida, no medida).",
 "loss": 5.711,
-"wind": -31.6
+"wind": -31.6,
+"kad": [
+7.2156,
+0.1874
+]
 },
 "e6-structured_v12_final_noise_strongD_rise": {
 "name": "Final · rigidez compartida + adv",
@@ -828,7 +840,11 @@ const MODELS = {
 "rel": "cont",
 "change": "La receta adversarial del favorito (3000 pasos, sin agudos).",
 "loss": 5.811,
-"wind": -20.6
+"wind": -20.6,
+"kad": [
+3.6648,
+0.2574
+]
 },
 "e6-structured_v12_final_learnedB_noise_strongD_rise": {
 "name": "Final · rigidez aprendida + adv",
@@ -836,7 +852,11 @@ const MODELS = {
 "rel": "cont",
 "change": "La receta adversarial del favorito (3000 pasos, sin agudos). El DDSP final de la tesis.",
 "loss": 5.815,
-"wind": -23.9
+"wind": -23.9,
+"kad": [
+3.2203,
+0.1771
+]
 },
 "voc-bigvgan24-original": {
 "name": "Original → BigVGAN 24 kHz",
@@ -844,7 +864,11 @@ const MODELS = {
 "rel": "voc",
 "change": "La grabación real convertida a mel y de vuelta a audio por BigVGAN-v2 preentrenado (24 kHz, sin entrenar en guitarra): el techo de un vocoder de mel.",
 "loss": 4.238,
-"wind": "na"
+"wind": "na",
+"kad": [
+1.7504,
+0.0201
+]
 },
 "voc-bigvgan24-e6-structured_v12_final_learnedB_noise_strongD_rise": {
 "name": "Final + adv → BigVGAN 24 kHz",
@@ -852,7 +876,11 @@ const MODELS = {
 "rel": "voc",
 "change": "El DDSP final por BigVGAN-v2 preentrenado, sin entrenar en guitarra.",
 "loss": 6.105,
-"wind": "na"
+"wind": "na",
+"kad": [
+1.7757,
+0.2639
+]
 },
 "original44k": {
 "name": "Original 44.1 kHz",
@@ -901,7 +929,11 @@ const MODELS = {
 "rel": "voc",
 "change": "La grabación real por BigVGAN-v2 de 24 kHz después de afinarlo 8000 pasos con las grabaciones reales de GAPS (fase 2): el nuevo techo.",
 "loss": 4.082,
-"wind": "na"
+"wind": "na",
+"kad": [
+1.4611,
+0.0291
+]
 },
 "voc-p2_real-e6-structured_v12_final_learnedB_noise_strongD_rise": {
 "name": "Final + adv → BigVGAN afinado",
@@ -909,7 +941,11 @@ const MODELS = {
 "rel": "voc",
 "change": "El DDSP final por el BigVGAN afinado en guitarra real. Nunca vio un DDSP en el entrenamiento.",
 "loss": 5.891,
-"wind": "na"
+"wind": "na",
+"kad": [
+1.821,
+0.2209
+]
 },
 "voc-p2_real-v3_x0res-d20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
 "name": "Final + adv → mel reparado (difusión) → BigVGAN afinado",
@@ -917,7 +953,11 @@ const MODELS = {
 "rel": "voc",
 "change": "El mel del DDSP pasa por una red de difusión superficial (se le añade ruido hasta el paso 20 de 100 y se quita, aprendiendo a dejarlo como el mel real) y luego por el BigVGAN afinado.",
 "loss": 6.078,
-"wind": "na"
+"wind": "na",
+"kad": [
+6.9643,
+0.5948
+]
 },
 "voc-p2_real-v3b_flow-e6-structured_v12_final_learnedB_noise_strongD_rise": {
 "name": "Final + adv → mel reparado (flujo) → BigVGAN afinado",
@@ -925,7 +965,11 @@ const MODELS = {
 "rel": "voc",
 "change": "El mel del DDSP pasa por un flujo rectificado que lo lleva en línea recta hacia el mel real, y luego por el BigVGAN afinado.",
 "loss": 5.874,
-"wind": "na"
+"wind": "na",
+"kad": [
+7.3303,
+0.3996
+]
 },
 "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
 "name": "Final + adv → vocoder entrenado con DDSP (V1)",
@@ -933,7 +977,11 @@ const MODELS = {
 "rel": "voc",
 "change": "El BigVGAN afinado, entrenado 6000 pasos más con pares DDSP → grabación real: entra el mel del DDSP final y tiene que salir la grabación real (pérdida de mel + adversarial). 20 grabaciones, 0.69 h de pares.",
 "loss": 5.796,
-"wind": "na"
+"wind": "na",
+"kad": [
+2.3323,
+0.1235
+]
 },
 "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
 "name": "Final + adv → vocoder con la onda del DDSP (V2)",
@@ -941,7 +989,11 @@ const MODELS = {
 "rel": "voc",
 "change": "Como V1, pero además la onda del DDSP entra en cada etapa del vocoder (como la fuente en NSF-HiFiGAN), no solo su mel: el vocoder puede copiar la fase y los ataques del DDSP en vez de inventarlos. 20 grabaciones, 0.69 h de pares.",
 "loss": 5.762,
-"wind": "na"
+"wind": "na",
+"kad": [
+1.3494,
+0.1835
+]
 }
 };
 /*MODELS-END*/
@@ -1087,7 +1139,10 @@ const ALL_SECTIONS = [
     v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p2_real-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
   { id: "vocoder-v2", page: 6, title: "La onda del DDSP dentro del vocoder (V2)", tag: "Vocoder · Mañana 18 nov",
     note: "Fase 3, V2: como V1 (mismo punto de partida, mismos pares, 6000 pasos), pero además la onda del DDSP entra en cada etapa del vocoder, como la fuente en NSF-HiFiGAN. Con solo el mel, el vocoder tiene que inventar la fase y el detalle fino; con la onda puede copiarlos del DDSP y dedicarse a corregir lo que suena mal. Las entradas nuevas empiezan en cero, así que al principio es exactamente el vocoder afinado (5.89). Loss en las 85 ventanas: 5.79 a los 2000 pasos, 5.79 a los 4000 y 5.76 a los 6000, y todavía bajando. Es el primer vocoder que mejora al DDSP solo (5.82) por más de 0.05; contra V1 (5.80) es un empate. Compáralo con V1 en los ataques y en el brillo. Clic en el nombre de una versión con vocoder para oír lo que entró, lo que añadió y lo que quitó.",
-    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise"] }
+    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "medir-realismo", page: 6, title: "Medir el realismo: la loss contra KAD", tag: "Vocoder · Mañana 18 nov",
+    note: "La loss (multi-escala espectral) compara cada ventana con su grabación nota por nota: premia un promedio liso y castiga el detalle realista pero distinto, y en un estudio de guitarra DDSP (Jonason et al.) ordenó los sistemas al revés que los oyentes. KAD (Kernel Audio Distance) compara cómo suenan en conjunto las 85 ventanas con las 85 reales, a través de dos redes que escuchan: PANNs (cómo suena en general) y EnCodec (el detalle acústico fino). Menor = más real; con intervalos de confianza de 1000 remuestreos. Aquí no coinciden. Mel reparado con flujo: la loss dice empate con el DDSP (5.87 vs 5.82); KAD dice que es lo menos real de todo (7.33 vs 3.21 en PANNs). El vocoder preentrenado: la loss dice peor (6.11), PANNs dice mucho más real (1.78), EnCodec un poco menos (0.26 vs 0.18): suena más a guitarra en general pero cambia el detalle fino. V2 contra V1: la loss dice empate (5.76 vs 5.80); PANNs dice que V2 es más real (1.35 vs 2.33, diferencia −0.98, intervalo −1.57 a −0.53) y llega al techo del vocoder con audio real (1.46); EnCodec, empate. Entre los DDSP pasa lo mismo: por la loss tu favorito (M1 + timbre 32 + adv) es el peor (5.93, contra 5.83 de T4adv y 5.82 del DDSP final), y por PANNs es el más real: 1.54, contra 1.99 de T4adv y 3.22 del DDSP final (sin adversarial, 7.22). Por PANNs, el DDSP que entra al vocoder es menos real que tu favorito (diferencia −1.68, intervalo −2.61 a −0.92); EnCodec los ve iguales (0.17–0.21). V2 sobre el DDSP final (1.35) apenas alcanza a tu favorito solo. Desde hoy el ganador se elige por KAD; tu oído sigue siendo el juez final. Cada tabla de modelos muestra ahora loss y KAD.",
+    v: ["original", "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-bigvgan24-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p2_real-v3b_flow-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise"] }
 ];
 // One artifact version holds at most 511 files, so the sections are split over pages built from this same file
 // (analysis/make_listen_pages.py sets PAGE_NO); each page shows the sections with its number (default 1).
@@ -1100,6 +1155,7 @@ const PAGES = { 1: { n: "Experimentos 1–18", url: "https://claude.ai/artifact/
   6: { n: "DDSP final y vocoder (noche 17–18 nov)", url: "https://claude.ai/artifact/6du45ZyZdAEwrmTRSJWDrM" } };
 const SECTIONS = ALL_SECTIONS.filter((S) => (S.page || 1) === PAGE_NO);
 const fmtLoss = (m) => m.ref ? "—" : m.pending ? "en entrenamiento" : m.loss.toFixed(2) + (m.findings ? " †" : "");
+const fmtKad = (m) => m.kad ? m.kad[0].toFixed(2) + " · " + m.kad[1].toFixed(2) : "—";
 const fmtWind = (m) => m.pending || m.wind === "na" ? "—" : m.wind === null ? "sin ruido" : m.wind.toFixed(1).replace("-", "−") + " dB";
 const REL = { rec: "desde cero", cont: "continúa", voc: "por el vocoder" };
 const parts = (file) => { // a file is a trained model, possibly rendered differently
@@ -1111,7 +1167,7 @@ const ORDER = Object.keys(MODELS);
 
 function modelRow(k, here) {
   const m = MODELS[k], p = m.parent ? MODELS[m.parent] : null;
-  return `<tr${here ? "" : ' class="away"'}><th scope="row">${m.name}${m.fav ? ' <span class="tagm">favorito</span>' : ""}</th><td>${p ? `${p.name} <span class="rel">${REL[m.rel]}</span>` : "—"}</td><td>${m.change}</td><td class="num">${fmtLoss(m)}</td><td class="num">${fmtWind(m)}</td></tr>`;
+  return `<tr${here ? "" : ' class="away"'}><th scope="row">${m.name}${m.fav ? ' <span class="tagm">favorito</span>' : ""}</th><td>${p ? `${p.name} <span class="rel">${REL[m.rel]}</span>` : "—"}</td><td>${m.change}</td><td class="num">${fmtLoss(m)}</td><td class="num">${fmtKad(m)}</td><td class="num">${fmtWind(m)}</td></tr>`;
 }
 
 function timeline(S) {
@@ -1119,19 +1175,19 @@ function timeline(S) {
   S.v.forEach((f) => { if (f === "original") return; const { key, variant } = parts(f); if (variant) variants.push(f); else here.add(key); let k = key; while (k) { all.add(k); k = MODELS[k].parent; } });
   const rows = ORDER.filter((k) => all.has(k)).map((k) => modelRow(k, here.has(k))).join("");
   const vs = variants.length ? `<p class="catnote">Variantes de generación, no son modelos nuevos: ${variants.map(nameOf).join("; ")}.</p>` : "";
-  return `<details class="cat"><summary>Modelos de esta sección</summary><div class="catbody"><div class="catscroll"><table class="cat"><thead><tr><th scope="col">Modelo</th><th scope="col">Viene de</th><th scope="col">Qué cambió</th><th scope="col" class="num">Loss</th><th scope="col" class="num">Viento</th></tr></thead><tbody>${rows}</tbody></table></div><p class="catnote">De más viejo a más nuevo. En gris, los antecesores que no se escuchan en esta sección.</p>${vs}</div></details>`;
+  return `<details class="cat"><summary>Modelos de esta sección</summary><div class="catbody"><div class="catscroll"><table class="cat"><thead><tr><th scope="col">Modelo</th><th scope="col">Viene de</th><th scope="col">Qué cambió</th><th scope="col" class="num">Loss</th><th scope="col" class="num">KAD</th><th scope="col" class="num">Viento</th></tr></thead><tbody>${rows}</tbody></table></div><p class="catnote">De más viejo a más nuevo. En gris, los antecesores que no se escuchan en esta sección. KAD: qué tan lejos suena del original en general, no nota por nota (Kernel Audio Distance ×100, sobre las mismas 85 ventanas; menor = más real). Dos números: PANNs (cómo suena en general) · EnCodec (el detalle acústico fino). La loss compara con una grabación concreta y premia un promedio liso, así que para el vocoder decide KAD; diferencias de menos de ~0.5 (PANNs) o ~0.1 (EnCodec) pueden ser azar. Medida solo en los modelos de la página 6.</p>${vs}</div></details>`;
 }
 
 function treeOf(parent) {
   const kids = ORDER.filter((k) => MODELS[k].parent === parent);
   if (!kids.length) return "";
-  return `<ul>${kids.map((k) => { const m = MODELS[k]; return `<li class="${m.rel || "root"}"><span class="tn">${m.name}</span>${m.fav ? ' <span class="tagm">favorito</span>' : ""}${m.rel ? ` <span class="rel">${REL[m.rel]}</span>` : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}</span><div class="tc">${m.change}</div>${treeOf(k)}</li>`; }).join("")}</ul>`;
+  return `<ul>${kids.map((k) => { const m = MODELS[k]; return `<li class="${m.rel || "root"}"><span class="tn">${m.name}</span>${m.fav ? ' <span class="tagm">favorito</span>' : ""}${m.rel ? ` <span class="rel">${REL[m.rel]}</span>` : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}${m.kad ? " · KAD " + fmtKad(m) : ""}</span><div class="tc">${m.change}</div>${treeOf(k)}</li>`; }).join("")}</ul>`;
 }
 
 function buildCatalog() {
   $("tree").innerHTML = treeOf(null);
   const liveHref = PAGE_NO === 1 ? `#${LIVE_SECTION}` : PAGES[1].url;
-  $("live").innerHTML = ORDER.filter((k) => MODELS[k].fav || MODELS[k].live).map((k) => { const m = MODELS[k]; return `<li><a href="${liveHref}">${m.name}</a>${m.fav ? ' <span class="tagm">favorito</span>' : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}</span></li>`; }).join("");
+  $("live").innerHTML = ORDER.filter((k) => MODELS[k].fav || MODELS[k].live).map((k) => { const m = MODELS[k]; return `<li><a href="${liveHref}">${m.name}</a>${m.fav ? ' <span class="tagm">favorito</span>' : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}${m.kad ? " · KAD " + fmtKad(m) : ""}</span></li>`; }).join("");
   const others = Object.entries(PAGES).filter(([n, p]) => +n !== PAGE_NO && p.url);
   $("pages").innerHTML = others.length ? "Otras páginas: " + others.map(([, p]) => `<a href="${p.url}" target="_blank" rel="noopener">${p.n}</a>`).join(" · ") : "";
 }

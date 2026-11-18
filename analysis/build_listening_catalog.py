@@ -128,6 +128,31 @@ VOC = [
 ]
 
 
+def kad_values():
+    """{page key: [PANNs-KAD, EnCodec-KAD]} against the same 85 real windows (analysis/e12_kad.py)."""
+    f = RES / "e12_kad.json"
+    if not f.exists():
+        return {}
+    k = json.loads(f.read_text())
+    p, e = k["panns-wavegram-logmel vs real"]["versions"], k["encodec-emb vs real"]["versions"]
+    L = "e6-structured_v12_final_learnedB_noise_strongD_rise"
+    out = {}
+    for v in p:
+        if v.startswith("model-"):
+            key = v[6:]  # a DDSP model rendered window by window (as its loss)
+        elif v.startswith("diff-"):
+            key = {"diff-v3_x0res": f"voc-p2_real-v3_x0res-d20-{L}", "diff-v3b_flow": f"voc-p2_real-v3b_flow-{L}"}.get(v)
+        elif v.startswith("voc-"):
+            run = v[4:].removesuffix("-real")
+            run = "bigvgan24" if run == "p0_pretrained" else run
+            key = f"voc-{run}-" + ("original" if v.endswith("-real") else L)
+        else:
+            key = None  # "ddsp": the vocoders' input (pair renders); the page's final DDSP uses its window render
+        if key and v in e:
+            out[key] = [p[v]["kad"], e[v]["kad"]]
+    return out
+
+
 def file_key(e):
     return e.get("key") or e["run"].replace("/", "-")
 
@@ -187,6 +212,9 @@ def main():
                                 rel="voc" if e["src"] else None, change=e["change"], loss=m["mean"] if m else None,
                                 wind="na", **({"pending": True} if m is None and e["src"] else {}),
                                 **({"ref": True} if not e["src"] else {}))
+    for k, v in kad_values().items():
+        if k in models:
+            models[k]["kad"] = v
     s = PAGE.read_text()
     a, b = "/*MODELS-START*/", "/*MODELS-END*/"
     i, j = s.index(a), s.index(b)

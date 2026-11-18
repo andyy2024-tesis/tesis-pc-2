@@ -14,6 +14,91 @@
      2.739
     ]
    },
+   "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+    "kad": 3.2203,
+    "ci": [
+     2.3503,
+     4.4078
+    ],
+    "minus_ddsp": 0.0057,
+    "minus_ddsp_ci": [
+     -0.362,
+     0.3194
+    ],
+    "minus_voc-v1_mix20": 0.888,
+    "minus_voc-v1_mix20_ci": [
+     -0.7934,
+     2.7359
+    ]
+   },
+   "model-e6-structured_v9_base_t32_noise_strongD": {
+    "kad": 1.5366,
+    "ci": [
+     0.9635,
+     2.307
+    ],
+    "minus_ddsp": -1.678,
+    "minus_ddsp_ci": [
+     -2.6078,
+     -0.9241
+    ],
+    "minus_voc-v1_mix20": -0.7957,
+    "minus_voc-v1_mix20_ci": [
+     -2.1495,
+     0.5089
+    ]
+   },
+   "model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": {
+    "kad": 1.9924,
+    "ci": [
+     1.3493,
+     2.827
+    ],
+    "minus_ddsp": -1.2221,
+    "minus_ddsp_ci": [
+     -2.0902,
+     -0.5055
+    ],
+    "minus_voc-v1_mix20": -0.3399,
+    "minus_voc-v1_mix20_ci": [
+     -1.6652,
+     0.9912
+    ]
+   },
+   "model-e6-structured_v12_final_noise_strongD_rise": {
+    "kad": 3.6648,
+    "ci": [
+     2.6223,
+     4.9278
+    ],
+    "minus_ddsp": 0.4503,
+    "minus_ddsp_ci": [
+     -0.1069,
+     0.99
+    ],
+    "minus_voc-v1_mix20": 1.3325,
+    "minus_voc-v1_mix20_ci": [
+     -0.5508,
+     3.1625
+    ]
+   },
+   "model-structured_v12_final_learnedB": {
+    "kad": 7.2156,
+    "ci": [
+     5.6655,
+     9.0385
+    ],
+    "minus_ddsp": 4.0011,
+    "minus_ddsp_ci": [
+     2.6999,
+     5.461
+    ],
+    "minus_voc-v1_mix20": 4.8833,
+    "minus_voc-v1_mix20_ci": [
+     2.8677,
+     7.0195
+    ]
+   },
    "voc-p0_pretrained": {
     "kad": 1.7757,
     "ci": [
@@ -160,6 +245,91 @@
     "minus_voc-v1_mix20_ci": [
      1.0463,
      5.0885
+    ]
+   },
+   "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+    "kad": 6.5662,
+    "ci": [
+     5.0277,
+     8.366
+    ],
+    "minus_ddsp": -0.177,
+    "minus_ddsp_ci": [
+     -0.6209,
+     0.2177
+    ],
+    "minus_voc-v1_mix20": 2.8753,
+    "minus_voc-v1_mix20_ci": [
+     1.0282,
+     4.9225
+    ]
+   },
+   "model-e6-structured_v9_base_t32_noise_strongD": {
+    "kad": 4.1727,
+    "ci": [
+     2.8284,
+     5.8448
+    ],
+    "minus_ddsp": -2.5705,
+    "minus_ddsp_ci": [
+     -3.607,
+     -1.6039
+    ],
+    "minus_voc-v1_mix20": 0.4818,
+    "minus_voc-v1_mix20_ci": [
+     -1.0179,
+     2.0068
+    ]
+   },
+   "model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": {
+    "kad": 5.4387,
+    "ci": [
+     3.7166,
+     7.5535
+    ],
+    "minus_ddsp": -1.3046,
+    "minus_ddsp_ci": [
+     -2.5004,
+     -0.1499
+    ],
+    "minus_voc-v1_mix20": 1.7477,
+    "minus_voc-v1_mix20_ci": [
+     0.2356,
+     3.3056
+    ]
+   },
+   "model-e6-structured_v12_final_noise_strongD_rise": {
+    "kad": 7.3462,
+    "ci": [
+     5.7391,
+     9.0617
+    ],
+    "minus_ddsp": 0.603,
+    "minus_ddsp_ci": [
+     -0.1199,
+     1.3403
+    ],
+    "minus_voc-v1_mix20": 3.6553,
+    "minus_voc-v1_mix20_ci": [
+     1.6207,
+     5.8385
+    ]
+   },
+   "model-structured_v12_final_learnedB": {
+    "kad": 13.8019,
+    "ci": [
+     11.5939,
+     16.7623
+    ],
+    "minus_ddsp": 7.0586,
+    "minus_ddsp_ci": [
+     5.0482,
+     9.3019
+    ],
+    "minus_voc-v1_mix20": 10.111,
+    "minus_voc-v1_mix20_ci": [
+     8.0309,
+     12.2183
     ]
    },
    "voc-p0_pretrained": {
@@ -327,6 +497,91 @@
      0.1593
     ]
    },
+   "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+    "kad": 0.1771,
+    "ci": [
+     0.0798,
+     0.2903
+    ],
+    "minus_ddsp": 0.0013,
+    "minus_ddsp_ci": [
+     -0.0389,
+     0.0352
+    ],
+    "minus_voc-v1_mix20": 0.0536,
+    "minus_voc-v1_mix20_ci": [
+     -0.0577,
+     0.1611
+    ]
+   },
+   "model-e6-structured_v9_base_t32_noise_strongD": {
+    "kad": 0.1712,
+    "ci": [
+     0.0682,
+     0.2944
+    ],
+    "minus_ddsp": -0.0045,
+    "minus_ddsp_ci": [
+     -0.1065,
+     0.1031
+    ],
+    "minus_voc-v1_mix20": 0.0477,
+    "minus_voc-v1_mix20_ci": [
+     -0.0779,
+     0.1724
+    ]
+   },
+   "model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": {
+    "kad": 0.2116,
+    "ci": [
+     0.0954,
+     0.3526
+    ],
+    "minus_ddsp": 0.0359,
+    "minus_ddsp_ci": [
+     -0.0625,
+     0.1331
+    ],
+    "minus_voc-v1_mix20": 0.0881,
+    "minus_voc-v1_mix20_ci": [
+     -0.0473,
+     0.2255
+    ]
+   },
+   "model-e6-structured_v12_final_noise_strongD_rise": {
+    "kad": 0.2574,
+    "ci": [
+     0.137,
+     0.4036
+    ],
+    "minus_ddsp": 0.0817,
+    "minus_ddsp_ci": [
+     0.0091,
+     0.1567
+    ],
+    "minus_voc-v1_mix20": 0.1339,
+    "minus_voc-v1_mix20_ci": [
+     0.0246,
+     0.2567
+    ]
+   },
+   "model-structured_v12_final_learnedB": {
+    "kad": 0.1874,
+    "ci": [
+     0.0891,
+     0.2945
+    ],
+    "minus_ddsp": 0.0117,
+    "minus_ddsp_ci": [
+     -0.0756,
+     0.0871
+    ],
+    "minus_voc-v1_mix20": 0.0639,
+    "minus_voc-v1_mix20_ci": [
+     -0.0386,
+     0.1722
+    ]
+   },
    "voc-p0_pretrained": {
     "kad": 0.2639,
     "ci": [
@@ -473,6 +728,91 @@
     "minus_voc-v1_mix20_ci": [
      -0.3215,
      0.2299
+    ]
+   },
+   "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+    "kad": 1.2026,
+    "ci": [
+     0.3263,
+     2.5705
+    ],
+    "minus_ddsp": -0.1461,
+    "minus_ddsp_ci": [
+     -0.2638,
+     -0.0359
+    ],
+    "minus_voc-v1_mix20": -0.2071,
+    "minus_voc-v1_mix20_ci": [
+     -0.4993,
+     0.0523
+    ]
+   },
+   "model-e6-structured_v9_base_t32_noise_strongD": {
+    "kad": 1.2046,
+    "ci": [
+     0.4404,
+     2.4266
+    ],
+    "minus_ddsp": -0.1441,
+    "minus_ddsp_ci": [
+     -0.6425,
+     0.1934
+    ],
+    "minus_voc-v1_mix20": -0.2051,
+    "minus_voc-v1_mix20_ci": [
+     -0.6119,
+     0.1213
+    ]
+   },
+   "model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": {
+    "kad": 1.0155,
+    "ci": [
+     0.2951,
+     2.1332
+    ],
+    "minus_ddsp": -0.3333,
+    "minus_ddsp_ci": [
+     -0.8656,
+     -0.0112
+    ],
+    "minus_voc-v1_mix20": -0.3942,
+    "minus_voc-v1_mix20_ci": [
+     -0.8398,
+     -0.0417
+    ]
+   },
+   "model-e6-structured_v12_final_noise_strongD_rise": {
+    "kad": 1.5599,
+    "ci": [
+     0.4638,
+     3.2174
+    ],
+    "minus_ddsp": 0.2111,
+    "minus_ddsp_ci": [
+     0.0065,
+     0.4666
+    ],
+    "minus_voc-v1_mix20": 0.1502,
+    "minus_voc-v1_mix20_ci": [
+     -0.1603,
+     0.5739
+    ]
+   },
+   "model-structured_v12_final_learnedB": {
+    "kad": 1.1513,
+    "ci": [
+     0.3241,
+     2.4602
+    ],
+    "minus_ddsp": -0.1974,
+    "minus_ddsp_ci": [
+     -0.6029,
+     0.0674
+    ],
+    "minus_voc-v1_mix20": -0.2584,
+    "minus_voc-v1_mix20_ci": [
+     -0.5715,
+     -0.0217
     ]
    },
    "voc-p0_pretrained": {

@@ -199,6 +199,15 @@ KAD x 100 (lower = closer to real), [95% interval]; spectral loss for comparison
   [-0.05, +0.17] (tie). V2 reaches the vocoder's own ceiling on real audio (1.46).
 - EnCodec against unseen real cannot tell real held-out audio (1.20) from the DDSP (1.35): recording and piece
   differences dominate it; not used for decisions.
+- DDSP models (rendered window by window as their loss, `model-<key>` in e12_kad_clips.py; the final DDSP this way
+  3.220 vs 3.215 from its pair renders, a check that both paths agree). PANNs vs same windows / EnCodec:
+  favourite M1 + timbre 32 + adv 1.54 / 0.171 (loss 5.93), T4adv 1.99 / 0.212 (5.83), final DDSP learned + adv
+  3.22 / 0.177 (5.82), final shared + adv 3.67 / 0.257 (5.81), final learned without adversarial 7.22 / 0.187 (5.71).
+  The loss ranks the favourite last; PANNs ranks it most real (favourite - final -1.68 [-2.61, -0.92]); EnCodec
+  sees no difference. The final DDSP (strings + recording everywhere) is less real by PANNs than the DDSP the user
+  preferred by ear, and V2 on it (1.35) only reaches the favourite alone. The adversarial fine-tune is what makes
+  any DDSP real by PANNs (7.22 -> 3.22).
+- Listening page: every model table shows loss and KAD (PANNs · EnCodec); page 6 section "medir-realismo".
 - Phase 4/5 winner rule now by KAD (`phase45.sh`): V2 or S replace V1 only if the PANNs (same windows) difference to
   V1 is below 0 with its whole interval and EnCodec does not say worse; same for the 100-recording pairs. On today's
   numbers: V2, 20-recording pairs.

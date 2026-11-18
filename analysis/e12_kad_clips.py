@@ -12,6 +12,8 @@ Folders under analysis/results/e12/kad/clips/ (gitignored):
                   The windows are the same for every renders folder (they depend only on the real audio and notes)
   voc-<run>-real  a real-input run on the real windows (the ceiling)
   diff-<run>      a mel refiner (scripts/e12_diffusion.py) vocoded by p2_real (shallow: depth 20)
+  model-<key>     a DDSP model rendered window by window as analysis/measure_catalog.py does for its loss (key = its
+                  listening-page key, e.g. e6-structured_v9_base_t32_noise_strongD; COMPARE_DEV=cpu while training)
 Usage: uv run python analysis/e12_kad_clips.py real realtest ddsp voc-p2_real voc-v1_mix20 diff-v3b_flow ...
 """
 import json
@@ -114,6 +116,24 @@ def refiner(run, wins, dev):
     return out
 
 
+def ddsp_model(key, wins):
+    sys.path.insert(0, "analysis")
+    from compare_runs import load
+    run = key.replace("e6-", "e6/", 1) if key.startswith("e6-") else key
+    ids = pd.read_csv(RES / "e4_recordings.csv").id.tolist()  # all 20 (3 have no test window)
+    m, recs, splits = load(run, ids)
+    out, k = [], 0
+    with torch.no_grad():
+        for rid, rec, (_, test) in zip(ids, recs, splits):
+            for j, w0 in enumerate(test):
+                assert wins[k][0] == rid and np.allclose(rec.y[int(w0):int(w0) + L], wins[k][1], atol=1e-4), (rid, k)
+                o, _ = m(rec, int(w0), noise_seed=j)
+                out.append((f"{rid}_{k:02d}", o.float().cpu().numpy()))
+                k += 1
+    assert k == len(wins), k
+    return out
+
+
 def main():
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     wins = eval_windows(REN)
@@ -130,6 +150,8 @@ def main():
             clips = vocoder(run, wins, name.endswith("-real"), dev)
         elif name.startswith("diff-"):
             clips = refiner(name[5:], wins, dev)
+        elif name.startswith("model-"):
+            clips = ddsp_model(name[6:], wins)
         else:
             raise SystemExit(f"unknown version {name}")
         write(name, clips)
