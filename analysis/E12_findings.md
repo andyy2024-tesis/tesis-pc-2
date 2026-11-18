@@ -140,3 +140,14 @@ dominate it; the media script now checks attacks.)
 Queue after V1 (night.sh -> ddsp100_run.sh): V2 (`v2_inject20`, the DDSP waveform injected NSF-style), S
 (`s_stems20`, the parts as extra mel channels), both on the same pairs from `p2_real`; then the 100-recording DDSP,
 its adversarial fine-tune, its pair renders, and V1 on those pairs (`v1_mix100`).
+
+## Phase 4 and 5 prepared (run after the night queue: `queue_final/phase45.sh`)
+
+Winner rule (the ear has not judged yet; loss differences under 0.05 are ties): V2 or S only replace V1 if at least
+0.05 better at their last evaluation; the 100-recording pairs only if V1 on them is at least 0.05 better than on the
+20. Phase 4: the winner fed the harmonic part only (`--input strings`). Phase 5: `--sr 44100` in
+`scripts/e12_vocoder.py` (BigVGAN-v2 44 kHz, 128 bands; real audio at 44.1 kHz from `scripts/e12_prep44k.py`, same
+soxr recipe as the 24 kHz files, 270 recordings, 4.4 GB; positions and renders stay at 24 kHz, the DDSP is upsampled
+per segment, the output is scored at 24 kHz). Smoke tests (pretrained, CPU): real 4.382 and DDSP 6.014 (phase 1 with
+polyphase resampling of the raw file: 4.402 and 6.033); the 24 kHz path is unchanged (5.891).
+Then `p5_real44` (as phase 2, 8000 steps; retried at batch 4 if 8 does not fit) and the winner at 44.1 kHz from it.

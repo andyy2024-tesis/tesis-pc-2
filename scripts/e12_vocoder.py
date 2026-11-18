@@ -9,6 +9,9 @@ guitar specialist. Phase 3 (V1, V2, S): DDSP render -> real audio on the recordi
 Never trains on the last 15% of the 20 evaluation recordings (their held-out windows) nor on the GAPS test split.
 Losses as BigVGAN-v2: multi-scale mel L1 x15 + multi-period and CQT discriminators with feature matching. Segments are
 peak-normalised to 0.95 like BigVGAN (the same gain on input and target).
+Phase 5 (--sr 44100): BigVGAN-v2 44 kHz (128 bands) instead, real audio from data/processed/sr44100 (scripts/
+e12_prep44k.py); positions, notes and DDSP renders stay at 24 kHz and the DDSP input is upsampled per segment; the
+output is brought back to 24 kHz for the evaluation, so every number compares.
 Evaluation: the 85 held-out 3 s windows of the 20 recordings, multi-scale spectral loss of the output vs the real audio
 (the measure of every DDSP model). Writes analysis/results/e12/<tag>/ (generator.pt, last.pt, log.txt, eval.json).
 """
@@ -23,6 +26,8 @@ import torch
 import torch.nn as nn
 from torch.utils.checkpoint import checkpoint
 
+from scipy.signal import resample_poly
+
 from tesis.data.gaps import PROCESSED, REPO
 from tesis.synth.dsp import MultiScaleSpectralLoss
 
@@ -33,10 +38,14 @@ from env import AttrDict  # noqa: E402
 from loss import MultiScaleMelSpectrogramLoss, discriminator_loss, feature_loss, generator_loss  # noqa: E402
 from meldataset import get_mel_spectrogram  # noqa: E402
 
-SR = 24000
+SR = 24000  # positions, notes, DDSP renders and the evaluation measure
 D = PROCESSED / f"sr{SR}"
 RES = REPO / "analysis" / "results"
-CKPT = REPO / "external" / "ckpt" / "bigvgan_v2_24khz_100band_256x"
+CKPTS = {24000: REPO / "external" / "ckpt" / "bigvgan_v2_24khz_100band_256x",
+         44100: REPO / "external" / "ckpt" / "bigvgan_v2_44khz_128band_512x"}
+CKPT = CKPTS[SR]
+UP = (147, 80)  # 24 kHz -> 44.1 kHz
+M = 80  # base-rate margin around an upsampled segment (= 147 samples at 44.1 kHz), so the filter edges are cut off
 TEST_FROM = 0.85  # as scripts/e4_train.py
 EVAL_IDS = pd.read_csv(RES / "e4_recordings.csv").id.tolist()
 
@@ -90,10 +99,14 @@ class Refiner(nn.Module):
 class Data:
     """Random aligned segments: real audio and, for phase 3, the DDSP render (mix + parts) of the same samples."""
 
-    def __init__(self, ids, renders=None):
+    def __init__(self, ids, renders=None, out_sr=SR):
         self.items = []
+        self.out_sr = out_sr
+        self.y_out = {}  # the real audio at the output rate when it is not 24 kHz
         for rid in ids:
             y = np.load(D / "audio" / f"{rid}.npy", mmap_mode="r")
+            if out_sr != SR:
+                self.y_out[rid] = np.load(PROCESSED / f"sr{out_sr}" / "audio" / f"{rid}.npy", mmap_mode="r")
             on = pd.read_csv(D / "notes" / f"{rid}.csv").onset.values
             lo, hi = max(int((on.min() - 0.5) * SR), 0), min(int((on.max() + 2.0) * SR), len(y))
             if rid in EVAL_IDS:
@@ -111,16 +124,29 @@ class Data:
         print(f"data: {len(self.items)} recordings, {w.sum() / SR / 3600:.2f} h", flush=True)
 
     def batch(self, B, seg, rng, parts=()):
+        """seg: samples at the output rate. At 44.1 kHz the segment starts at a 24 kHz sample s (real audio from
+        round(s * 147 / 80), within half a 44.1 kHz sample) and the DDSP input is upsampled with a margin."""
         ys, xs = [], []
+        up = self.out_sr != SR
+        nb = int(np.ceil(seg * SR / self.out_sr)) + 1 if up else seg  # base-rate samples covering the segment
         for k in rng.choice(len(self.items), B, p=self.p):
             rid, y, lo, hi, x = self.items[k]
-            s = int(rng.integers(lo, hi - seg))
-            real = np.asarray(y[s:s + seg], np.float32) / 32768
+            if up:
+                s = int(rng.integers(lo + M, hi - nb - M))
+                s2 = int(round(s * UP[0] / UP[1]))
+                real = np.asarray(self.y_out[rid][s2:s2 + seg], np.float32) / 32768
+            else:
+                s = int(rng.integers(lo, hi - seg))
+                real = np.asarray(y[s:s + seg], np.float32) / 32768
             peak = np.abs(real).max()
             if x is not None:
                 rlo, names, arr = x
                 rows = [0] + [1 + names.index(p) for p in parts]
-                xx = np.asarray(arr[rows, s - rlo:s - rlo + seg], np.float32)
+                if up:
+                    xx = np.asarray(arr[rows, s - M - rlo:s - rlo + nb + M], np.float32)
+                    xx = resample_poly(xx, *UP, axis=1)[:, M * UP[0] // UP[1]:][:, :seg].astype(np.float32)
+                else:
+                    xx = np.asarray(arr[rows, s - rlo:s - rlo + seg], np.float32)
                 peak = max(peak, np.abs(xx[0]).max())
             g = 0.95 / max(peak, 1e-4)  # one gain for input and target, both peaks <= 0.95
             ys.append(real * g)
@@ -180,7 +206,7 @@ def vocode_long(G, inputs, y, x, dev, win=SR * 6, xf=SR // 2):
         m = yy.shape[-1]
         if m < 2048:
             break
-        pad = (-m) % 256
+        pad = (-m) % G.h.hop_size
         ref = (xx[:, 0] if xx is not None else yy[:, 0])
         g = 0.95 / max(float(ref.abs().max()), 1e-4)
         yy = torch.nn.functional.pad(yy, (0, pad)) * g
@@ -193,8 +219,10 @@ def vocode_long(G, inputs, y, x, dev, win=SR * 6, xf=SR // 2):
     return out[:n]
 
 
-def eval_windows(renders):
-    """The 85 held-out 3 s windows of the 20 recordings (starts as in e4_train: 5 per recording after 85%)."""
+def eval_windows(renders, out_sr=SR):
+    """The 85 held-out 3 s windows of the 20 recordings (starts as in e4_train: 5 per recording after 85%).
+    (rid, real 24 kHz, DDSP (names, parts)); with out_sr != 24 kHz the DDSP parts are upsampled and a fourth item is
+    the real window at out_sr (the input of a real-input run; the score is still against the 24 kHz window)."""
     sys.path.insert(0, str(REPO / "scripts"))
     import e2_one_piece as e2
     wins = []
@@ -209,12 +237,19 @@ def eval_windows(renders):
         test = st[st >= int(TEST_FROM * len(y))]
         test = test[np.linspace(0, len(test) - 1, min(5, len(test))).astype(int)] if len(test) else test
         z = np.load(renders / f"{rid}.npz") if renders is not None else None
+        y2 = np.load(PROCESSED / f"sr{out_sr}" / "audio" / f"{rid}.npy", mmap_mode="r") if out_sr != SR else None
         for w0 in test:
             x = None
             if z is not None:
                 rlo, names = int(z["lo"]), list(z["parts"])
                 x = (names, z["x"][:, w0 - rlo:w0 - rlo + L].astype(np.float32))
-            wins.append((rid, y[w0:w0 + L], x))
+                if y2 is not None:
+                    x = (names, resample_poly(x[1], *UP, axis=1).astype(np.float32))
+            if y2 is None:
+                wins.append((rid, y[w0:w0 + L], x))
+            else:
+                s2 = int(round(w0 * UP[0] / UP[1]))
+                wins.append((rid, y[w0:w0 + L], x, np.asarray(y2[s2:s2 + 3 * out_sr], np.float32) / 32768))
     return wins
 
 
@@ -233,12 +268,15 @@ def main():
     ap.add_argument("--lr", type=float, default=5e-5)
     ap.add_argument("--eval-every", type=int, default=5000)
     ap.add_argument("--no-ckpt", action="store_true", help="keep activations (needs far more GPU memory)")
+    ap.add_argument("--sr", type=int, choices=sorted(CKPTS), default=SR, help="output rate (phase 5: 44100)")
     a = ap.parse_args()
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     out = RES / "e12" / a.tag
     out.mkdir(parents=True, exist_ok=True)
     (out / "config.json").write_text(json.dumps(vars(a), indent=1))
-    h = AttrDict(json.loads((CKPT / "config.json").read_text()))
+    ck = CKPTS[a.sr]
+    h = AttrDict(json.loads((ck / "config.json").read_text()))
+    assert h.sampling_rate == a.sr
 
     renders = RES / "e12" / "renders" / a.renders if a.renders else None
     if renders is not None:
@@ -249,7 +287,7 @@ def main():
         ids = man[man.split == "train"].id.tolist()
         names = []
     inputs = Inputs(a, h, names)
-    data = Data(ids, renders)
+    data = Data(ids, renders, a.sr)
 
     G = Refiner(h, n_stems=len(inputs.groups), inject=a.inject != "none", ckpt=not a.no_ckpt).to(dev)
     mpd, cqtd = MultiPeriodDiscriminator(h).to(dev), MultiScaleSubbandCQTDiscriminator(h).to(dev)
@@ -258,8 +296,8 @@ def main():
     opt_d = torch.optim.AdamW(list(cqtd.parameters()) + list(mpd.parameters()), a.lr, betas=(h.adam_b1, h.adam_b2))
     new_params = inputs.groups or a.inject != "none"
     if a.init == "pretrained":
-        G.g.load_state_dict(torch.load(CKPT / "bigvgan_generator.pt", map_location="cpu")["generator"])
-        sd = torch.load(CKPT / "bigvgan_discriminator_optimizer.pt", map_location="cpu", weights_only=False)
+        G.g.load_state_dict(torch.load(ck / "bigvgan_generator.pt", map_location="cpu")["generator"])
+        sd = torch.load(ck / "bigvgan_discriminator_optimizer.pt", map_location="cpu", weights_only=False)
         mpd.load_state_dict(sd["mpd"])
         cqtd.load_state_dict(sd["mrd"])
         opt_state = dict(g=sd["optim_g"], d=sd["optim_d"])
@@ -282,21 +320,24 @@ def main():
     del sd, opt_state
     warm = 1000  # linear warm-up of both learning rates
     sched = [torch.optim.lr_scheduler.LambdaLR(o, lambda s: min(1.0, (s + 1) / warm)) for o in (opt_g, opt_d)]
-    mel_loss = MultiScaleMelSpectrogramLoss(sampling_rate=SR)
+    mel_loss = MultiScaleMelSpectrogramLoss(sampling_rate=a.sr)
     mss = MultiScaleSpectralLoss()
-    wins = eval_windows(renders)
+    wins = eval_windows(renders, a.sr)
 
     def evaluate():
         G.eval()
         vals = []
-        for rid, y, x in wins:
-            yt = torch.tensor(y)[None, None]
+        for w in wins:
+            y, x = w[1], w[2]
+            yt = torch.tensor(w[3] if len(w) > 3 else y)[None, None]
             xt = None
             if x is not None:
                 nm, arr = x
                 rows = [0] + [1 + nm.index(p) for p in inputs.parts]
                 xt = torch.tensor(arr[rows])[None]
-            o = vocode_long(G, inputs, yt, xt, dev)
+            o = vocode_long(G, inputs, yt, xt, dev, win=a.sr * 6, xf=a.sr // 2)
+            if a.sr != SR:
+                o = resample_poly(o, UP[1], UP[0]).astype(np.float32)[:len(y)]
             vals.append(mss(torch.tensor(o)[None], torch.tensor(y)[None]).item())
         G.train()
         return float(np.mean(vals))
