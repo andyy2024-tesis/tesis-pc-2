@@ -121,3 +121,22 @@ mel repair up to 2.3 ms, mixed signs: smeared attacks, not a shift; the media sc
 recording, so a refiner that adds realistic but different detail is penalised; for these the ear decides.
 Also rendered: BigVGAN-v2 44 kHz (from the full-band 48 kHz excerpt and from the DDSP upsampled) and DisCoder (44.1 kHz,
 music-trained). `analysis/e12_vocode.py`, `analysis/e12_discoder.py` (own environment in external/discoder/.venv).
+
+## V1: DDSP mel -> real audio (from phase 2), 20-recording pairs
+
+`v1_mix20`: the fine-tuned vocoder trained 6000 more steps (batch 8 x 32768, ~2 h) on pairs: the final DDSP's mel of a
+window in, the real recording of that window out (BigVGAN's mel + adversarial + feature-matching losses). Held-out
+loss 5.891 (step 0 = `p2_real` on the DDSP) -> 5.814 / 5.817 / 5.796 at 2000 / 4000 / 6000. The first vocoder that
+does not make the DDSP worse (raw DDSP 5.82), but a tie by this measure. The training mel loss kept falling
+(1.56 -> 1.39) while the held-out loss stalled after step 2000: with 0.69 h of pairs the vocoder starts memorising
+them, which is what the 100-recording DDSP (~5 h of pairs) tests next.
+
+Timing: attack-level lag (cross-correlation of onset strengths, 32-sample resolution) V1 vs its DDSP input within
+2.7 ms, and V1 vs the real recording 0 in 3 of 5 excerpts; in 277 the DDSP's attacks are 64 samples off the real ones
+and V1's are not, so V1 moves attacks toward the real timing. Plain vocoders: 0 on all excerpts. (The earlier
+whole-excerpt envelope lag wandered by up to 6 ms even between the DDSP and the real audio, because the decays
+dominate it; the media script now checks attacks.)
+
+Queue after V1 (night.sh -> ddsp100_run.sh): V2 (`v2_inject20`, the DDSP waveform injected NSF-style), S
+(`s_stems20`, the parts as extra mel channels), both on the same pairs from `p2_real`; then the 100-recording DDSP,
+its adversarial fine-tune, its pair renders, and V1 on those pairs (`v1_mix100`).

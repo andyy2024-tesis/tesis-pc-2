@@ -34,5 +34,9 @@
   "mean": 5.874,
   "texture": 0.27,
   "note": "e12_diffusion --eval-only --vocoder p2_real; identity in the same eval 5.880"
+ },
+ "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 5.796,
+  "note": "v1_mix20 eval at step 6000 (2000: 5.814, 4000: 5.817)"
  }
 }

@@ -7,13 +7,14 @@ For each version given (a file label in analysis/results/slides/audio/<recording
   the vocoder, resampled to the output rate), "anadido" (what it added: the spectrogram magnitude where the output is
   louder than the input, with the output's phase) and "quitado" (what it removed: where the input is louder, with the
   input's phase). A vocoder keeps the timing but not the phase of the waveform (sample correlation output/input
-  -0.2 to 0.25 on these excerpts, envelope lag under 1.2 ms for plain vocoding and 2.3 ms after mel repair, no consistent sign), so a plain waveform difference would sound like the whole
+  -0.2 to 0.25 on these excerpts, attacks within 2.7 ms, no consistent sign), so a plain waveform difference would sound like the whole
   piece again. Stems use render_stems.py's loudness rule; true levels go into the page's STEMS table.
 Usage: uv run python analysis/e12_listen_media.py original44k voc-bigvgan24-original ...
 """
 import subprocess
 import sys
 
+import librosa
 import numpy as np
 import soundfile as sf
 import torch
@@ -43,14 +44,16 @@ def shared_gain(rid):
                       for v in VERSIONS if v not in LATER and not v.endswith("-noise"))
 
 
-def env_lag(a, b, max_lag=600):
-    """Shift (samples) that best lines up the amplitude envelopes of a and b (phase-blind)."""
+def onset_lag(a, b, sr, hop=32, max_lag=40):
+    """Shift (samples, multiple of hop) that best lines up the attacks of a and b: cross-correlation of their onset
+    strengths (phase-blind). Whole-excerpt amplitude envelopes are dominated by the decays, which a trained vocoder
+    reshapes, so their best lag wandered by up to 6 ms with no consistent sign even between the DDSP and the real audio."""
     n = min(len(a), len(b))
-    k = np.ones(120) / 120
-    ea, eb = np.convolve(np.abs(a[:n]), k, "same"), np.convolve(np.abs(b[:n]), k, "same")
-    ea, eb = ea - ea.mean(), eb - eb.mean()
-    c = [np.dot(ea[max(t, 0):n + min(t, 0)], eb[max(-t, 0):n - max(t, 0)]) for t in range(-max_lag, max_lag + 1, 3)]
-    return int(np.argmax(c)) * 3 - max_lag
+    fa, fb = (librosa.onset.onset_strength(y=z[:n], sr=sr, hop_length=hop) for z in (a, b))
+    fa, fb = fa - fa.mean(), fb - fb.mean()
+    m = len(fa)
+    c = [np.dot(fa[max(t, 0):m + min(t, 0)], fb[max(-t, 0):m - max(t, 0)]) for t in range(-max_lag, max_lag + 1)]
+    return (int(np.argmax(c)) - max_lag) * hop
 
 
 def spectral_diff(y, x, sr):
@@ -80,10 +83,10 @@ def main():
             x, sx = sf.read(AUDIO / rid / f"{SRC[v]}.wav", dtype="float32")
             if sx != sr:
                 x = torchaudio.functional.resample(torch.as_tensor(x)[None], sx, sr)[0].numpy()
-            d = env_lag(y, x)
-            # within 5 ms: smoothed mels (V3b flow) blur attacks, envelope lags up to 2.3 ms with mixed signs; the
-            # parts use an 85 ms STFT window, so only a gross offset (a frame or more) would spoil them
-            assert abs(d) <= sr // 200, f"{rid} {v}: vocoder output is {d} samples off its input"
+            d = onset_lag(y, x, sr)
+            # attacks within 5 ms (seen: up to 2.7 ms, mixed signs); the parts use an 85 ms STFT window, so only a
+            # gross offset (a frame or more) would spoil them
+            assert abs(d) <= sr // 200, f"{rid} {v}: vocoder output attacks are {d} samples off its input"
             n = min(len(y), len(x))
             mix, x = y[:n], x[:n]
             added, removed = spectral_diff(mix, x, sr)

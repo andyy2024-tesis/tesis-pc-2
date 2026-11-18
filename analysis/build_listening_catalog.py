@@ -123,6 +123,7 @@ VOC = [
     dict(n="Final + adv → BigVGAN afinado", key="voc-p2_real-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El DDSP final por el BigVGAN afinado en guitarra real. Nunca vio un DDSP en el entrenamiento."),
     dict(n="Final + adv → mel reparado (difusión) → BigVGAN afinado", key="voc-p2_real-v3_x0res-d20-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El mel del DDSP pasa por una red de difusión superficial (se le añade ruido hasta el paso 20 de 100 y se quita, aprendiendo a dejarlo como el mel real) y luego por el BigVGAN afinado."),
     dict(n="Final + adv → mel reparado (flujo) → BigVGAN afinado", key="voc-p2_real-v3b_flow-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El mel del DDSP pasa por un flujo rectificado que lo lleva en línea recta hacia el mel real, y luego por el BigVGAN afinado."),
+    dict(n="Final + adv → vocoder entrenado con DDSP (V1)", key="voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El BigVGAN afinado, entrenado 6000 pasos más con pares DDSP → grabación real: entra el mel del DDSP final y tiene que salir la grabación real (pérdida de mel + adversarial). 20 grabaciones, 0.69 h de pares."),
 ]
 
 
