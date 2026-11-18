@@ -29,3 +29,8 @@ echo "$(date +%T) start render $r" >> $Q/status.txt
 uv run python scripts/e12_render_ddsp.py $r > $R/e12_render_$(basename $r)_log.txt 2>&1
 echo "$(date +%T) end render $r exit $?" >> $Q/status.txt
 echo "$(date +%T) data100 done" >> $Q/status.txt
+# The user's question: does the vocoder gain from ~7x more DDSP/real pairs? V1 as v1_mix20, on the 100-recording pairs
+# (same 85 held-out windows: the 20 test recordings stay cut at 85%).
+REN=structured_v12_final_learnedB_data100_noise_strongD_rise
+[ -d $R/e12/renders/$REN ] && voc v1_mix100 --input mix
+echo "$(date +%T) queue_final finished" >> $Q/status.txt
