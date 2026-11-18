@@ -3,7 +3,8 @@
 For each recording: bars vs syncpoints, share of MIDI notes matched to a tab note, and consistency (fret = pitch - open
 string pitch, within 0-19). Writes data/processed/sr24000/strings/<id>.csv (string, fret per row of notes/<id>.csv;
 string 0 = unmatched) and analysis/results/tab_strings.csv.
-Usage: uv run python analysis/tab_strings.py [ids...]   (default: the 20 of e4_recordings.csv)
+Usage: uv run python analysis/tab_strings.py [ids...]   (default: the 20 of e4_recordings.csv; with ids the summary
+goes to analysis/results/tab_strings_more.csv)
 """
 import sys
 
@@ -16,7 +17,7 @@ from tesis.data.tab import OPEN, assign_strings, complete_strings, tab_times
 D = PROCESSED / "sr24000"
 
 
-def main(ids):
+def main(ids, out_name="tab_strings.csv"):
     rows = []
     (D / "strings").mkdir(exist_ok=True)
     for rid in ids:
@@ -38,10 +39,13 @@ def main(ids):
         rows.append(r)
         print(r, flush=True)
     out = pd.DataFrame(rows)
-    out.to_csv(REPO / "analysis" / "results" / "tab_strings.csv", index=False)
+    out.to_csv(REPO / "analysis" / "results" / out_name, index=False)
     if "matched" in out:
         print("median matched", out.matched.median(), "min", out.matched.min())
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:] or pd.read_csv(REPO / "analysis" / "results" / "e4_recordings.csv").id.tolist())
+    if sys.argv[1:]:  # other recordings (experiment 12: more DDSP training pairs) keep the summary of the 20 intact
+        main(sys.argv[1:], "tab_strings_more.csv")
+    else:
+        main(pd.read_csv(REPO / "analysis" / "results" / "e4_recordings.csv").id.tolist())

@@ -6,6 +6,7 @@ Reports test spectral loss and energy shares, and renders held-out excerpts for 
 Usage: uv run python scripts/e4_train.py --variant structured|ddsp [--steps 6000] [--batch 8]
 """
 import argparse
+from pathlib import Path
 import json
 import time
 
@@ -130,6 +131,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0, help="initialization and window-sampling seed")
     ap.add_argument("--extra-recordings", type=int, default=0,
                     help="train also on this many more recordings (evaluation stays on the 20 of e4_recordings.csv)")
+    ap.add_argument("--extra-ids-file", default=None, help="file with more training recording ids (one per line)")
     ap.add_argument("--eval-extra", action="store_true", help="the extra recordings also get held-out test windows")
     a = ap.parse_args()
     torch.manual_seed(a.seed)
@@ -139,6 +141,8 @@ def main():
     (out_dir).mkdir(parents=True, exist_ok=True)
     ids = pd.read_csv(REPO / "analysis" / "results" / "e4_recordings.csv").id.tolist()
     extra = extra_ids(a.extra_recordings)
+    if a.extra_ids_file:  # an explicit list (experiment 12: recordings whose tab matched, for vocoder pairs)
+        extra = [r for r in Path(a.extra_ids_file).read_text().split() if r not in ids]
     (out_dir / "config.json").write_text(json.dumps(dict(variant=a.variant, overrides=json.loads(a.config), loss=a.loss,
                                                          seed=a.seed, **(dict(extra_ids=extra) if extra else {}),
                                                          **(dict(eval_extra=True) if a.eval_extra else {}))))
