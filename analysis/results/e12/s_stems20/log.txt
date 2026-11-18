@@ -1,0 +1,15 @@
+s_stems20: step 0 eval 5.891
+  step    200  mel 1.608  adv 3.666  fm 13.257  d 2.829  (256 s)
+  step    400  mel 1.650  adv 3.832  fm 13.752  d 2.756  (511 s)
+  step    600  mel 2.338  adv 4.921  fm 16.539  d 2.176  (766 s)
+  step    800  mel 3.471  adv 7.532  fm 22.915  d 0.391  (1021 s)
+  step   1000  mel 3.800  adv 7.770  fm 22.984  d 0.199  (1276 s)
+  step   1200  mel 4.143  adv 7.995  fm 24.212  d 0.294  (1531 s)
+  step   1400  mel 4.754  adv 7.967  fm 28.590  d 0.379  (1785 s)
+  step   1600  mel 12.742  adv 8.011  fm 47.846  d 0.306  (2040 s)
+  step   1800  mel 13.007  adv 8.029  fm 47.715  d 0.082  (2295 s)
+  step   2000  mel 12.962  adv 7.993  fm 47.566  d 0.018  (2551 s)
+  EVAL step 2000: 58.615
+  step   2200  mel 12.966  adv 7.998  fm 46.911  d 0.049  (2837 s)
+  step   2400  mel 12.938  adv 8.000  fm 46.658  d 0.024  (3100 s)
+  step   2600  mel 12.871  adv 8.226  fm 46.308  d 0.136  (3367 s)

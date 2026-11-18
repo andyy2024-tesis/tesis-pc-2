@@ -79,7 +79,10 @@ class Refiner(nn.Module):
         g = self.g
         x = g.conv_pre(mel)
         if self.stem_in is not None:
-            x = x + self.stem_in(stems)
+            # log-mels floor at log(1e-5) = -11.5: a silent part is a large constant over all its channels, and
+            # fed raw it blew up the first S run once the zero-initialised layer moved (mel loss 1.6 -> 12.9 by step
+            # 1600). Shifted and scaled, silence is 0 and loud parts about 1.
+            x = x + self.stem_in((stems + 11.513) * 0.1)
         for i in range(g.num_upsamples):
             for up in g.ups[i]:
                 x = up(x)

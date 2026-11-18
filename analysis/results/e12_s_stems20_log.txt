@@ -1,0 +1,67 @@
+data: 20 recordings, 0.69 h
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+mpd_reshapes: [2, 3, 5, 7, 11]
+Creating low pass filter ...Low pass filter created, time used = 0.0003 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0008 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0002 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0011 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0001 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0015 seconds
+new (zero-initialised) parameters: ['stem_in']
+[WARNING] Min value of input waveform signal is -1.0059607028961182
+[WARNING] Min value of input waveform signal is -1.0262078046798706
+[WARNING] Min value of input waveform signal is -1.0176271200180054
+s_stems20: step 0 eval 5.891
+[WARNING] Min value of input waveform signal is -1.053034782409668
+[WARNING] Max value of input waveform signal is 1.0123603343963623
+  step    200  mel 1.608  adv 3.666  fm 13.257  d 2.829  (256 s)
+[WARNING] Max value of input waveform signal is 1.0123603343963623
+[WARNING] Min value of input waveform signal is -1.053034782409668
+[WARNING] Min value of input waveform signal is -1.021592378616333
+[WARNING] Min value of input waveform signal is -1.021592378616333
+[WARNING] Min value of input waveform signal is -1.0101053714752197
+  step    400  mel 1.650  adv 3.832  fm 13.752  d 2.756  (511 s)
+[WARNING] Min value of input waveform signal is -1.021592378616333
+[WARNING] Min value of input waveform signal is -1.0359203815460205
+  step    600  mel 2.338  adv 4.921  fm 16.539  d 2.176  (766 s)
+[WARNING] Min value of input waveform signal is -1.0359203815460205
+  step    800  mel 3.471  adv 7.532  fm 22.915  d 0.391  (1021 s)
+[WARNING] Min value of input waveform signal is -1.021592378616333
+[WARNING] Min value of input waveform signal is -1.0309386253356934
+  step   1000  mel 3.800  adv 7.770  fm 22.984  d 0.199  (1276 s)
+[WARNING] Min value of input waveform signal is -1.0020734071731567
+  step   1200  mel 4.143  adv 7.995  fm 24.212  d 0.294  (1531 s)
+[WARNING] Max value of input waveform signal is 1.0123603343963623
+[WARNING] Min value of input waveform signal is -1.0127540826797485
+  step   1400  mel 4.754  adv 7.967  fm 28.590  d 0.379  (1785 s)
+[WARNING] Min value of input waveform signal is -1.021592378616333
+  step   1600  mel 12.742  adv 8.011  fm 47.846  d 0.306  (2040 s)
+[WARNING] Min value of input waveform signal is -1.021592378616333
+[WARNING] Min value of input waveform signal is -1.021592378616333
+[WARNING] Min value of input waveform signal is -1.0003645420074463
+[WARNING] Min value of input waveform signal is -1.0359203815460205
+  step   1800  mel 13.007  adv 8.029  fm 47.715  d 0.082  (2295 s)
+[WARNING] Min value of input waveform signal is -1.021592378616333
+  step   2000  mel 12.962  adv 7.993  fm 47.566  d 0.018  (2551 s)
+[WARNING] Min value of input waveform signal is -1.0059607028961182
+[WARNING] Min value of input waveform signal is -1.0262078046798706
+[WARNING] Min value of input waveform signal is -1.0176271200180054
+  EVAL step 2000: 58.615
+[WARNING] Min value of input waveform signal is -1.021592378616333
+  step   2200  mel 12.966  adv 7.998  fm 46.911  d 0.049  (2837 s)
+[WARNING] Min value of input waveform signal is -1.0101053714752197
+[WARNING] Min value of input waveform signal is -1.0309386253356934
+  step   2400  mel 12.938  adv 8.000  fm 46.658  d 0.024  (3100 s)
+[WARNING] Max value of input waveform signal is 1.0123603343963623
+[WARNING] Min value of input waveform signal is -1.021592378616333
+  step   2600  mel 12.871  adv 8.226  fm 46.308  d 0.136  (3367 s)

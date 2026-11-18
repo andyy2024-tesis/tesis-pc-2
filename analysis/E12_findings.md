@@ -149,6 +149,60 @@ stage through zero-initialised strided convolutions. Held-out loss 5.891 (step 0
 (5.796) a tie. With the waveform the vocoder can copy the DDSP's phase and fine detail instead of inventing them.
 Page 6 section "vocoder-v2". (Page 6 now has 443 files: S fits; the 100-recording results go on a page 7.)
 
+## S: first run diverged
+
+`s_stems20` (the parts as extra mel channels) was fine until step 400, then blew up as the learning rate warmed up
+(mel loss 1.6 -> 12.9 by step 1600, discriminator loss -> 0.02; held-out 58.6 at step 2000) and was stopped. Cause:
+log-mels floor at log(1e-5) = -11.5, so a silent part is a large constant over all its 100 channels; once the
+zero-initialised input layer moves, that constant swamps the vocoder (V2's injected waveform stays within +-1). Fix
+in `Refiner.forward`: the part mels enter as (log-mel + 11.513) x 0.1 (silence 0, loud parts ~1). Rerun
+`s_stems20b` at the start of `phase45.sh`.
+
+## Measuring realism: KAD instead of the spectral loss (decided with the user, 2026-11-18)
+
+The spectral loss compares with one specific recording, so it rewards a smooth average and penalises realistic but
+different detail; in the literature it also misranks systems against listeners (Jonason et al. 2023, polyphonic
+guitar DDSP: a lower MSSL with a significantly lower MOS; Kandpal et al. 2022: spectral distances correlate 0.40-0.56
+with MOS and miss added noise). FAD depends on the embedding and is biased at small N; KAD (Chung et al. 2025, MMD
+with a Gaussian kernel) is unbiased at small N. Setup (`analysis/e12_kad_clips.py`, `analysis/e12_kad.py`, kadtk in
+its own environment `external/kadtk/.venv`):
+- clips: the same 85 held-out 3 s windows, every clip at RMS -23 dBFS;
+- embeddings: PANNs Wavegram-LogMel (one 2048-vector per clip; the KAD authors' choice) and EnCodec 24 kHz (one
+  128-vector per second; codec features, sensitive to distortion and low-pass). CLAP left out: it pads clips to 10 s;
+- references: "real" (the same windows; paired) and "realtest" (600 clips of the 30 GAPS test-split recordings);
+- kernel bandwidth from the reference for every version (kadtk takes it from the evaluated set);
+- U-statistic over distinct clips (a clip is never compared with its own real window: the paired cross term made
+  kadtk's estimate negative); 1000 paired bootstrap resamples, 95% intervals for each score and each difference.
+- The bigger test set (all ~7 min of held-out audio instead of the 85 windows' 4.25 min) is not needed for KAD (no
+  small-sample bias) and would narrow intervals only ~25%; kept as an option for close calls.
+
+KAD x 100 (lower = closer to real), [95% interval]; spectral loss for comparison:
+
+| version | MSS | PANNs vs same windows | PANNs vs unseen real | EnCodec vs same windows |
+|---|---|---|---|---|
+| final DDSP | 5.82 | 3.21 [2.26, 4.47] | 6.74 [5.14, 8.56] | 0.176 [0.080, 0.290] |
+| pretrained BigVGAN on DDSP | 6.11 | 1.78 [1.29, 2.46] | 4.42 [2.64, 7.07] | 0.264 [0.153, 0.388] |
+| fine-tuned BigVGAN (p2) on DDSP | 5.89 | 1.82 [1.30, 2.50] | 4.23 [2.46, 6.74] | 0.221 [0.120, 0.330] |
+| mel repair, diffusion (x0res d20) | 6.08 | 6.96 [5.60, 8.57] | 10.16 [7.45, 13.41] | 0.595 [0.403, 0.862] |
+| mel repair, flow | 5.87 | 7.33 [6.18, 8.63] | 13.14 [9.88, 17.07] | 0.400 [0.255, 0.605] |
+| V1 | 5.80 | 2.33 [1.54, 3.37] | 3.69 [2.15, 5.86] | 0.123 [0.051, 0.204] |
+| V2 | 5.76 | 1.35 [0.89, 2.00] | 3.12 [1.71, 5.22] | 0.183 [0.099, 0.295] |
+| real -> pretrained BigVGAN | 4.24 | 1.75 [1.35, 2.26] | 3.43 [1.76, 5.73] | 0.020 [0.013, 0.028] |
+| real -> fine-tuned BigVGAN | 4.08 | 1.46 [1.06, 1.97] | 3.04 [1.47, 5.45] | 0.029 [0.020, 0.039] |
+| real (held-out windows) | - | - | 2.03 [0.89, 3.82] | - |
+
+- The mel refiners, a tie by MSS, are the least real by every KAD (significant): the smooth mels sound unreal.
+- The pretrained vocoder, worse than the DDSP by MSS, is much closer to real by PANNs (difference -1.44 [-2.94,
+  -0.06]) but slightly further by EnCodec (+0.088 [+0.050, +0.126]): it makes the sound more guitar-like overall and
+  changes fine acoustic detail away from the recording.
+- V2 vs V1: PANNs, same windows -0.98 [-1.57, -0.53] (V2 better); unseen real -0.57 [-1.29, +0.07]; EnCodec +0.06
+  [-0.05, +0.17] (tie). V2 reaches the vocoder's own ceiling on real audio (1.46).
+- EnCodec against unseen real cannot tell real held-out audio (1.20) from the DDSP (1.35): recording and piece
+  differences dominate it; not used for decisions.
+- Phase 4/5 winner rule now by KAD (`phase45.sh`): V2 or S replace V1 only if the PANNs (same windows) difference to
+  V1 is below 0 with its whole interval and EnCodec does not say worse; same for the 100-recording pairs. On today's
+  numbers: V2, 20-recording pairs.
+
 ## Phase 4 and 5 prepared (run after the night queue: `queue_final/phase45.sh`)
 
 Winner rule (the ear has not judged yet; loss differences under 0.05 are ties): V2 or S only replace V1 if at least

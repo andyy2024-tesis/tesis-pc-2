@@ -1,0 +1,628 @@
+{
+ "panns-wavegram-logmel vs real": {
+  "bandwidth": 4.7523,
+  "versions": {
+   "ddsp": {
+    "kad": 3.2146,
+    "ci": [
+     2.2556,
+     4.4711
+    ],
+    "minus_voc-v1_mix20": 0.8823,
+    "minus_voc-v1_mix20_ci": [
+     -0.8587,
+     2.739
+    ]
+   },
+   "voc-p0_pretrained": {
+    "kad": 1.7757,
+    "ci": [
+     1.2941,
+     2.4632
+    ],
+    "minus_ddsp": -1.4389,
+    "minus_ddsp_ci": [
+     -2.9426,
+     -0.0561
+    ],
+    "minus_voc-v1_mix20": -0.5566,
+    "minus_voc-v1_mix20_ci": [
+     -1.2934,
+     0.1517
+    ]
+   },
+   "voc-p2_real": {
+    "kad": 1.821,
+    "ci": [
+     1.2987,
+     2.495
+    ],
+    "minus_ddsp": -1.3936,
+    "minus_ddsp_ci": [
+     -2.8863,
+     0.0498
+    ],
+    "minus_voc-v1_mix20": -0.5113,
+    "minus_voc-v1_mix20_ci": [
+     -1.2137,
+     0.1283
+    ]
+   },
+   "diff-v3_x0res": {
+    "kad": 6.9643,
+    "ci": [
+     5.5973,
+     8.5704
+    ],
+    "minus_ddsp": 3.7498,
+    "minus_ddsp_ci": [
+     1.5256,
+     5.8939
+    ],
+    "minus_voc-v1_mix20": 4.632,
+    "minus_voc-v1_mix20_ci": [
+     3.5018,
+     5.8571
+    ]
+   },
+   "diff-v3b_flow": {
+    "kad": 7.3303,
+    "ci": [
+     6.1809,
+     8.6279
+    ],
+    "minus_ddsp": 4.1157,
+    "minus_ddsp_ci": [
+     2.2861,
+     5.8479
+    ],
+    "minus_voc-v1_mix20": 4.9979,
+    "minus_voc-v1_mix20_ci": [
+     3.7455,
+     6.2105
+    ]
+   },
+   "voc-v1_mix20": {
+    "kad": 2.3323,
+    "ci": [
+     1.5372,
+     3.3747
+    ],
+    "minus_ddsp": -0.8823,
+    "minus_ddsp_ci": [
+     -2.739,
+     0.8587
+    ]
+   },
+   "voc-v2_inject20": {
+    "kad": 1.3494,
+    "ci": [
+     0.8877,
+     1.9983
+    ],
+    "minus_ddsp": -1.8652,
+    "minus_ddsp_ci": [
+     -3.466,
+     -0.4899
+    ],
+    "minus_voc-v1_mix20": -0.9829,
+    "minus_voc-v1_mix20_ci": [
+     -1.569,
+     -0.5345
+    ]
+   },
+   "voc-p0_pretrained-real": {
+    "kad": 1.7504,
+    "ci": [
+     1.3514,
+     2.2619
+    ],
+    "minus_ddsp": -1.4641,
+    "minus_ddsp_ci": [
+     -2.8795,
+     -0.2828
+    ],
+    "minus_voc-v1_mix20": -0.5819,
+    "minus_voc-v1_mix20_ci": [
+     -1.5705,
+     0.1762
+    ]
+   },
+   "voc-p2_real-real": {
+    "kad": 1.4611,
+    "ci": [
+     1.0591,
+     1.9663
+    ],
+    "minus_ddsp": -1.7534,
+    "minus_ddsp_ci": [
+     -3.1486,
+     -0.5268
+    ],
+    "minus_voc-v1_mix20": -0.8712,
+    "minus_voc-v1_mix20_ci": [
+     -1.8208,
+     -0.1171
+    ]
+   }
+  }
+ },
+ "panns-wavegram-logmel vs realtest": {
+  "bandwidth": 4.3337,
+  "versions": {
+   "ddsp": {
+    "kad": 6.7432,
+    "ci": [
+     5.1397,
+     8.562
+    ],
+    "minus_voc-v1_mix20": 3.0523,
+    "minus_voc-v1_mix20_ci": [
+     1.0463,
+     5.0885
+    ]
+   },
+   "voc-p0_pretrained": {
+    "kad": 4.4212,
+    "ci": [
+     2.6374,
+     7.0646
+    ],
+    "minus_ddsp": -2.322,
+    "minus_ddsp_ci": [
+     -4.3492,
+     -0.4483
+    ],
+    "minus_voc-v1_mix20": 0.7303,
+    "minus_voc-v1_mix20_ci": [
+     -0.3719,
+     1.9181
+    ]
+   },
+   "voc-p2_real": {
+    "kad": 4.2277,
+    "ci": [
+     2.4587,
+     6.744
+    ],
+    "minus_ddsp": -2.5156,
+    "minus_ddsp_ci": [
+     -4.4256,
+     -0.6904
+    ],
+    "minus_voc-v1_mix20": 0.5368,
+    "minus_voc-v1_mix20_ci": [
+     -0.527,
+     1.5918
+    ]
+   },
+   "diff-v3_x0res": {
+    "kad": 10.1602,
+    "ci": [
+     7.4469,
+     13.4099
+    ],
+    "minus_ddsp": 3.417,
+    "minus_ddsp_ci": [
+     0.3359,
+     6.2701
+    ],
+    "minus_voc-v1_mix20": 6.4693,
+    "minus_voc-v1_mix20_ci": [
+     4.5426,
+     8.4994
+    ]
+   },
+   "diff-v3b_flow": {
+    "kad": 13.1435,
+    "ci": [
+     9.8834,
+     17.067
+    ],
+    "minus_ddsp": 6.4003,
+    "minus_ddsp_ci": [
+     3.1243,
+     9.5005
+    ],
+    "minus_voc-v1_mix20": 9.4526,
+    "minus_voc-v1_mix20_ci": [
+     7.0947,
+     11.903
+    ]
+   },
+   "voc-v1_mix20": {
+    "kad": 3.6909,
+    "ci": [
+     2.1514,
+     5.8634
+    ],
+    "minus_ddsp": -3.0523,
+    "minus_ddsp_ci": [
+     -5.0885,
+     -1.0463
+    ]
+   },
+   "voc-v2_inject20": {
+    "kad": 3.1223,
+    "ci": [
+     1.7105,
+     5.2169
+    ],
+    "minus_ddsp": -3.621,
+    "minus_ddsp_ci": [
+     -5.4219,
+     -1.8567
+    ],
+    "minus_voc-v1_mix20": -0.5687,
+    "minus_voc-v1_mix20_ci": [
+     -1.2871,
+     0.0713
+    ]
+   },
+   "voc-p0_pretrained-real": {
+    "kad": 3.4348,
+    "ci": [
+     1.7565,
+     5.728
+    ],
+    "minus_ddsp": -3.3084,
+    "minus_ddsp_ci": [
+     -5.5495,
+     -1.2422
+    ],
+    "minus_voc-v1_mix20": -0.2561,
+    "minus_voc-v1_mix20_ci": [
+     -1.3048,
+     0.8756
+    ]
+   },
+   "voc-p2_real-real": {
+    "kad": 3.0356,
+    "ci": [
+     1.4741,
+     5.4509
+    ],
+    "minus_ddsp": -3.7077,
+    "minus_ddsp_ci": [
+     -5.8636,
+     -1.6206
+    ],
+    "minus_voc-v1_mix20": -0.6553,
+    "minus_voc-v1_mix20_ci": [
+     -1.7599,
+     0.5081
+    ]
+   },
+   "real": {
+    "kad": 2.0324,
+    "ci": [
+     0.8922,
+     3.8211
+    ],
+    "minus_ddsp": -4.7109,
+    "minus_ddsp_ci": [
+     -6.1971,
+     -3.3241
+    ],
+    "minus_voc-v1_mix20": -1.6586,
+    "minus_voc-v1_mix20_ci": [
+     -2.8006,
+     -0.6434
+    ]
+   }
+  }
+ },
+ "encodec-emb vs real": {
+  "bandwidth": 6.1323,
+  "versions": {
+   "ddsp": {
+    "kad": 0.1757,
+    "ci": [
+     0.0795,
+     0.2896
+    ],
+    "minus_voc-v1_mix20": 0.0522,
+    "minus_voc-v1_mix20_ci": [
+     -0.0505,
+     0.1593
+    ]
+   },
+   "voc-p0_pretrained": {
+    "kad": 0.2639,
+    "ci": [
+     0.1528,
+     0.3879
+    ],
+    "minus_ddsp": 0.0881,
+    "minus_ddsp_ci": [
+     0.0498,
+     0.1257
+    ],
+    "minus_voc-v1_mix20": 0.1404,
+    "minus_voc-v1_mix20_ci": [
+     0.0326,
+     0.2573
+    ]
+   },
+   "voc-p2_real": {
+    "kad": 0.2209,
+    "ci": [
+     0.1199,
+     0.3295
+    ],
+    "minus_ddsp": 0.0451,
+    "minus_ddsp_ci": [
+     -0.017,
+     0.0988
+    ],
+    "minus_voc-v1_mix20": 0.0974,
+    "minus_voc-v1_mix20_ci": [
+     -0.017,
+     0.2088
+    ]
+   },
+   "diff-v3_x0res": {
+    "kad": 0.5948,
+    "ci": [
+     0.4027,
+     0.8615
+    ],
+    "minus_ddsp": 0.419,
+    "minus_ddsp_ci": [
+     0.2235,
+     0.6518
+    ],
+    "minus_voc-v1_mix20": 0.4713,
+    "minus_voc-v1_mix20_ci": [
+     0.2977,
+     0.6981
+    ]
+   },
+   "diff-v3b_flow": {
+    "kad": 0.3996,
+    "ci": [
+     0.2549,
+     0.6049
+    ],
+    "minus_ddsp": 0.2239,
+    "minus_ddsp_ci": [
+     0.0862,
+     0.3824
+    ],
+    "minus_voc-v1_mix20": 0.2762,
+    "minus_voc-v1_mix20_ci": [
+     0.1435,
+     0.4405
+    ]
+   },
+   "voc-v1_mix20": {
+    "kad": 0.1235,
+    "ci": [
+     0.0515,
+     0.2039
+    ],
+    "minus_ddsp": -0.0522,
+    "minus_ddsp_ci": [
+     -0.1593,
+     0.0505
+    ]
+   },
+   "voc-v2_inject20": {
+    "kad": 0.1835,
+    "ci": [
+     0.0985,
+     0.2955
+    ],
+    "minus_ddsp": 0.0078,
+    "minus_ddsp_ci": [
+     -0.1313,
+     0.144
+    ],
+    "minus_voc-v1_mix20": 0.06,
+    "minus_voc-v1_mix20_ci": [
+     -0.0504,
+     0.1726
+    ]
+   },
+   "voc-p0_pretrained-real": {
+    "kad": 0.0201,
+    "ci": [
+     0.0131,
+     0.0283
+    ],
+    "minus_ddsp": -0.1556,
+    "minus_ddsp_ci": [
+     -0.2718,
+     -0.0601
+    ],
+    "minus_voc-v1_mix20": -0.1034,
+    "minus_voc-v1_mix20_ci": [
+     -0.1828,
+     -0.0316
+    ]
+   },
+   "voc-p2_real-real": {
+    "kad": 0.0291,
+    "ci": [
+     0.0196,
+     0.039
+    ],
+    "minus_ddsp": -0.1466,
+    "minus_ddsp_ci": [
+     -0.2574,
+     -0.0479
+    ],
+    "minus_voc-v1_mix20": -0.0944,
+    "minus_voc-v1_mix20_ci": [
+     -0.1725,
+     -0.0234
+    ]
+   }
+  }
+ },
+ "encodec-emb vs realtest": {
+  "bandwidth": 6.3221,
+  "versions": {
+   "ddsp": {
+    "kad": 1.3487,
+    "ci": [
+     0.3827,
+     2.7786
+    ],
+    "minus_voc-v1_mix20": -0.0609,
+    "minus_voc-v1_mix20_ci": [
+     -0.3215,
+     0.2299
+    ]
+   },
+   "voc-p0_pretrained": {
+    "kad": 1.3501,
+    "ci": [
+     0.4256,
+     2.7329
+    ],
+    "minus_ddsp": 0.0013,
+    "minus_ddsp_ci": [
+     -0.0954,
+     0.0831
+    ],
+    "minus_voc-v1_mix20": -0.0596,
+    "minus_voc-v1_mix20_ci": [
+     -0.338,
+     0.2216
+    ]
+   },
+   "voc-p2_real": {
+    "kad": 1.1441,
+    "ci": [
+     0.3069,
+     2.443
+    ],
+    "minus_ddsp": -0.2046,
+    "minus_ddsp_ci": [
+     -0.381,
+     -0.0596
+    ],
+    "minus_voc-v1_mix20": -0.2656,
+    "minus_voc-v1_mix20_ci": [
+     -0.5489,
+     -0.0082
+    ]
+   },
+   "diff-v3_x0res": {
+    "kad": 2.3263,
+    "ci": [
+     0.8139,
+     4.4579
+    ],
+    "minus_ddsp": 0.9775,
+    "minus_ddsp_ci": [
+     0.3828,
+     1.6663
+    ],
+    "minus_voc-v1_mix20": 0.9166,
+    "minus_voc-v1_mix20_ci": [
+     0.3064,
+     1.7054
+    ]
+   },
+   "diff-v3b_flow": {
+    "kad": 1.6217,
+    "ci": [
+     0.5427,
+     3.3217
+    ],
+    "minus_ddsp": 0.273,
+    "minus_ddsp_ci": [
+     -0.0087,
+     0.6564
+    ],
+    "minus_voc-v1_mix20": 0.212,
+    "minus_voc-v1_mix20_ci": [
+     -0.1294,
+     0.7159
+    ]
+   },
+   "voc-v1_mix20": {
+    "kad": 1.4097,
+    "ci": [
+     0.4153,
+     2.8836
+    ],
+    "minus_ddsp": 0.0609,
+    "minus_ddsp_ci": [
+     -0.2299,
+     0.3215
+    ]
+   },
+   "voc-v2_inject20": {
+    "kad": 1.1616,
+    "ci": [
+     0.4393,
+     2.3357
+    ],
+    "minus_ddsp": -0.1872,
+    "minus_ddsp_ci": [
+     -0.6936,
+     0.1986
+    ],
+    "minus_voc-v1_mix20": -0.2481,
+    "minus_voc-v1_mix20_ci": [
+     -0.6202,
+     0.0714
+    ]
+   },
+   "voc-p0_pretrained-real": {
+    "kad": 1.1748,
+    "ci": [
+     0.2966,
+     2.511
+    ],
+    "minus_ddsp": -0.174,
+    "minus_ddsp_ci": [
+     -0.5559,
+     0.137
+    ],
+    "minus_voc-v1_mix20": -0.2349,
+    "minus_voc-v1_mix20_ci": [
+     -0.5839,
+     0.0555
+    ]
+   },
+   "voc-p2_real-real": {
+    "kad": 1.042,
+    "ci": [
+     0.226,
+     2.3419
+    ],
+    "minus_ddsp": -0.3067,
+    "minus_ddsp_ci": [
+     -0.7288,
+     0.0337
+    ],
+    "minus_voc-v1_mix20": -0.3677,
+    "minus_voc-v1_mix20_ci": [
+     -0.7672,
+     -0.0472
+    ]
+   },
+   "real": {
+    "kad": 1.2015,
+    "ci": [
+     0.3109,
+     2.5836
+    ],
+    "minus_ddsp": -0.1472,
+    "minus_ddsp_ci": [
+     -0.5269,
+     0.1908
+    ],
+    "minus_voc-v1_mix20": -0.2082,
+    "minus_voc-v1_mix20_ci": [
+     -0.5512,
+     0.1016
+    ]
+   }
+  }
+ }
+}
