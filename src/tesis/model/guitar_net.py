@@ -127,6 +127,9 @@ class NetConfig:
     #   bands per octave up to body_eq_max, at least 24, on top of the table); (pluck_click) the click an EQ from it;
     #   attack time and end-of-note fade are scaled per recording; the stiffness law is shifted by the guitar's measured
     #   offset (notes.log_b_offset, analysis/inharmonicity_recording.py)
+    rec_b: str = "measured"  # rec_all: per-recording stiffness shift "measured" (notes.log_b_offset), "none" (the
+    #   shared table only) or "learned" (from the embedding, one shift per string with strings, bounded to x0.6..1.65,
+    #   starts at 0; learned through the partial frequencies)
 
     @property
     def n_feat(self):
@@ -268,8 +271,9 @@ class Recording:
             else:
                 assert cfg.strings_b == "pitch", cfg.strings_b
             self.string_feat = np.concatenate([np.eye(6)[self.string - 1], (self.fret / 12)[:, None]], 1).astype(np.float32)
-        if cfg.rec_all and "log_b_offset" in notes:
+        if cfg.rec_all and cfg.rec_b == "measured" and "log_b_offset" in notes:
             B = B * np.exp(notes.log_b_offset.values)
+        self.f0_hz, self.b_base = f0, B  # rec_b "learned" rebuilds the frequencies in the forward pass
         self.freqs = f0[:, None] * k * np.sqrt(1 + B[:, None] * k ** 2)
         if cfg.sympathetic:
             self.open_pitch = OPEN_STRINGS
@@ -366,6 +370,10 @@ class GuitarNet(nn.Module):
             self.rec_consts = nn.Linear(R, 2)
             nn.init.zeros_(self.rec_consts.weight)
             nn.init.zeros_(self.rec_consts.bias)
+            if cfg.rec_b == "learned":  # stiffness shift per string (or one) from the embedding, starts at 0
+                self.rec_b = nn.Linear(R, 6 if cfg.strings else 1)
+                nn.init.zeros_(self.rec_b.weight)
+                nn.init.zeros_(self.rec_b.bias)
         self.register_buffer("logk", torch.log(torch.arange(1, K + 1).float()))
         out_dim = K if cfg.structured else K + 1
         self.voice_out = nn.Linear(Hd, out_dim)
@@ -670,6 +678,12 @@ class GuitarNet(nn.Module):
             end = torch.as_tensor(rec.end[idx], device=dev)
             voice = torch.as_tensor(rec.voice[idx], device=dev)
             f = torch.as_tensor(rec.freqs[idx], device=dev, dtype=torch.float64)
+            if cfg.rec_all and cfg.rec_b == "learned":
+                sh = 0.5 * torch.tanh(self.rec_b(emb)).double()  # log stiffness shift
+                sh = sh[torch.as_tensor(rec.string[idx] - 1, device=dev)] if cfg.strings else sh.expand(len(idx))
+                kk = torch.arange(1, f.shape[1] + 1, device=dev, dtype=torch.float64)
+                b = torch.as_tensor(rec.b_base[idx], device=dev, dtype=torch.float64)[:, None] * torch.exp(sh)[:, None]
+                f = torch.as_tensor(rec.f0_hz[idx], device=dev, dtype=torch.float64)[:, None] * kk * torch.sqrt(1 + b * kk ** 2)
             t_rel = n_abs[None] - on[:, None]
             att_sc, fade_sc = torch.exp(1.5 * torch.tanh(self.rec_consts(emb))) if cfg.rec_all else (1.0, 1.0)
             gate = ((t_rel >= 0) & (n_abs[None] < end[:, None])).float() * \

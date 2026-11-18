@@ -59,7 +59,7 @@ def load_recordings(ids, cfg, n_eval=None):
                 gb = pd.read_csv(REPO / "analysis" / "results" / "inharmonicity_guitar.csv")
                 gb = gb[gb.id == rid].set_index("string").log_b_open
                 notes["log_b_open"] = gb.loc[st.string.values].values
-        if cfg.rec_all:  # this guitar's stiffness relative to the average (analysis/inharmonicity_recording.py)
+        if cfg.rec_all and cfg.rec_b == "measured":  # this guitar's stiffness relative to the average (analysis/inharmonicity_recording.py)
             ob = pd.read_csv(REPO / "analysis" / "results" / "inharmonicity_recording.csv").set_index("id").log_b_offset
             notes["log_b_offset"] = float(ob.get(rid, 0.0))
         rec = Recording(i, y, notes, tc, cfg, LOG_B)
