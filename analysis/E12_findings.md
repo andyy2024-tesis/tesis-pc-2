@@ -93,7 +93,15 @@ Results (vocoded by the pretrained BigVGAN; identity = the DDSP mel itself, 6.09
 |---|---|---|---|---|
 | V3 noise prediction, depth 20 / 40 / 80 | 8.93 / 27.3 / 28.1 | 8.01 / 10.9 / 29.3 | 7.69 / 9.70 / 25.5 | - |
 | V3 x0res (first run), depth 20 / 40 / 80 | 6.28 / 6.34 / 6.39 | (crashed saving: rerun) | | |
+| V3 x0res (rerun), depth 20 / 40 / 80 | 6.49 / 6.57 / 6.62 | 6.28 / 6.30 / 6.32 | 6.30 / 6.33 / 6.34 | 6.30 / 6.33 / 6.34 |
 | V3b flow (no source noise) | 6.12 | 6.13 | 6.17 | 6.18 |
+| V3b flow, source noise 0.3 + bridge 0.3 | 7.89 | 7.82 | 7.78 | 7.78 |
+
+Texture kept (frame-to-frame variance of the mel / the real mel's; DDSP mel 0.90): x0res 0.46 / 0.48 / 0.49 at depth
+10 / 20 / 40; flow 0.27; flow with source noise 10.5 (it never learns to remove the starting noise; also its target
+ignores the bridge noise). Both mel refiners trained by squared error learn the average correction, and the average is
+smooth: half the texture or less, so the vocoder makes duller audio. Mel-domain repair as set up here does not beat
+the DDSP mel on this measure; the GAN routes (V1, V2, S), whose adversarial losses reward texture, come next.
 
 Why the flow gets slightly worse: its mels are closer to the real ones (mel MSE 0.0125 vs 0.0145 for the DDSP mel) but
 smooth: their frame-to-frame variation is 27% of the real mel's (DDSP mel: 90%). Trained on MSE from a fixed start,
