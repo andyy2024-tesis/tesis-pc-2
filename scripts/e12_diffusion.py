@@ -173,7 +173,7 @@ def main():
     ap.add_argument("--eval-every", type=int, default=10000)
     ap.add_argument("--eval-only", action="store_true", help="load <tag>/model.pt and only evaluate (e.g. with p2_real)")
     a = ap.parse_args()
-    dev = "cuda"
+    dev = "cuda" if torch.cuda.is_available() else "cpu"
     out = RES / "e12" / a.tag
     out.mkdir(parents=True, exist_ok=True)
     if not a.eval_only:

@@ -18,3 +18,48 @@ Creating early downsampling filter ...No early downsampling is required, downsa
 Early downsampling filter created,                         time used = 0.0000 seconds
 Creating CQT kernels ...CQT kernels created, time used = 0.0022 seconds
 p2_real: step 0 eval 4.237
+  step    200  mel 0.828  adv 3.453  fm 14.031  d 2.975  (446 s)
+  step    400  mel 0.832  adv 3.563  fm 14.148  d 2.946  (876 s)
+  step    600  mel 0.839  adv 3.538  fm 14.106  d 2.958  (1313 s)
+  step    800  mel 0.850  adv 3.529  fm 14.204  d 2.989  (1750 s)
+  step   1000  mel 0.866  adv 3.550  fm 14.025  d 2.987  (2180 s)
+  step   1200  mel 0.869  adv 3.548  fm 14.161  d 2.996  (2610 s)
+  step   1400  mel 0.867  adv 3.546  fm 13.961  d 2.994  (3037 s)
+  step   1600  mel 0.866  adv 3.533  fm 13.845  d 3.006  (3467 s)
+  step   1800  mel 0.872  adv 3.532  fm 13.914  d 2.996  (3799 s)
+  step   2000  mel 0.868  adv 3.545  fm 13.972  d 3.005  (4053 s)
+  EVAL step 2000: 4.146
+  step   2200  mel 0.869  adv 3.541  fm 13.917  d 2.995  (4547 s)
+  step   2400  mel 0.867  adv 3.491  fm 13.693  d 3.026  (5176 s)
+  step   2600  mel 0.866  adv 3.497  fm 13.699  d 3.020  (5804 s)
+  step   2800  mel 0.868  adv 3.493  fm 13.662  d 3.027  (6426 s)
+  step   3000  mel 0.870  adv 3.522  fm 13.816  d 3.003  (7052 s)
+  step   3200  mel 0.862  adv 3.467  fm 13.528  d 3.042  (7426 s)
+  step   3400  mel 0.864  adv 3.495  fm 13.586  d 3.022  (7680 s)
+  step   3600  mel 0.867  adv 3.464  fm 13.586  d 3.043  (7934 s)
+  step   3800  mel 0.867  adv 3.485  fm 13.630  d 3.028  (8188 s)
+  step   4000  mel 0.864  adv 3.485  fm 13.567  d 3.039  (8442 s)
+  EVAL step 4000: 4.101
+  step   4200  mel 0.863  adv 3.458  fm 13.513  d 3.048  (8701 s)
+  step   4400  mel 0.862  adv 3.454  fm 13.365  d 3.052  (8955 s)
+  step   4600  mel 0.866  adv 3.482  fm 13.499  d 3.034  (9209 s)
+  step   4800  mel 0.863  adv 3.482  fm 13.329  d 3.028  (9463 s)
+  step   5000  mel 0.866  adv 3.489  fm 13.312  d 3.026  (9717 s)
+  step   5200  mel 0.862  adv 3.461  fm 13.331  d 3.046  (9971 s)
+  step   5400  mel 0.865  adv 3.467  fm 13.304  d 3.037  (10225 s)
+  step   5600  mel 0.866  adv 3.471  fm 13.375  d 3.034  (10479 s)
+  step   5800  mel 0.863  adv 3.439  fm 13.250  d 3.057  (10733 s)
+  step   6000  mel 0.862  adv 3.459  fm 13.329  d 3.047  (10987 s)
+  EVAL step 6000: 4.103
+  step   6200  mel 0.861  adv 3.444  fm 13.315  d 3.052  (11246 s)
+  step   6400  mel 0.863  adv 3.463  fm 13.271  d 3.048  (11500 s)
+  step   6600  mel 0.860  adv 3.432  fm 13.045  d 3.058  (11754 s)
+  step   6800  mel 0.862  adv 3.425  fm 13.161  d 3.066  (12008 s)
+  step   7000  mel 0.862  adv 3.456  fm 13.123  d 3.048  (12263 s)
+  step   7200  mel 0.864  adv 3.448  fm 13.175  d 3.047  (12517 s)
+  step   7400  mel 0.860  adv 3.436  fm 12.975  d 3.059  (12771 s)
+  step   7600  mel 0.864  adv 3.469  fm 13.121  d 3.038  (13025 s)
+  step   7800  mel 0.863  adv 3.434  fm 13.185  d 3.058  (13279 s)
+  step   8000  mel 0.859  adv 3.446  fm 13.034  d 3.053  (13533 s)
+  EVAL step 8000: 4.082
+done

@@ -77,6 +77,11 @@ sequential script, `queue_final/night.sh`: phase 2, then V1 on the 20-recording 
 The 100-recording DDSP needs ~20 GB (vs ~7 GB for 20 recordings: the peak comes from the densest windows of the extra
 recordings, not from per-recording data), so it cannot share the GPU with a vocoder run; it goes last.
 
+Result (85 held-out windows; real audio -> mel -> fine-tuned vocoder): 4.238 (pretrained) -> 4.146 / 4.101 / 4.103 /
+4.082 at 2000 / 4000 / 6000 / 8000 steps. The final DDSP through the fine-tuned vocoder: 5.891 (pretrained vocoder
+6.105, raw DDSP 5.82). Fine-tuning on real guitar alone, without ever seeing a DDSP mel, already narrows the gap that
+the vocoder adds on top of the DDSP from 0.29 to 0.07. Run `p2_real` is the starting point of every trained route.
+
 ## V3: shallow diffusion on the mel
 
 First run (`v3_shallow`, DiffSinger's noise prediction, 50% unpaired real batches): at 10000 steps the reverse process
@@ -107,7 +112,12 @@ Why the flow gets slightly worse: its mels are closer to the real ones (mel MSE 
 smooth: their frame-to-frame variation is 27% of the real mel's (DDSP mel: 90%). Trained on MSE from a fixed start,
 the flow learns the average correction, which washes out texture, and the vocoder turns a smooth mel into dull audio.
 Fix being tried: start from the DDSP mel plus noise (`--src-noise 0.3`, bridge 0.3) so the flow has to create texture.
-Every evaluation now also reports the texture ratio. Caveat on the measure: the spectral loss compares with one specific
+Every evaluation now also reports the texture ratio.
+
+Re-evaluated with the fine-tuned vocoder (`p2_real`; `--eval-only`): identity 5.880 (texture 0.90), x0res depth 20
+6.078 (0.48), flow 5.874 (0.27). With a vocoder that has heard real guitar, the flow ties the identity in spite of
+its smooth mel; x0res stays worse. Excerpts of both through `p2_real` are on page 6 for the ear (envelope lag after
+mel repair up to 2.3 ms, mixed signs: smeared attacks, not a shift; the media script now allows 5 ms). Caveat on the measure: the spectral loss compares with one specific
 recording, so a refiner that adds realistic but different detail is penalised; for these the ear decides.
 Also rendered: BigVGAN-v2 44 kHz (from the full-band 48 kHz excerpt and from the DDSP upsampled) and DisCoder (44.1 kHz,
 music-trained). `analysis/e12_vocode.py`, `analysis/e12_discoder.py` (own environment in external/discoder/.venv).

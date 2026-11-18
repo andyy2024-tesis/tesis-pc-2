@@ -7,7 +7,7 @@ For each version given (a file label in analysis/results/slides/audio/<recording
   the vocoder, resampled to the output rate), "anadido" (what it added: the spectrogram magnitude where the output is
   louder than the input, with the output's phase) and "quitado" (what it removed: where the input is louder, with the
   input's phase). A vocoder keeps the timing but not the phase of the waveform (sample correlation output/input
-  -0.2 to 0.25 on these excerpts, envelope lag under 1.2 ms, no consistent sign), so a plain waveform difference would sound like the whole
+  -0.2 to 0.25 on these excerpts, envelope lag under 1.2 ms for plain vocoding and 2.3 ms after mel repair, no consistent sign), so a plain waveform difference would sound like the whole
   piece again. Stems use render_stems.py's loudness rule; true levels go into the page's STEMS table.
 Usage: uv run python analysis/e12_listen_media.py original44k voc-bigvgan24-original ...
 """
@@ -81,7 +81,9 @@ def main():
             if sx != sr:
                 x = torchaudio.functional.resample(torch.as_tensor(x)[None], sx, sr)[0].numpy()
             d = env_lag(y, x)
-            assert abs(d) <= sr // 500, f"{rid} {v}: vocoder output is {d} samples off its input"  # within 2 ms
+            # within 5 ms: smoothed mels (V3b flow) blur attacks, envelope lags up to 2.3 ms with mixed signs; the
+            # parts use an 85 ms STFT window, so only a gross offset (a frame or more) would spoil them
+            assert abs(d) <= sr // 200, f"{rid} {v}: vocoder output is {d} samples off its input"
             n = min(len(y), len(x))
             mix, x = y[:n], x[:n]
             added, removed = spectral_diff(mix, x, sr)

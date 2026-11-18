@@ -16,5 +16,23 @@
  },
  "voc-discoder-e6-structured_v12_final_learnedB_noise_strongD_rise": {
   "mean": 6.107
+ },
+ "voc-p2_real-original": {
+  "mean": 4.082,
+  "note": "phase-2 eval at step 8000"
+ },
+ "voc-p2_real-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 5.891,
+  "note": "v1_mix20 step-0 eval (= p2_real on the DDSP mix)"
+ },
+ "voc-p2_real-v3_x0res-d20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 6.078,
+  "texture": 0.48,
+  "note": "e12_diffusion --eval-only --vocoder p2_real; identity in the same eval 5.880"
+ },
+ "voc-p2_real-v3b_flow-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 5.874,
+  "texture": 0.27,
+  "note": "e12_diffusion --eval-only --vocoder p2_real; identity in the same eval 5.880"
  }
 }

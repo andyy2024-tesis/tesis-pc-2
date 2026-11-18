@@ -3,6 +3,7 @@
 Inputs as in training (Inputs): the real excerpt (original.wav) for --input real runs, otherwise the DDSP excerpt
 (<label>.wav) and, when the run takes stems or the strings part, the parts rendered by analysis/render_stems.py
 (slides/audio/<rid>/stems/<label>/<part>.wav, raw level; a part with no file is silent in that excerpt).
+A real-input run given a DDSP label vocodes that DDSP excerpt (the "DDSP -> this vocoder" baseline).
 Writes slides/audio/<rid>/voc-<run>-<label>.wav (label "original" for real-input runs).
 Usage: uv run python analysis/e12_refine_excerpts.py <run> [<ddsp label>]
   e.g. p2_real   |   v1_mix20 e6-structured_v12_final_learnedB_noise_strongD_rise
@@ -29,6 +30,8 @@ def main():
     label = sys.argv[2] if len(sys.argv) > 2 else "original"
     cfg = json.loads((RES / "e12" / run / "config.json").read_text())
     a = Namespace(**cfg)
+    if a.input == "real" and label != "original":
+        a.input = "mix"
     h = AttrDict(json.loads((CKPT / "config.json").read_text()))
     inputs = Inputs(a, h, PARTS)
     dev = "cuda" if torch.cuda.is_available() else "cpu"
