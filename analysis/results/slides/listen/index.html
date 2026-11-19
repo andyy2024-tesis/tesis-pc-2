@@ -76,6 +76,23 @@ button.cell.off { cursor: default; color: var(--muted); background: transparent;
 button.cell.off:hover { border-color: var(--line); }
 .var { display: block; font-weight: 400; font-style: italic; color: var(--accent); }
 .overview { gap: 20px; }
+/* Blind mode: versions shuffled under letters; names, notes and scores hidden until "Revelar". */
+button.pill { font: 500 14px var(--sans); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; min-height: 36px; cursor: pointer; }
+button.pill:hover { border-color: var(--play); }
+button.pill:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; }
+button.pill[aria-pressed="true"] { background: var(--play); color: var(--on-play); border-color: var(--play); }
+.blindopt { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.blindopt .note { font-size: 14px; }
+body.blind .overview { display: none; }
+th .letter { font-family: var(--mono); font-size: 16px; font-weight: 600; }
+.blind-tools { display: flex; flex-direction: column; gap: 10px; max-width: 72ch; }
+.blind-tools label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--muted); }
+.blind-tools input { font: 15px var(--sans); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; min-height: 40px; width: 100%; box-sizing: border-box; }
+.blind-tools input:focus-visible { outline: 2px solid var(--play); outline-offset: 1px; }
+.blind-tools .row { display: flex; flex-wrap: wrap; gap: 8px; }
+ol.reveal { list-style: none; margin: 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+ol.reveal b { font-family: var(--mono); }
+ol.reveal .tv { color: var(--muted); }
 .live { display: flex; flex-direction: column; gap: 6px; }
 .live ul { margin: 6px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .live a { color: var(--fg); font-weight: 500; }
@@ -129,6 +146,10 @@ table.cat tr.away th, table.cat tr.away td { color: var(--muted); font-weight: 4
     <p class="lede" id="pages"></p>
     <div class="opts">
       <span><kbd>←</kbd> <kbd>→</kbd> versión · <kbd>↑</kbd> <kbd>↓</kbd> grabación · <kbd>Espacio</kbd> pausa</span>
+    </div>
+    <div class="blindopt">
+      <button id="blind" class="pill" type="button" aria-pressed="false">Modo ciego</button>
+      <span class="note">Baraja las versiones de cada sección y oculta nombres, notas y puntajes hasta que pulses «Revelar».</span>
     </div>
   </header>
   <section class="overview" aria-label="Modelos">
@@ -1366,29 +1387,87 @@ function colHead(s, f) {
   return `<th scope="col"><button type="button" class="colhead" data-s="${s}" data-key="${key}" aria-expanded="false" aria-controls="stems-${s}">${label}<span class="hint">partes</span></button></th>`;
 }
 
+// Browser storage only for this viewer's conveniences (blind on/off, the shuffle, notes); the page works without it.
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (_) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (_) {} },
+};
+let BLIND = store.get("blind") === "1";
+const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+const isRef = (f) => f === "original" || !!(MODELS[parts(f).key] || {}).ref; // the real recording stays named and first
+const permKey = (S) => `blind-perm-${PAGE_NO}-${S.id}`, notesKey = (S) => `blind-notes-${PAGE_NO}-${S.id}`;
+
+function blindOrder(S) { // references first, the rest shuffled; the shuffle is kept per section so letters stay put on reload
+  const refs = S.v.filter(isRef), rest = S.v.filter((f) => !isRef(f));
+  let perm = null;
+  try { perm = JSON.parse(store.get(permKey(S))); } catch (_) {}
+  if (!Array.isArray(perm) || perm.slice().sort().join("|") !== rest.slice().sort().join("|")) {
+    perm = rest.slice();
+    for (let i = perm.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [perm[i], perm[j]] = [perm[j], perm[i]]; }
+    store.set(permKey(S), JSON.stringify(perm));
+  }
+  return { cols: refs.concat(perm), perm, letters: Object.fromEntries(perm.map((f, i) => [f, String.fromCharCode(65 + i)])) };
+}
+
+function blindTools(S, s, perm, letters) {
+  const reveal = perm.map((f) => { const m = MODELS[parts(f).key]; return `<li><b>${letters[f]}</b> = ${nameOf(f)} <span class="tv">· loss ${fmtLoss(m)} · KAD ${fmtKad(m)}</span></li>`; }).join("");
+  return `<div class="blind-tools"><label for="notes-${s}">Tu orden o tus notas, antes de revelar (se guardan en este navegador)</label>
+    <input type="text" id="notes-${s}" data-notes="${s}" value="${esc(store.get(notesKey(S)) || "")}" placeholder="p. ej. B > A > C; A tiene más sala" autocomplete="off">
+    <div class="row"><button type="button" class="pill" data-reveal="${s}" aria-expanded="false" aria-controls="reveal-${s}">Revelar</button>
+    <button type="button" class="pill" data-reshuffle="${s}">Barajar de nuevo</button></div>
+    <ol class="reveal" id="reveal-${s}" hidden>${reveal}</ol></div>`;
+}
+
 function build() {
   const toc = $("toc"), root = $("sections");
+  toc.innerHTML = ""; root.innerHTML = "";
+  document.body.classList.toggle("blind", BLIND);
+  $("blind").setAttribute("aria-pressed", String(BLIND));
   SECTIONS.forEach((S, s) => {
     const a = document.createElement("a"); a.href = "#" + S.id; a.textContent = S.title; toc.append(a);
     const sec = document.createElement("section"); sec.id = S.id;
-    let html = `<div class="sec-head"><p class="sec-num">${String(s + 1).padStart(2, "0")} · ${S.tag}</p><h2>${S.title}</h2><p class="note">${S.note}</p></div>`;
-    if (S.heard) html += `<p class="heard"><b>Lo que escuché:</b> ${S.heard}</p>`;
-    html += timeline(S);
-    if (S.v.some((f) => f !== "original" && STEMS[parts(f).key])) html += `<p class="note stems-tip">Clic en el nombre de un modelo para escuchar cada una de sus partes por separado.</p>`;
-    html += `<div class="grid-scroll"><table class="clips"><thead><tr><th class="rec" scope="col">Grabación</th>${S.v.map((f) => colHead(s, f)).join("")}</tr></thead><tbody>`;
+    const B = BLIND ? blindOrder(S) : null, cols = B ? B.cols : S.v;
+    const label = (f) => (B && B.letters[f] ? "Versión " + B.letters[f] : nameOf(f));
+    const note = B ? "Modo ciego: las versiones están barajadas y sin nombre. Escúchalas, escribe tu orden y después pulsa «Revelar»." : S.note;
+    let html = `<div class="sec-head"><p class="sec-num">${String(s + 1).padStart(2, "0")} · ${S.tag}</p><h2>${S.title}</h2><p class="note">${note}</p></div>`;
+    if (!B) {
+      if (S.heard) html += `<p class="heard"><b>Lo que escuché:</b> ${S.heard}</p>`;
+      html += timeline(S);
+      if (S.v.some((f) => f !== "original" && STEMS[parts(f).key])) html += `<p class="note stems-tip">Clic en el nombre de un modelo para escuchar cada una de sus partes por separado.</p>`;
+    }
+    const head = (f) => (B ? (B.letters[f] ? `<th scope="col"><span class="letter">${B.letters[f]}</span></th>` : `<th scope="col">${nameOf(f)}</th>`) : colHead(s, f));
+    html += `<div class="grid-scroll"><table class="clips"><thead><tr><th class="rec" scope="col">Grabación</th>${cols.map(head).join("")}</tr></thead><tbody>`;
     RECS.forEach(([rid, short], r) => {
-      html += `<tr><td class="rec">${short}</td>${S.v.map((f, c) => `<td>${cellBtn("s" + s, r, c, f, nameOf(f), S.title, f === "original" ? " orig" : "")}</td>`).join("")}</tr>`;
+      html += `<tr><td class="rec">${short}</td>${cols.map((f, c) => `<td>${cellBtn("s" + s, r, c, f, label(f), S.title, isRef(f) ? " orig" : "")}</td>`).join("")}</tr>`;
     });
-    html += `</tbody></table></div><div class="stems" id="stems-${s}" hidden></div>`;
+    html += `</tbody></table></div>`;
+    html += B ? blindTools(S, s, B.perm, B.letters) : `<div class="stems" id="stems-${s}" hidden></div>`;
     sec.innerHTML = html;
     root.append(sec);
   });
-  root.addEventListener("click", (e) => {
-    const h = e.target.closest("button.colhead"); if (h) { toggleStems(+h.dataset.s, h.dataset.key); return; }
-    const x = e.target.closest("button.stems-close"); if (x) { closeStems(+x.dataset.s, true); return; }
-    const b = e.target.closest("button.cell"); if (b && !b.disabled) select(b, true);
-  });
 }
+
+function rebuild() {
+  stopCur();
+  const y = window.scrollY;
+  build();
+  window.scrollTo(0, y);
+}
+
+$("sections").addEventListener("click", (e) => {
+  const h = e.target.closest("button.colhead"); if (h) { toggleStems(+h.dataset.s, h.dataset.key); return; }
+  const x = e.target.closest("button.stems-close"); if (x) { closeStems(+x.dataset.s, true); return; }
+  const rv = e.target.closest("button[data-reveal]");
+  if (rv) { const o = $("reveal-" + rv.dataset.reveal), show = o.hidden; o.hidden = !show; rv.setAttribute("aria-expanded", String(show)); rv.textContent = show ? "Ocultar" : "Revelar"; return; }
+  const rs = e.target.closest("button[data-reshuffle]");
+  if (rs) { const S = SECTIONS[+rs.dataset.reshuffle]; store.del(permKey(S)); store.del(notesKey(S)); rebuild(); return; }
+  const b = e.target.closest("button.cell"); if (b && !b.disabled) select(b, true);
+});
+$("sections").addEventListener("input", (e) => {
+  const n = e.target.closest("input[data-notes]"); if (n) store.set(notesKey(SECTIONS[+n.dataset.notes]), n.value);
+});
+$("blind").addEventListener("click", () => { BLIND = !BLIND; store.set("blind", BLIND ? "1" : "0"); rebuild(); });
 
 function closeStems(s, focusHead) {
   const panel = $("stems-" + s), key = panel.dataset.key;
@@ -1482,7 +1561,7 @@ setIcon($("pp"), false);
 $("pp").addEventListener("click", () => { if (cur) cur.audio.paused ? cur.audio.play() : cur.audio.pause(); });
 $("seek").addEventListener("input", (e) => { if (cur) cur.audio.currentTime = +e.target.value; });
 document.addEventListener("keydown", (e) => {
-  if (!cur || e.target.matches("input[type=range], input[type=checkbox], summary, button.colhead, button.stems-close")) return;
+  if (!cur || e.target.matches("input[type=range], input[type=checkbox], input[type=text], summary, button.colhead, button.stems-close, button.pill")) return;
   const moves = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] };
   if (e.key === " " && !e.target.closest("button")) { e.preventDefault(); cur.audio.paused ? cur.audio.play() : cur.audio.pause(); return; }
   if (!(e.key in moves)) return;
