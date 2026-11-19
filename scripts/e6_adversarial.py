@@ -144,7 +144,11 @@ def main():
         for _ in range(a.batch):
             r = int(rng.integers(len(recs)))
             w0 = int(rng.choice(splits[r][0]))
-            fake, _ = model(recs[r], w0)
+            # warm-up trains only the discriminator: no generator graph. Kept, it lived on into the next sample's forward
+            # (two graphs at once), and a dense window (up to 145 sounding notes in the 100-recording set, 35 in the
+            # 20) needs ~10 GB for one: out of memory. Same numbers as before (D only ever saw fake.detach()).
+            with torch.set_grad_enabled(step > a.warmup_d):
+                fake, _ = model(recs[r], w0)
             real = torch.tensor(recs[r].y[w0:w0 + L], device=dev)[None]
             fake = fake[None]
             # discriminator
@@ -164,6 +168,7 @@ def main():
                 logs += np.array([d_loss.item(), spec.item(), adv.item(), fm.item()]) / a.batch
             else:
                 logs[0] += d_loss.item() / a.batch
+            del fake, real
         opt_d.step()
         if step > a.warmup_d:
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)

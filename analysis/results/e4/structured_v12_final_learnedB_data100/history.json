@@ -1,0 +1,74 @@
+[
+ {
+  "step": 2000,
+  "train_loss": 5.712836027145386,
+  "test_loss": 5.847157091252944,
+  "n_windows": 85,
+  "share_burst_db": -37.583882214186076,
+  "share_strings_db": -0.08492370704313007,
+  "share_body_db": -17.57867247488904,
+  "share_contact_db": -45.72431645209278,
+  "share_floor_db": -35.74752585951679,
+  "share_noise_db": -28.43606961893668
+ },
+ {
+  "step": 4000,
+  "train_loss": 5.658833205699921,
+  "test_loss": 5.779626077764174,
+  "n_windows": 85,
+  "share_burst_db": -37.18036390888417,
+  "share_strings_db": -0.07063558454802825,
+  "share_body_db": -18.310675662347098,
+  "share_contact_db": -43.89021435631995,
+  "share_floor_db": -32.44384065253885,
+  "share_noise_db": -32.39409334376723
+ },
+ {
+  "step": 6000,
+  "train_loss": 5.697554349899292,
+  "test_loss": 5.723592724519618,
+  "n_windows": 85,
+  "share_burst_db": -37.54463852265993,
+  "share_strings_db": -0.1182372016815511,
+  "share_body_db": -16.034283728623855,
+  "share_contact_db": -40.79096415187384,
+  "share_floor_db": -31.503140266295677,
+  "share_noise_db": -30.13357291347529
+ },
+ {
+  "step": 8000,
+  "train_loss": 5.761025965213776,
+  "test_loss": 5.67529665442074,
+  "n_windows": 85,
+  "share_burst_db": -37.84213876481045,
+  "share_strings_db": -0.10911043879704667,
+  "share_body_db": -16.83910830108741,
+  "share_contact_db": -39.24045603369097,
+  "share_floor_db": -32.26017147842075,
+  "share_noise_db": -24.91169451757223
+ },
+ {
+  "step": 10000,
+  "train_loss": 5.3592212200164795,
+  "test_loss": 5.656116379008574,
+  "n_windows": 85,
+  "share_burst_db": -38.16367484450054,
+  "share_strings_db": -0.1171502639796071,
+  "share_body_db": -16.414182379645005,
+  "share_contact_db": -38.9404841949718,
+  "share_floor_db": -31.581479779179805,
+  "share_noise_db": -25.52029797582476
+ },
+ {
+  "step": 12000,
+  "train_loss": 5.562014281749725,
+  "test_loss": 5.64533587624045,
+  "n_windows": 85,
+  "share_burst_db": -37.89028640705403,
+  "share_strings_db": -0.10426819076014253,
+  "share_body_db": -16.9763061179135,
+  "share_contact_db": -38.83789454291729,
+  "share_floor_db": -31.887071539245365,
+  "share_noise_db": -25.654082161849047
+ }
+]

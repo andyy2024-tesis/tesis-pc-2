@@ -1,0 +1,32 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1795033210.686002 1529633 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1795033210.712892 1529633 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1795033211.302271 1529633 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+
+panns-wavegram-logmel vs real (bandwidth 4.752)
+  ddsp                       3.215 [2.256, 4.471]   - voc-v1_mix20: +0.882 [-0.859, +2.739]
+  voc-v1_mix20               2.332 [1.537, 3.375]   - ddsp: -0.882 [-2.739, +0.859]
+  voc-v2_inject20            1.349 [0.888, 1.998]   - ddsp: -1.865 [-3.466, -0.490]   - voc-v1_mix20: -0.983 [-1.569, -0.534]
+  voc-s_stems20b             2.277 [1.523, 3.246]   - ddsp: -0.938 [-2.808, +0.682]   - voc-v1_mix20: -0.056 [-0.507, +0.330]
+
+panns-wavegram-logmel vs realtest (bandwidth 4.334)
+  ddsp                       6.743 [5.140, 8.562]   - voc-v1_mix20: +3.052 [+1.046, +5.088]
+  voc-v1_mix20               3.691 [2.151, 5.863]   - ddsp: -3.052 [-5.088, -1.046]
+  voc-v2_inject20            3.122 [1.710, 5.217]   - ddsp: -3.621 [-5.422, -1.857]   - voc-v1_mix20: -0.569 [-1.287, +0.071]
+  voc-s_stems20b             3.834 [2.223, 6.392]   - ddsp: -2.909 [-4.849, -0.999]   - voc-v1_mix20: +0.143 [-0.448, +0.749]
+  real                       2.032 [0.892, 3.821]   - ddsp: -4.711 [-6.197, -3.324]   - voc-v1_mix20: -1.659 [-2.801, -0.643]
+
+encodec-emb vs real (bandwidth 6.132)
+  ddsp                       0.176 [0.080, 0.290]   - voc-v1_mix20: +0.052 [-0.051, +0.159]
+  voc-v1_mix20               0.123 [0.051, 0.204]   - ddsp: -0.052 [-0.159, +0.051]
+  voc-v2_inject20            0.183 [0.099, 0.295]   - ddsp: +0.008 [-0.131, +0.144]   - voc-v1_mix20: +0.060 [-0.050, +0.173]
+  voc-s_stems20b             0.450 [0.321, 0.590]   - ddsp: +0.274 [+0.101, +0.437]   - voc-v1_mix20: +0.326 [+0.204, +0.453]
+
+encodec-emb vs realtest (bandwidth 6.322)
+  ddsp                       1.349 [0.383, 2.779]   - voc-v1_mix20: -0.061 [-0.322, +0.230]
+  voc-v1_mix20               1.410 [0.415, 2.884]   - ddsp: +0.061 [-0.230, +0.322]
+  voc-v2_inject20            1.162 [0.439, 2.336]   - ddsp: -0.187 [-0.694, +0.199]   - voc-v1_mix20: -0.248 [-0.620, +0.071]
+  voc-s_stems20b             1.251 [0.438, 2.538]   - ddsp: -0.098 [-0.477, +0.228]   - voc-v1_mix20: -0.159 [-0.418, +0.098]
+  real                       1.202 [0.311, 2.584]   - ddsp: -0.147 [-0.527, +0.191]   - voc-v1_mix20: -0.208 [-0.551, +0.102]

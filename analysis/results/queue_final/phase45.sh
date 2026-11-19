@@ -53,3 +53,16 @@ run p5_real44 --sr 44100 --init pretrained --input real --steps 8000
 [ -f $R/e12/p5_real44/generator.pt ] || run p5_real44 --sr 44100 --init pretrained --input real --steps 8000 --batch 4
 [ -f $R/e12/p5_real44/generator.pt ] && run p5_${route}_mix${pairs}_44k --sr 44100 --init p5_real44 --renders $REN --steps 6000 $full
 echo "$(date +%T) phase45 finished" >> $Q/status.txt
+# Re-queued 2026-11-18: the 100-recording DDSP's adversarial step ran out of memory at warm-up (a dense recording,
+# 225_j41wc, has windows with 145 sounding notes; the warm-up kept two generator graphs). Fixed in e6_adversarial.py
+# (no generator graph during warm-up; measured on that window: 20.4 -> 0.4 GiB extra). Then its renders and V1 on them.
+adv _v12_final_learnedB_data100
+r=e6/structured_v12_final_learnedB_data100_noise_strongD_rise
+if [ -f $R/$r/model.pt ]; then
+  echo "$(date +%T) start render $r" >> $Q/status.txt
+  uv run python scripts/e12_render_ddsp.py $r > $R/e12_render_$(basename $r)_log.txt 2>&1
+  echo "$(date +%T) end render $r exit $?" >> $Q/status.txt
+fi
+REN=structured_v12_final_learnedB_data100_noise_strongD_rise
+[ -d $R/e12/renders/$REN ] && run v1_mix100 --init p2_real --renders $REN --steps 6000 --input mix
+echo "$(date +%T) data100 requeue finished" >> $Q/status.txt
