@@ -42,5 +42,21 @@
  "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
   "mean": 5.762,
   "note": "v2_inject20 eval at step 6000 (2000: 5.794, 4000: 5.790)"
+ },
+ "voc-s_stems20b-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 5.763,
+  "note": "s_stems20b eval at step 6000"
+ },
+ "voc-p4_v2_strings20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 6.17,
+  "note": "p4_v2_strings20 eval at step 6000"
+ },
+ "voc-p5_real44-original": {
+  "mean": 4.493,
+  "note": "phase-5 eval at step 8000 (pretrained 4.382; 4.449 at step 6000)"
+ },
+ "voc-p5_real44-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 6.002,
+  "note": "p5_v2_mix20_44k step-0 eval (= p5_real44 on the DDSP mix)"
  }
 }

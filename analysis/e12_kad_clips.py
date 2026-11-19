@@ -9,8 +9,11 @@ Folders under analysis/results/e12/kad/clips/ (gitignored):
   ddsp            the final DDSP (its pair renders)
   voc-<run>       a vocoder run (scripts/e12_vocoder.py) on its own DDSP renders (the run's --renders; real-input
                   runs, phase 2 and the pretrained p0_pretrained, take the final DDSP's mix), as in its evaluation.
-                  The windows are the same for every renders folder (they depend only on the real audio and notes)
+                  The windows are the same for every renders folder (they depend only on the real audio and notes).
+                  A 44.1 kHz run (phase 5) takes the real window at 44.1 kHz or the DDSP upsampled, and its output is
+                  brought back to 24 kHz (as its evaluation)
   voc-<run>-real  a real-input run on the real windows (the ceiling)
+  voc-pretrained44[-real]  BigVGAN-v2 44 kHz as released, through the phase-5 path (the reference for p5_real44)
   diff-<run>      a mel refiner (scripts/e12_diffusion.py) vocoded by p2_real (shallow: depth 20)
   model-<key>     a DDSP model rendered window by window as analysis/measure_catalog.py does for its loss (key = its
                   listening-page key, e.g. e6-structured_v9_base_t32_noise_strongD; COMPARE_DEV=cpu while training)
@@ -27,7 +30,8 @@ import torch
 import torch.nn.functional as F
 
 sys.path.insert(0, "scripts")
-from e12_vocoder import CKPT, D, RES, SR, Inputs, Refiner, eval_windows, vocode_long  # noqa: E402
+from e12_vocoder import CKPTS, D, RES, SR, UP, Inputs, Refiner, eval_windows, vocode_long  # noqa: E402
+from scipy.signal import resample_poly  # noqa: E402
 from env import AttrDict  # noqa: E402
 
 OUT = RES / "e12" / "kad" / "clips"
@@ -62,34 +66,45 @@ def realtest():
 
 
 def vocoder(run, wins, real_in, dev):
-    cfg = json.loads((RES / "e12" / run / "config.json").read_text())
-    if cfg.get("renders") and RES / "e12" / "renders" / cfg["renders"] != REN:
-        wins = eval_windows(RES / "e12" / "renders" / cfg["renders"])
-        assert len(wins) == 85, len(wins)
+    pre44 = run == "pretrained44"  # BigVGAN-v2 44 kHz as released (phase 1), through the phase-5 path
+    cfg = json.loads((RES / "e12" / ("p5_real44" if pre44 else run) / "config.json").read_text())
+    sr = cfg.get("sr", SR)
+    ren = RES / "e12" / "renders" / cfg["renders"] if cfg.get("renders") else REN
+    if ren != REN or sr != SR:  # 44.1 kHz runs: real window at 44.1 kHz, DDSP upsampled, as in their evaluation
+        w2 = eval_windows(ren, sr)
+        assert len(w2) == 85 and all(np.array_equal(p[1], q[1]) for p, q in zip(w2, wins)), "windows differ"
+        wins = w2
     a = Namespace(**cfg)
     if real_in:
         assert a.input == "real", run
     elif a.input == "real":
         a.input = "mix"
-    h = AttrDict(json.loads((CKPT / "config.json").read_text()))
+    h = AttrDict(json.loads((CKPTS[sr] / "config.json").read_text()))
     names = wins[0][2][0]
     inputs = Inputs(a, h, names)
     G = Refiner(h, n_stems=len(inputs.groups), inject=a.inject != "none").to(dev)
-    G.load_state_dict(torch.load(RES / "e12" / run / "generator.pt", map_location="cpu"))
+    if pre44:
+        G.g.load_state_dict(torch.load(CKPTS[sr] / "bigvgan_generator.pt", map_location="cpu")["generator"])
+    else:
+        G.load_state_dict(torch.load(RES / "e12" / run / "generator.pt", map_location="cpu"))
     G.g.remove_weight_norm()
     G.eval()
     out = []
-    for k, (rid, y, (nm, arr)) in enumerate(wins):
-        yt = torch.tensor(y)[None, None]
+    for k, w in enumerate(wins):
+        rid, y, (nm, arr) = w[:3]
+        yt = torch.tensor(w[3] if len(w) > 3 else y)[None, None]
         xt = None if real_in else torch.tensor(arr[[0] + [1 + nm.index(p) for p in inputs.parts]])[None]
-        out.append((f"{rid}_{k:02d}", vocode_long(G, inputs, yt, xt, dev)))
+        o = vocode_long(G, inputs, yt, xt, dev, win=sr * 6, xf=sr // 2)
+        if sr != SR:  # scored at 24 kHz, as every loss
+            o = resample_poly(o, UP[1], UP[0]).astype(np.float32)[:len(y)]
+        out.append((f"{rid}_{k:02d}", o))
     return out
 
 
 def refiner(run, wins, dev):
     from e12_diffusion import Denoiser, Schedule, condition, denorm, refine
     cfg = json.loads((RES / "e12" / run / "config.json").read_text())
-    h = AttrDict(json.loads((CKPT / "config.json").read_text()))
+    h = AttrDict(json.loads((CKPTS[SR] / "config.json").read_text()))
     assert not cfg.get("stems")
     net = Denoiser(cond_ch=100 + 1).to(dev)
     net.load_state_dict(torch.load(RES / "e12" / run / "model.pt", map_location=dev))

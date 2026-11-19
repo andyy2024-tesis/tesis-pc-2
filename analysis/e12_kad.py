@@ -23,6 +23,7 @@ Writes analysis/results/e12_kad.json.
 Usage: external/kadtk/.venv/bin/python analysis/e12_kad.py ddsp voc-p2_real voc-v1_mix20 ...
 """
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -40,7 +41,8 @@ CLIPS = REPO / "analysis" / "results" / "e12" / "kad" / "clips"
 OUT = REPO / "analysis" / "results" / "e12_kad.json"
 MODELS = ["panns-wavegram-logmel", "encodec-emb"]
 NB = 1000
-BASES = ["ddsp", "voc-v1_mix20"]  # paired differences (same resamples) with 95% intervals
+# paired differences (same resamples) with 95% intervals; KAD_BASES=a,b,... adds more
+BASES = ["ddsp", "voc-v1_mix20"] + [b for b in os.environ.get("KAD_BASES", "").split(",") if b]
 
 
 def load(model, f):

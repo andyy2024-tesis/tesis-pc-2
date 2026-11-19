@@ -1,0 +1,65 @@
+data: 270 recordings, 13.74 h
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+mpd_reshapes: [2, 3, 5, 7, 11]
+Creating low pass filter ...Low pass filter created, time used = 0.0003 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0008 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0002 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0013 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0001 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0018 seconds
+p5_real44: step 0 eval 4.382
+  step    200  mel 1.007  adv 3.451  fm 18.728  d 3.017  (265 s)
+  step    400  mel 1.015  adv 3.555  fm 18.788  d 2.988  (530 s)
+  step    600  mel 1.024  adv 3.522  fm 18.680  d 3.009  (795 s)
+  step    800  mel 1.032  adv 3.562  fm 18.762  d 3.014  (1060 s)
+  step   1000  mel 1.039  adv 3.543  fm 18.356  d 3.034  (1325 s)
+  step   1200  mel 1.046  adv 3.554  fm 18.301  d 3.029  (1590 s)
+  step   1400  mel 1.046  adv 3.570  fm 17.959  d 3.025  (1855 s)
+  step   1600  mel 1.045  adv 3.534  fm 17.549  d 3.031  (2120 s)
+  step   1800  mel 1.048  adv 3.590  fm 17.781  d 2.993  (2385 s)
+  step   2000  mel 1.048  adv 3.541  fm 17.586  d 3.028  (2650 s)
+  EVAL step 2000: 4.504
+  step   2200  mel 1.047  adv 3.537  fm 17.588  d 3.020  (2921 s)
+  step   2400  mel 1.051  adv 3.529  fm 17.507  d 3.033  (3186 s)
+  step   2600  mel 1.046  adv 3.523  fm 17.307  d 3.032  (3451 s)
+  step   2800  mel 1.042  adv 3.504  fm 17.080  d 3.045  (3716 s)
+  step   3000  mel 1.042  adv 3.508  fm 17.240  d 3.034  (3981 s)
+  step   3200  mel 1.047  adv 3.493  fm 16.893  d 3.050  (4246 s)
+  step   3400  mel 1.046  adv 3.513  fm 16.939  d 3.036  (4511 s)
+  step   3600  mel 1.043  adv 3.467  fm 16.783  d 3.059  (4776 s)
+  step   3800  mel 1.045  adv 3.503  fm 16.908  d 3.034  (5041 s)
+  step   4000  mel 1.050  adv 3.520  fm 16.876  d 3.026  (5306 s)
+  EVAL step 4000: 4.460
+  step   4200  mel 1.041  adv 3.462  fm 16.543  d 3.062  (5577 s)
+  step   4400  mel 1.044  adv 3.511  fm 16.964  d 3.032  (5842 s)
+  step   4600  mel 1.046  adv 3.487  fm 16.576  d 3.045  (6107 s)
+  step   4800  mel 1.044  adv 3.492  fm 16.488  d 3.037  (6372 s)
+  step   5000  mel 1.040  adv 3.485  fm 16.442  d 3.049  (6637 s)
+  step   5200  mel 1.048  adv 3.493  fm 16.423  d 3.039  (6902 s)
+  step   5400  mel 1.043  adv 3.487  fm 16.337  d 3.045  (7167 s)
+  step   5600  mel 1.044  adv 3.460  fm 16.394  d 3.056  (7432 s)
+  step   5800  mel 1.045  adv 3.503  fm 16.298  d 3.033  (7697 s)
+  step   6000  mel 1.043  adv 3.499  fm 16.292  d 3.036  (7962 s)
+  EVAL step 6000: 4.449
+  step   6200  mel 1.040  adv 3.470  fm 16.059  d 3.054  (8234 s)
+  step   6400  mel 1.044  adv 3.482  fm 16.190  d 3.046  (8499 s)
+  step   6600  mel 1.040  adv 3.445  fm 16.016  d 3.073  (8764 s)
+  step   6800  mel 1.043  adv 3.505  fm 16.176  d 3.026  (9029 s)
+  step   7000  mel 1.041  adv 3.465  fm 16.006  d 3.056  (9301 s)
+  step   7200  mel 1.044  adv 3.474  fm 16.112  d 3.044  (9574 s)
+  step   7400  mel 1.043  adv 3.470  fm 15.752  d 3.046  (9842 s)
+  step   7600  mel 1.041  adv 3.465  fm 15.964  d 3.055  (10108 s)
+  step   7800  mel 1.047  adv 3.472  fm 15.931  d 3.047  (10373 s)
+  step   8000  mel 1.052  adv 3.529  fm 16.048  d 3.016  (10639 s)
+  EVAL step 8000: 4.493
+done

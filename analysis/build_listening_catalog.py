@@ -125,6 +125,10 @@ VOC = [
     dict(n="Final + adv → mel reparado (flujo) → BigVGAN afinado", key="voc-p2_real-v3b_flow-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El mel del DDSP pasa por un flujo rectificado que lo lleva en línea recta hacia el mel real, y luego por el BigVGAN afinado."),
     dict(n="Final + adv → vocoder entrenado con DDSP (V1)", key="voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El BigVGAN afinado, entrenado 6000 pasos más con pares DDSP → grabación real: entra el mel del DDSP final y tiene que salir la grabación real (pérdida de mel + adversarial). 20 grabaciones, 0.69 h de pares."),
     dict(n="Final + adv → vocoder con la onda del DDSP (V2)", key="voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="Como V1, pero además la onda del DDSP entra en cada etapa del vocoder (como la fuente en NSF-HiFiGAN), no solo su mel: el vocoder puede copiar la fase y los ataques del DDSP en vez de inventarlos. 20 grabaciones, 0.69 h de pares."),
+    dict(n="Final + adv → vocoder con cada parte del DDSP (S)", key="voc-s_stems20b-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="Como V1, pero además del mel de la mezcla entra el mel de cada parte del DDSP por separado (cuerdas, cuerpo, ataque, contacto, fondo, ruido), para que el vocoder sepa qué es cada cosa. 20 grabaciones, 0.69 h de pares."),
+    dict(n="Solo las cuerdas del DDSP → V2 (fase 4)", key="voc-p4_v2_strings20-e6-structured_v12_final_learnedB_noise_strongD_rise", src="stems/e6-structured_v12_final_learnedB_noise_strongD_rise/strings", change="V2 entrenado con solo la parte armónica del DDSP (las cuerdas): sin cuerpo, ataque, contacto, fondo ni ruido. Todo lo demás lo tiene que poner el vocoder. «Entrada» es la parte de cuerdas sola."),
+    dict(n="Original 44.1 kHz → BigVGAN 44 kHz afinado", key="voc-p5_real44-original", src="original44k", change="La grabación real en banda completa por BigVGAN-v2 de 44 kHz después de afinarlo 8000 pasos con las grabaciones reales de GAPS a 44.1 kHz (fase 5, como la fase 2 a 24 kHz)."),
+    dict(n="Final + adv → BigVGAN 44 kHz afinado", key="voc-p5_real44-e6-structured_v12_final_learnedB_noise_strongD_rise", src="e6-structured_v12_final_learnedB_noise_strongD_rise", change="El DDSP final (24 kHz) por el BigVGAN de 44 kHz afinado en guitarra real: nunca vio un DDSP y tiene que inventar lo que está por encima de 12 kHz."),
 ]
 
 
@@ -144,8 +148,9 @@ def kad_values():
             key = {"diff-v3_x0res": f"voc-p2_real-v3_x0res-d20-{L}", "diff-v3b_flow": f"voc-p2_real-v3b_flow-{L}"}.get(v)
         elif v.startswith("voc-"):
             run = v[4:].removesuffix("-real")
-            run = "bigvgan24" if run == "p0_pretrained" else run
-            key = f"voc-{run}-" + ("original" if v.endswith("-real") else L)
+            run = {"p0_pretrained": "bigvgan24", "pretrained44": "bigvgan44"}.get(run, run)
+            real = "original48" if run == "bigvgan44" else "original"  # the 44 kHz page file was cut from the 48 kHz file
+            key = f"voc-{run}-" + (real if v.endswith("-real") else L)
         else:
             key = None  # "ddsp": the vocoders' input (pair renders); the page's final DDSP uses its window render
         if key and v in e:

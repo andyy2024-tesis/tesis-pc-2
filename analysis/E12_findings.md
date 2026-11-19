@@ -222,3 +222,35 @@ soxr recipe as the 24 kHz files, 270 recordings, 4.4 GB; positions and renders s
 per segment, the output is scored at 24 kHz). Smoke tests (pretrained, CPU): real 4.382 and DDSP 6.014 (phase 1 with
 polyphase resampling of the raw file: 4.402 and 6.033); the 24 kHz path is unchanged (5.891).
 Then `p5_real44` (as phase 2, 8000 steps; retried at batch 4 if 8 does not fit) and the winner at 44.1 kHz from it.
+
+## S rerun, phase 4 and the 44.1 kHz vocoder (2026-11-18 afternoon; page 7)
+
+Run order: `s_stems20b` -> KAD pick (V2, 20-recording pairs) -> `p4_v2_strings20` -> `p5_real44` -> `p5_v2_mix20_44k`
+(killed at step ~2000 by a machine reboot at 21:24 and restarted from zero by `queue_final/restart.sh`, followed by the
+re-queued data100 adversarial, renders and V1-100). KAD x 100 against the same 85 windows, [95% interval]:
+
+| version | MSS | PANNs | EnCodec |
+|---|---|---|---|
+| V2 (DDSP mix + waveform) | 5.76 | 1.35 [0.89, 2.00] | 0.183 [0.099, 0.295] |
+| S rerun (mix + each part's mel) | 5.76 | 2.28 [1.52, 3.25] | 0.450 [0.321, 0.590] |
+| phase 4: V2 with the strings part only | 6.17 | 1.18 [0.79, 1.73] | 0.150 [0.067, 0.249] |
+| DDSP -> BigVGAN 44k pretrained | 6.03 | 2.15 [1.55, 2.97] | 0.384 [0.254, 0.527] |
+| DDSP -> BigVGAN 44k tuned on real (p5_real44) | 6.00 | 2.15 [1.49, 3.06] | 0.455 [0.319, 0.605] |
+| real -> BigVGAN 44k pretrained | 4.40 | 2.38 [1.82, 3.13] | 0.068 [0.055, 0.083] |
+| real -> BigVGAN 44k tuned (p5_real44) | 4.49 | 2.16 [1.61, 2.83] | 0.254 [0.225, 0.283] |
+| real -> BigVGAN 24k tuned (p2, for reference) | 4.08 | 1.46 [1.06, 1.97] | 0.029 [0.020, 0.039] |
+
+- S: the fixed input scaling trained normally (5.80 / 5.81 / 5.76) but S is less real than V2 by both embeddings
+  (PANNs +0.93 [+0.48, +1.48], EnCodec +0.27 [+0.13, +0.40]); the pick stayed V2.
+- Phase 4: worst by MSS, tied with full V2 by KAD (PANNs -0.18 [-0.66, +0.19], EnCodec -0.03 [-0.14, +0.07]; unseen
+  real +0.18 [-0.52, +0.87]). The vocoder invents body, attacks and noise as convincingly (for these embeddings) as the
+  DDSP's own parts; MSS penalises it because invented detail does not match the recording note by note. If the ear
+  agrees, the DDSP in front of the vocoder could be much simpler.
+- Phase 5: tuning BigVGAN-v2 44k on real GAPS audio (same recipe as phase 2) made it worse, unlike at 24 kHz: real
+  audio 4.38 -> 4.50 / 4.46 / 4.45 / 4.49 (steps 0/2000/4000/6000/8000); EnCodec on real 0.068 -> 0.254 (+0.19
+  [+0.16, +0.21]); PANNs a tie. Band energies of real excerpts through it stay within 1 dB of the original from 0 to
+  22 kHz (no band lost), so the loss is fine detail. Both metrics are computed at 24 kHz, so neither hears the band
+  above 12 kHz, the only thing the 44.1 kHz path adds; up to 12 kHz the 44.1 kHz vocoders are less real than the
+  24 kHz ones. Not investigated further (learning rate, data resampling) until the ear says the top band matters.
+- `analysis/e12_kad_clips.py` now handles 44.1 kHz runs (real window at 44.1 kHz or DDSP upsampled, output back to
+  24 kHz) and `voc-pretrained44[-real]`; `analysis/e12_kad.py` takes extra paired baselines from `KAD_BASES`.

@@ -1,0 +1,16 @@
+{
+ "tag": "p5_real44",
+ "init": "pretrained",
+ "input": "real",
+ "stems": false,
+ "inject": "none",
+ "renders": null,
+ "ids": "train",
+ "steps": 8000,
+ "batch": 8,
+ "seg": 32768,
+ "lr": 5e-05,
+ "eval_every": 2000,
+ "no_ckpt": false,
+ "sr": 44100
+}

@@ -1,0 +1,66 @@
+21:28:55 clips
+  WeightNorm.apply(module, name, dim)
+Removing weight norm...
+voc-p4_v2_strings20 85 clips
+  WeightNorm.apply(module, name, dim)
+Removing weight norm...
+voc-p5_real44 85 clips
+  WeightNorm.apply(module, name, dim)
+Removing weight norm...
+voc-p5_real44-real 85 clips
+21:43:17 kad
+I0000 00:00:1795056199.459114   30277 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1795056199.719078   30277 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+I0000 00:00:1795056200.507437   30277 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+
+panns-wavegram-logmel vs real (bandwidth 4.752)
+  ddsp                       3.215 [2.256, 4.471]   - voc-v1_mix20: +0.882 [-0.859, +2.739]
+  voc-v1_mix20               2.332 [1.537, 3.375]   - ddsp: -0.882 [-2.739, +0.859]
+  voc-v2_inject20            1.349 [0.888, 1.998]   - ddsp: -1.865 [-3.466, -0.490]   - voc-v1_mix20: -0.983 [-1.569, -0.534]
+  voc-s_stems20b             2.277 [1.523, 3.246]   - ddsp: -0.938 [-2.808, +0.682]   - voc-v1_mix20: -0.056 [-0.507, +0.330]
+  voc-p2_real-real           1.461 [1.059, 1.966]   - ddsp: -1.753 [-3.149, -0.527]   - voc-v1_mix20: -0.871 [-1.821, -0.117]
+  voc-p0_pretrained-real     1.750 [1.351, 2.262]   - ddsp: -1.464 [-2.880, -0.283]   - voc-v1_mix20: -0.582 [-1.571, +0.176]
+  voc-p2_real                1.821 [1.299, 2.495]   - ddsp: -1.394 [-2.886, +0.050]   - voc-v1_mix20: -0.511 [-1.214, +0.128]
+  voc-p4_v2_strings20        1.175 [0.791, 1.726]   - ddsp: -2.040 [-3.515, -0.782]   - voc-v1_mix20: -1.158 [-2.026, -0.555]
+  voc-p5_real44              2.146 [1.491, 3.059]   - ddsp: -1.069 [-2.817, +0.600]   - voc-v1_mix20: -0.187 [-0.892, +0.448]
+  voc-p5_real44-real         2.160 [1.609, 2.833]   - ddsp: -1.054 [-2.611, +0.324]   - voc-v1_mix20: -0.172 [-1.252, +0.632]
+
+panns-wavegram-logmel vs realtest (bandwidth 4.334)
+  ddsp                       6.743 [5.140, 8.562]   - voc-v1_mix20: +3.052 [+1.046, +5.088]
+  voc-v1_mix20               3.691 [2.151, 5.863]   - ddsp: -3.052 [-5.088, -1.046]
+  voc-v2_inject20            3.122 [1.710, 5.217]   - ddsp: -3.621 [-5.422, -1.857]   - voc-v1_mix20: -0.569 [-1.287, +0.071]
+  voc-s_stems20b             3.834 [2.223, 6.392]   - ddsp: -2.909 [-4.849, -0.999]   - voc-v1_mix20: +0.143 [-0.448, +0.749]
+  voc-p2_real-real           3.036 [1.474, 5.451]   - ddsp: -3.708 [-5.864, -1.621]   - voc-v1_mix20: -0.655 [-1.760, +0.508]
+  voc-p0_pretrained-real     3.435 [1.756, 5.728]   - ddsp: -3.308 [-5.550, -1.242]   - voc-v1_mix20: -0.256 [-1.305, +0.876]
+  voc-p2_real                4.228 [2.459, 6.744]   - ddsp: -2.516 [-4.426, -0.690]   - voc-v1_mix20: +0.537 [-0.527, +1.592]
+  voc-p4_v2_strings20        3.305 [1.881, 5.461]   - ddsp: -3.438 [-5.264, -1.780]   - voc-v1_mix20: -0.386 [-1.301, +0.485]
+  voc-p5_real44              3.995 [2.304, 6.611]   - ddsp: -2.748 [-4.812, -0.731]   - voc-v1_mix20: +0.304 [-0.733, +1.407]
+  voc-p5_real44-real         3.178 [1.647, 5.252]   - ddsp: -3.566 [-5.761, -1.605]   - voc-v1_mix20: -0.513 [-1.661, +0.656]
+  real                       2.032 [0.892, 3.821]   - ddsp: -4.711 [-6.197, -3.324]   - voc-v1_mix20: -1.659 [-2.801, -0.643]
+
+encodec-emb vs real (bandwidth 6.132)
+  ddsp                       0.176 [0.080, 0.290]   - voc-v1_mix20: +0.052 [-0.051, +0.159]
+  voc-v1_mix20               0.123 [0.051, 0.204]   - ddsp: -0.052 [-0.159, +0.051]
+  voc-v2_inject20            0.183 [0.099, 0.295]   - ddsp: +0.008 [-0.131, +0.144]   - voc-v1_mix20: +0.060 [-0.050, +0.173]
+  voc-s_stems20b             0.450 [0.321, 0.590]   - ddsp: +0.274 [+0.101, +0.437]   - voc-v1_mix20: +0.326 [+0.204, +0.453]
+  voc-p2_real-real           0.029 [0.020, 0.039]   - ddsp: -0.147 [-0.257, -0.048]   - voc-v1_mix20: -0.094 [-0.172, -0.023]
+  voc-p0_pretrained-real     0.020 [0.013, 0.028]   - ddsp: -0.156 [-0.272, -0.060]   - voc-v1_mix20: -0.103 [-0.183, -0.032]
+  voc-p2_real                0.221 [0.120, 0.330]   - ddsp: +0.045 [-0.017, +0.099]   - voc-v1_mix20: +0.097 [-0.017, +0.209]
+  voc-p4_v2_strings20        0.150 [0.067, 0.249]   - ddsp: -0.026 [-0.168, +0.098]   - voc-v1_mix20: +0.027 [-0.075, +0.128]
+  voc-p5_real44              0.455 [0.319, 0.605]   - ddsp: +0.279 [+0.145, +0.405]   - voc-v1_mix20: +0.331 [+0.176, +0.488]
+  voc-p5_real44-real         0.254 [0.225, 0.283]   - ddsp: +0.078 [-0.047, +0.181]   - voc-v1_mix20: +0.130 [+0.050, +0.204]
+
+encodec-emb vs realtest (bandwidth 6.322)
+  ddsp                       1.349 [0.383, 2.779]   - voc-v1_mix20: -0.061 [-0.322, +0.230]
+  voc-v1_mix20               1.410 [0.415, 2.884]   - ddsp: +0.061 [-0.230, +0.322]
+  voc-v2_inject20            1.162 [0.439, 2.336]   - ddsp: -0.187 [-0.694, +0.199]   - voc-v1_mix20: -0.248 [-0.620, +0.071]
+  voc-s_stems20b             1.251 [0.438, 2.538]   - ddsp: -0.098 [-0.477, +0.228]   - voc-v1_mix20: -0.159 [-0.418, +0.098]
+  voc-p2_real-real           1.042 [0.226, 2.342]   - ddsp: -0.307 [-0.729, +0.034]   - voc-v1_mix20: -0.368 [-0.767, -0.047]
+  voc-p0_pretrained-real     1.175 [0.297, 2.511]   - ddsp: -0.174 [-0.556, +0.137]   - voc-v1_mix20: -0.235 [-0.584, +0.056]
+  voc-p2_real                1.144 [0.307, 2.443]   - ddsp: -0.205 [-0.381, -0.060]   - voc-v1_mix20: -0.266 [-0.549, -0.008]
+  voc-p4_v2_strings20        1.273 [0.398, 2.622]   - ddsp: -0.076 [-0.464, +0.229]   - voc-v1_mix20: -0.137 [-0.389, +0.080]
+  voc-p5_real44              1.175 [0.464, 2.354]   - ddsp: -0.174 [-0.532, +0.181]   - voc-v1_mix20: -0.235 [-0.686, +0.167]
+  voc-p5_real44-real         1.133 [0.408, 2.357]   - ddsp: -0.215 [-0.750, +0.194]   - voc-v1_mix20: -0.276 [-0.786, +0.122]
+  real                       1.202 [0.311, 2.584]   - ddsp: -0.147 [-0.527, +0.191]   - voc-v1_mix20: -0.208 [-0.551, +0.102]
+21:44:03 kad done
