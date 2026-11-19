@@ -1,0 +1,16 @@
+{
+ "tag": "v2_fav20",
+ "init": "p2_real",
+ "input": "mix",
+ "stems": false,
+ "inject": "mix",
+ "renders": "structured_v9_base_t32_noise_strongD",
+ "ids": "train",
+ "steps": 6000,
+ "batch": 8,
+ "seg": 32768,
+ "lr": 5e-05,
+ "eval_every": 2000,
+ "no_ckpt": false,
+ "sr": 24000
+}

@@ -1,0 +1,16 @@
+{
+ "tag": "v1_mix100",
+ "init": "p2_real",
+ "input": "mix",
+ "stems": false,
+ "inject": "none",
+ "renders": "structured_v12_final_learnedB_data100_noise_strongD_rise",
+ "ids": "train",
+ "steps": 6000,
+ "batch": 8,
+ "seg": 32768,
+ "lr": 5e-05,
+ "eval_every": 2000,
+ "no_ckpt": false,
+ "sr": 24000
+}

@@ -86,6 +86,12 @@
   "n": 85,
   "wind": -25.3
  },
+ "e6/structured_v12_final_learnedB_data100_noise_strongD_rise": {
+  "mean": 5.721,
+  "median": 5.655,
+  "n": 85,
+  "wind": -24.3
+ },
  "e6/structured_v12_final_learnedB_noise_strongD_rise": {
   "mean": 5.815,
   "median": 5.791,
@@ -361,6 +367,12 @@
   "median": 5.645,
   "n": 85,
   "wind": -31.6
+ },
+ "structured_v12_final_learnedB_data100": {
+  "mean": 5.645,
+  "median": 5.565,
+  "n": 85,
+  "wind": -26.6
  },
  "structured_v2": {
   "mean": 6.302,

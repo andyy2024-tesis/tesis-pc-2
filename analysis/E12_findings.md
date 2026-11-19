@@ -275,3 +275,31 @@ re-queued data100 adversarial, renders and V1-100). KAD x 100 against the same 8
   much worse by PANNs (3.22 -> 8.70, +5.48 [+4.12, +7.09]; unseen real 6.74 -> 14.02), EnCodec unchanged; without the
   noise part a tie (3.27), without the room floor slightly worse (3.61). The log-mel embedding needs something in the
   upper bands, which the strings leave nearly empty; real recordings have hiss there.
+
+## Last night's runs and the DDSP chain by KAD (2026-11-19 morning; page 7)
+
+KAD x 100 against the same 85 windows (PANNs / EnCodec), loss at the last evaluation:
+
+| version | MSS | PANNs | EnCodec |
+|---|---|---|---|
+| V2 on the final DDSP (v2_inject20) | 5.76 | 1.35 | 0.183 |
+| V2 on M1 + timbre 32 + adv pairs (v2_fav20) | 5.79 | 1.64 | 0.337 |
+| V1 on 20 recordings (v1_mix20) | 5.80 | 2.33 | 0.123 |
+| V1 on 100 recordings (v1_mix100, its own DDSP) | 5.75 | 3.38 | 0.515 |
+| final DDSP, 100 recordings + adv | 5.72 | 3.26 | 0.116 |
+
+- V2 on the KAD-preferred DDSP is not better: vs V2 on the final DDSP PANNs +0.29 [-0.11, +0.69], EnCodec +0.15
+  [+0.01, +0.29]. The vocoder barely improves that DDSP (1.54 -> 1.64) but takes the final DDSP from 3.22 to 1.35:
+  what matters is how DDSP and vocoder complement each other, not how real the DDSP sounds alone. The user's ear
+  (final DDSP preferred) was the better guide; V2 on the final DDSP stays the best result.
+- 100 recordings: the DDSP is as real by PANNs (3.26 vs 3.22) and slightly better by EnCodec (0.12 vs 0.18); loss
+  5.72 vs 5.82. V1 on its pairs gains by loss (5.75 vs 5.80) but is less real by KAD (PANNs +1.04 [+0.24, +1.96],
+  EnCodec +0.39 [+0.21, +0.57], unseen real +2.22 [+0.84, +4.06]). Possible reason (not tested): with 80 other guitars
+  and rooms the vocoder learns an average sound instead of each recording's. The 20-recording pairs stay.
+- DDSP chain (all adversarial, PANNs vs same windows): M1 + timbre 32 + adv 1.54; M1 (+ per-note attack) 2.17; M1 +
+  strings 1.39 (strings help: -0.78 [-1.56, -0.16]); M1 + measured floor 2.18, with strings 1.45; attention 1.94;
+  attention ahead 1.46; + cross-voice 1.45; ahead + recording everywhere 1.83 (+0.37 [-0.11, +0.84]); ahead + contact
+  (T4adv) 1.99 (+0.54 [+0.11, +0.99]); final (T4adv + strings + recording everywhere 32 + learned stiffness) 3.22
+  (+1.23 [+0.60, +2.00] over T4adv); final on 100 recordings 3.26. Strings alone help and contact alone hurts a
+  little; the large drop appears only in the full combination, and no existing model isolates which piece causes
+  it (candidates: ahead + strings, final without contact). EnCodec sees no clear differences (0.06-0.26).
