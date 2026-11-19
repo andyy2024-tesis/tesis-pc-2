@@ -1,0 +1,55 @@
+data: 20 recordings, 0.69 h
+/home/sis.virtual.uniandes.edu.co/a.boteror/Documentos/tesis/.venv/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+mpd_reshapes: [2, 3, 5, 7, 11]
+Creating low pass filter ...Low pass filter created, time used = 0.0017 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0010 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0001 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0014 seconds
+Creating low pass filter ...Low pass filter created, time used = 0.0001 seconds
+num_octave =  9
+Creating early downsampling filter ...No early downsampling is required, downsample_factor =  1
+Early downsampling filter created,                         time used = 0.0000 seconds
+Creating CQT kernels ...CQT kernels created, time used = 0.0019 seconds
+new (zero-initialised) parameters: ['src']
+p5_v2_mix20_44k: step 0 eval 6.002
+  step    200  mel 1.700  adv 3.756  fm 15.519  d 2.746  (286 s)
+  step    400  mel 1.603  adv 3.748  fm 15.781  d 2.803  (566 s)
+  step    600  mel 1.571  adv 3.711  fm 15.721  d 2.849  (840 s)
+  step    800  mel 1.578  adv 3.650  fm 15.548  d 2.915  (1111 s)
+  step   1000  mel 1.577  adv 3.604  fm 15.419  d 2.977  (1386 s)
+  step   1200  mel 1.567  adv 3.516  fm 14.907  d 3.035  (1659 s)
+  step   1400  mel 1.564  adv 3.491  fm 14.687  d 3.051  (1926 s)
+  step   1600  mel 1.577  adv 3.475  fm 14.449  d 3.066  (2193 s)
+  step   1800  mel 1.554  adv 3.479  fm 14.590  d 3.050  (2460 s)
+  step   2000  mel 1.535  adv 3.464  fm 14.407  d 3.071  (2726 s)
+  EVAL step 2000: 6.034
+  step   2200  mel 1.545  adv 3.475  fm 14.201  d 3.056  (3000 s)
+  step   2400  mel 1.532  adv 3.461  fm 14.145  d 3.062  (3266 s)
+  step   2600  mel 1.528  adv 3.468  fm 14.108  d 3.059  (3533 s)
+  step   2800  mel 1.523  adv 3.480  fm 14.151  d 3.044  (3799 s)
+  step   3000  mel 1.520  adv 3.449  fm 14.100  d 3.067  (4065 s)
+  step   3200  mel 1.509  adv 3.470  fm 13.862  d 3.052  (4332 s)
+  step   3400  mel 1.496  adv 3.446  fm 13.788  d 3.064  (4598 s)
+  step   3600  mel 1.496  adv 3.475  fm 13.849  d 3.051  (4864 s)
+  step   3800  mel 1.487  adv 3.456  fm 13.747  d 3.056  (5131 s)
+  step   4000  mel 1.489  adv 3.446  fm 13.678  d 3.064  (5397 s)
+  EVAL step 4000: 6.072
+  step   4200  mel 1.484  adv 3.453  fm 13.546  d 3.061  (5671 s)
+  step   4400  mel 1.488  adv 3.454  fm 13.499  d 3.060  (5938 s)
+  step   4600  mel 1.476  adv 3.479  fm 13.453  d 3.044  (6204 s)
+  step   4800  mel 1.470  adv 3.455  fm 13.401  d 3.058  (6470 s)
+  step   5000  mel 1.459  adv 3.453  fm 13.237  d 3.055  (6736 s)
+  step   5200  mel 1.452  adv 3.452  fm 13.306  d 3.054  (7003 s)
+  step   5400  mel 1.453  adv 3.456  fm 13.083  d 3.050  (7269 s)
+  step   5600  mel 1.453  adv 3.455  fm 13.095  d 3.053  (7535 s)
+  step   5800  mel 1.446  adv 3.462  fm 13.214  d 3.049  (7802 s)
+  step   6000  mel 1.440  adv 3.466  fm 13.047  d 3.041  (8068 s)
+  EVAL step 6000: 6.005
+done

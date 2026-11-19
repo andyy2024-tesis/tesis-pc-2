@@ -18,25 +18,10 @@
      0.4899,
      3.466
     ],
-    "minus_voc-p2_real-real": 1.7534,
-    "minus_voc-p2_real-real_ci": [
-     0.5268,
-     3.1486
-    ],
-    "minus_voc-p2_real": 1.3936,
-    "minus_voc-p2_real_ci": [
-     -0.0498,
-     2.8863
-    ],
-    "minus_voc-pretrained44-real": 0.8378,
-    "minus_voc-pretrained44-real_ci": [
-     -0.5981,
-     2.3755
-    ],
-    "minus_voc-pretrained44": 1.0642,
-    "minus_voc-pretrained44_ci": [
-     -0.5284,
-     2.7319
+    "minus_voc-p5_real44": 1.0689,
+    "minus_voc-p5_real44_ci": [
+     -0.6002,
+     2.8167
     ]
    },
    "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
@@ -228,25 +213,10 @@
      0.5345,
      1.569
     ],
-    "minus_voc-p2_real-real": 0.8712,
-    "minus_voc-p2_real-real_ci": [
-     0.1171,
-     1.8208
-    ],
-    "minus_voc-p2_real": 0.5113,
-    "minus_voc-p2_real_ci": [
-     -0.1283,
-     1.2137
-    ],
-    "minus_voc-pretrained44-real": -0.0445,
-    "minus_voc-pretrained44-real_ci": [
-     -0.8929,
-     0.9676
-    ],
-    "minus_voc-pretrained44": 0.1819,
-    "minus_voc-pretrained44_ci": [
-     -0.501,
-     0.9201
+    "minus_voc-p5_real44": 0.1866,
+    "minus_voc-p5_real44_ci": [
+     -0.4479,
+     0.8922
     ]
    },
    "voc-v2_inject20": {
@@ -265,25 +235,10 @@
      -1.569,
      -0.5345
     ],
-    "minus_voc-p2_real-real": -0.1117,
-    "minus_voc-p2_real-real_ci": [
-     -0.6432,
-     0.4904
-    ],
-    "minus_voc-p2_real": -0.4716,
-    "minus_voc-p2_real_ci": [
-     -0.9322,
-     -0.0294
-    ],
-    "minus_voc-pretrained44-real": -1.0274,
-    "minus_voc-pretrained44-real_ci": [
-     -1.729,
-     -0.2687
-    ],
-    "minus_voc-pretrained44": -0.801,
-    "minus_voc-pretrained44_ci": [
-     -1.3745,
-     -0.304
+    "minus_voc-p5_real44": -0.7963,
+    "minus_voc-p5_real44_ci": [
+     -1.407,
+     -0.3294
     ]
    },
    "voc-p0_pretrained-real": {
@@ -469,26 +424,6 @@
     "minus_voc-v2_inject20_ci": [
      0.3294,
      1.407
-    ],
-    "minus_voc-p2_real-real": 0.6846,
-    "minus_voc-p2_real-real_ci": [
-     0.0636,
-     1.4723
-    ],
-    "minus_voc-p2_real": 0.3247,
-    "minus_voc-p2_real_ci": [
-     -0.019,
-     0.7353
-    ],
-    "minus_voc-pretrained44-real": -0.2311,
-    "minus_voc-pretrained44-real_ci": [
-     -0.9262,
-     0.5748
-    ],
-    "minus_voc-pretrained44": -0.0047,
-    "minus_voc-pretrained44_ci": [
-     -0.3061,
-     0.3399
     ]
    },
    "voc-p5_real44-real": {
@@ -606,6 +541,101 @@
      -0.5163,
      0.859
     ]
+   },
+   "ddsp-nocontact": {
+    "kad": 8.6949,
+    "ci": [
+     6.6073,
+     11.5174
+    ],
+    "minus_ddsp": 5.4803,
+    "minus_ddsp_ci": [
+     4.115,
+     7.0847
+    ],
+    "minus_voc-v1_mix20": 6.3626,
+    "minus_voc-v1_mix20_ci": [
+     3.5946,
+     9.649
+    ]
+   },
+   "ddsp-nonoise": {
+    "kad": 3.2695,
+    "ci": [
+     2.3324,
+     4.5353
+    ],
+    "minus_ddsp": 0.0549,
+    "minus_ddsp_ci": [
+     -0.1561,
+     0.2852
+    ],
+    "minus_voc-v1_mix20": 0.9372,
+    "minus_voc-v1_mix20_ci": [
+     -0.7553,
+     2.7816
+    ]
+   },
+   "ddsp-nocontact-nonoise": {
+    "kad": 8.6244,
+    "ci": [
+     6.6657,
+     11.0688
+    ],
+    "minus_ddsp": 5.4098,
+    "minus_ddsp_ci": [
+     4.3018,
+     6.6321
+    ],
+    "minus_voc-v1_mix20": 6.2921,
+    "minus_voc-v1_mix20_ci": [
+     3.7187,
+     9.3456
+    ]
+   },
+   "ddsp-nofloor": {
+    "kad": 3.6105,
+    "ci": [
+     2.733,
+     4.7193
+    ],
+    "minus_ddsp": 0.3959,
+    "minus_ddsp_ci": [
+     -0.2004,
+     1.0003
+    ],
+    "minus_voc-v1_mix20": 1.2782,
+    "minus_voc-v1_mix20_ci": [
+     -0.2422,
+     2.8665
+    ]
+   },
+   "voc-p5_v2_mix20_44k": {
+    "kad": 1.6783,
+    "ci": [
+     1.0092,
+     2.5703
+    ],
+    "minus_ddsp": -1.5362,
+    "minus_ddsp_ci": [
+     -3.291,
+     0.0905
+    ],
+    "minus_voc-v1_mix20": -0.654,
+    "minus_voc-v1_mix20_ci": [
+     -1.1934,
+     -0.1666
+    ],
+    "minus_voc-v2_inject20": 0.3289,
+    "minus_voc-v2_inject20_ci": [
+     -0.0241,
+     0.7731
+    ],
+    "minus_voc-p5_real44": -0.4673,
+    "minus_voc-p5_real44_ci": [
+     -0.9748,
+     0.0321
+    ]
    }
   }
  },
@@ -628,25 +658,10 @@
      1.8567,
      5.4219
     ],
-    "minus_voc-p2_real-real": 3.7077,
-    "minus_voc-p2_real-real_ci": [
-     1.6206,
-     5.8636
-    ],
-    "minus_voc-p2_real": 2.5156,
-    "minus_voc-p2_real_ci": [
-     0.6904,
-     4.4256
-    ],
-    "minus_voc-pretrained44-real": 2.8379,
-    "minus_voc-pretrained44-real_ci": [
-     0.751,
-     5.1387
-    ],
-    "minus_voc-pretrained44": 2.309,
-    "minus_voc-pretrained44_ci": [
-     0.2037,
-     4.4617
+    "minus_voc-p5_real44": 2.7481,
+    "minus_voc-p5_real44_ci": [
+     0.7305,
+     4.8116
     ]
    },
    "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
@@ -838,25 +853,10 @@
      -0.0713,
      1.2871
     ],
-    "minus_voc-p2_real-real": 0.6553,
-    "minus_voc-p2_real-real_ci": [
-     -0.5081,
-     1.7599
-    ],
-    "minus_voc-p2_real": -0.5368,
-    "minus_voc-p2_real_ci": [
-     -1.5918,
-     0.527
-    ],
-    "minus_voc-pretrained44-real": -0.2144,
-    "minus_voc-pretrained44-real_ci": [
-     -1.4709,
-     0.843
-    ],
-    "minus_voc-pretrained44": -0.7433,
-    "minus_voc-pretrained44_ci": [
-     -2.0947,
-     0.4822
+    "minus_voc-p5_real44": -0.3042,
+    "minus_voc-p5_real44_ci": [
+     -1.4069,
+     0.7328
     ]
    },
    "voc-v2_inject20": {
@@ -875,25 +875,10 @@
      -1.2871,
      0.0713
     ],
-    "minus_voc-p2_real-real": 0.0867,
-    "minus_voc-p2_real-real_ci": [
-     -1.083,
-     1.0865
-    ],
-    "minus_voc-p2_real": -1.1054,
-    "minus_voc-p2_real_ci": [
-     -2.0797,
-     -0.2399
-    ],
-    "minus_voc-pretrained44-real": -0.7831,
-    "minus_voc-pretrained44-real_ci": [
-     -1.8683,
-     0.1857
-    ],
-    "minus_voc-pretrained44": -1.312,
-    "minus_voc-pretrained44_ci": [
-     -2.51,
-     -0.3164
+    "minus_voc-p5_real44": -0.8729,
+    "minus_voc-p5_real44_ci": [
+     -1.8509,
+     -0.0568
     ]
    },
    "voc-p0_pretrained-real": {
@@ -996,25 +981,10 @@
      -2.006,
      -0.3207
     ],
-    "minus_voc-p2_real-real": -1.0032,
-    "minus_voc-p2_real-real_ci": [
-     -2.1054,
-     0.0699
-    ],
-    "minus_voc-p2_real": -2.1953,
-    "minus_voc-p2_real_ci": [
-     -3.3347,
-     -1.0715
-    ],
-    "minus_voc-pretrained44-real": -1.873,
-    "minus_voc-pretrained44-real_ci": [
-     -3.0757,
-     -0.6192
-    ],
-    "minus_voc-pretrained44": -2.4019,
-    "minus_voc-pretrained44_ci": [
-     -3.7846,
-     -1.0639
+    "minus_voc-p5_real44": -1.9628,
+    "minus_voc-p5_real44_ci": [
+     -3.217,
+     -0.7843
     ]
    },
    "voc-s_stems20b": {
@@ -1121,26 +1091,6 @@
     "minus_voc-v2_inject20_ci": [
      0.0568,
      1.8509
-    ],
-    "minus_voc-p2_real-real": 0.9596,
-    "minus_voc-p2_real-real_ci": [
-     -0.1436,
-     1.9984
-    ],
-    "minus_voc-p2_real": -0.2325,
-    "minus_voc-p2_real_ci": [
-     -0.6982,
-     0.2372
-    ],
-    "minus_voc-pretrained44-real": 0.0898,
-    "minus_voc-pretrained44-real_ci": [
-     -0.9467,
-     1.0546
-    ],
-    "minus_voc-pretrained44": -0.4391,
-    "minus_voc-pretrained44_ci": [
-     -0.9848,
-     0.0571
     ]
    },
    "voc-p5_real44-real": {
@@ -1258,6 +1208,101 @@
      -1.6772,
      0.6253
     ]
+   },
+   "ddsp-nocontact": {
+    "kad": 14.0183,
+    "ci": [
+     11.6833,
+     16.5548
+    ],
+    "minus_ddsp": 7.275,
+    "minus_ddsp_ci": [
+     5.9191,
+     8.6896
+    ],
+    "minus_voc-v1_mix20": 10.3273,
+    "minus_voc-v1_mix20_ci": [
+     7.3696,
+     13.346
+    ]
+   },
+   "ddsp-nonoise": {
+    "kad": 7.2933,
+    "ci": [
+     5.6094,
+     9.4844
+    ],
+    "minus_ddsp": 0.55,
+    "minus_ddsp_ci": [
+     0.0587,
+     1.1268
+    ],
+    "minus_voc-v1_mix20": 3.6023,
+    "minus_voc-v1_mix20_ci": [
+     1.7777,
+     5.4541
+    ]
+   },
+   "ddsp-nocontact-nonoise": {
+    "kad": 14.4222,
+    "ci": [
+     12.154,
+     16.9029
+    ],
+    "minus_ddsp": 7.6789,
+    "minus_ddsp_ci": [
+     6.5813,
+     8.8771
+    ],
+    "minus_voc-v1_mix20": 10.7312,
+    "minus_voc-v1_mix20_ci": [
+     8.3014,
+     13.3567
+    ]
+   },
+   "ddsp-nofloor": {
+    "kad": 8.0989,
+    "ci": [
+     6.2457,
+     10.6055
+    ],
+    "minus_ddsp": 1.3556,
+    "minus_ddsp_ci": [
+     0.2915,
+     2.653
+    ],
+    "minus_voc-v1_mix20": 4.4079,
+    "minus_voc-v1_mix20_ci": [
+     2.7207,
+     6.1324
+    ]
+   },
+   "voc-p5_v2_mix20_44k": {
+    "kad": 3.301,
+    "ci": [
+     1.8119,
+     5.6152
+    ],
+    "minus_ddsp": -3.4423,
+    "minus_ddsp_ci": [
+     -5.4353,
+     -1.5325
+    ],
+    "minus_voc-v1_mix20": -0.39,
+    "minus_voc-v1_mix20_ci": [
+     -1.099,
+     0.3321
+    ],
+    "minus_voc-v2_inject20": 0.1787,
+    "minus_voc-v2_inject20_ci": [
+     -0.4778,
+     0.8648
+    ],
+    "minus_voc-p5_real44": -0.6942,
+    "minus_voc-p5_real44_ci": [
+     -1.546,
+     0.0802
+    ]
    }
   }
  },
@@ -1280,25 +1325,10 @@
      -0.144,
      0.1313
     ],
-    "minus_voc-p2_real-real": 0.1466,
-    "minus_voc-p2_real-real_ci": [
-     0.0479,
-     0.2574
-    ],
-    "minus_voc-p2_real": -0.0451,
-    "minus_voc-p2_real_ci": [
-     -0.0988,
-     0.017
-    ],
-    "minus_voc-pretrained44-real": 0.1079,
-    "minus_voc-pretrained44-real_ci": [
-     0.0081,
-     0.2255
-    ],
-    "minus_voc-pretrained44": -0.2081,
-    "minus_voc-pretrained44_ci": [
-     -0.2744,
-     -0.1326
+    "minus_voc-p5_real44": -0.279,
+    "minus_voc-p5_real44_ci": [
+     -0.4052,
+     -0.1449
     ]
    },
    "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
@@ -1490,25 +1520,10 @@
      -0.1726,
      0.0504
     ],
-    "minus_voc-p2_real-real": 0.0944,
-    "minus_voc-p2_real-real_ci": [
-     0.0234,
-     0.1725
-    ],
-    "minus_voc-p2_real": -0.0974,
-    "minus_voc-p2_real_ci": [
-     -0.2088,
-     0.017
-    ],
-    "minus_voc-pretrained44-real": 0.0557,
-    "minus_voc-pretrained44-real_ci": [
-     -0.0145,
-     0.1339
-    ],
-    "minus_voc-pretrained44": -0.2603,
-    "minus_voc-pretrained44_ci": [
-     -0.4011,
-     -0.1257
+    "minus_voc-p5_real44": -0.3312,
+    "minus_voc-p5_real44_ci": [
+     -0.4877,
+     -0.1758
     ]
    },
    "voc-v2_inject20": {
@@ -1527,25 +1542,10 @@
      -0.0504,
      0.1726
     ],
-    "minus_voc-p2_real-real": 0.1544,
-    "minus_voc-p2_real-real_ci": [
-     0.0694,
-     0.2668
-    ],
-    "minus_voc-p2_real": -0.0373,
-    "minus_voc-p2_real_ci": [
-     -0.1519,
-     0.0862
-    ],
-    "minus_voc-pretrained44-real": 0.1157,
-    "minus_voc-pretrained44-real_ci": [
-     0.0288,
-     0.231
-    ],
-    "minus_voc-pretrained44": -0.2003,
-    "minus_voc-pretrained44_ci": [
-     -0.3438,
-     -0.046
+    "minus_voc-p5_real44": -0.2712,
+    "minus_voc-p5_real44_ci": [
+     -0.4256,
+     -0.1191
     ]
    },
    "voc-p0_pretrained-real": {
@@ -1731,26 +1731,6 @@
     "minus_voc-v2_inject20_ci": [
      0.1191,
      0.4256
-    ],
-    "minus_voc-p2_real-real": 0.4256,
-    "minus_voc-p2_real-real_ci": [
-     0.2873,
-     0.5826
-    ],
-    "minus_voc-p2_real": 0.2338,
-    "minus_voc-p2_real_ci": [
-     0.144,
-     0.3284
-    ],
-    "minus_voc-pretrained44-real": 0.3869,
-    "minus_voc-pretrained44-real_ci": [
-     0.2466,
-     0.5386
-    ],
-    "minus_voc-pretrained44": 0.0709,
-    "minus_voc-pretrained44_ci": [
-     -0.0223,
-     0.1649
     ]
    },
    "voc-p5_real44-real": {
@@ -1868,6 +1848,101 @@
      -0.4607,
      -0.1841
     ]
+   },
+   "ddsp-nocontact": {
+    "kad": 0.189,
+    "ci": [
+     0.0924,
+     0.3099
+    ],
+    "minus_ddsp": 0.0133,
+    "minus_ddsp_ci": [
+     -0.012,
+     0.0401
+    ],
+    "minus_voc-v1_mix20": 0.0655,
+    "minus_voc-v1_mix20_ci": [
+     -0.0426,
+     0.1735
+    ]
+   },
+   "ddsp-nonoise": {
+    "kad": 0.2189,
+    "ci": [
+     0.103,
+     0.3575
+    ],
+    "minus_ddsp": 0.0432,
+    "minus_ddsp_ci": [
+     -0.032,
+     0.1322
+    ],
+    "minus_voc-v1_mix20": 0.0954,
+    "minus_voc-v1_mix20_ci": [
+     -0.027,
+     0.2245
+    ]
+   },
+   "ddsp-nocontact-nonoise": {
+    "kad": 0.202,
+    "ci": [
+     0.0952,
+     0.3362
+    ],
+    "minus_ddsp": 0.0263,
+    "minus_ddsp_ci": [
+     -0.0456,
+     0.099
+    ],
+    "minus_voc-v1_mix20": 0.0785,
+    "minus_voc-v1_mix20_ci": [
+     -0.0387,
+     0.202
+    ]
+   },
+   "ddsp-nofloor": {
+    "kad": 0.2004,
+    "ci": [
+     0.0831,
+     0.3695
+    ],
+    "minus_ddsp": 0.0247,
+    "minus_ddsp_ci": [
+     -0.0697,
+     0.1338
+    ],
+    "minus_voc-v1_mix20": 0.0769,
+    "minus_voc-v1_mix20_ci": [
+     -0.0351,
+     0.2132
+    ]
+   },
+   "voc-p5_v2_mix20_44k": {
+    "kad": 0.4304,
+    "ci": [
+     0.326,
+     0.5592
+    ],
+    "minus_ddsp": 0.2546,
+    "minus_ddsp_ci": [
+     0.1429,
+     0.3717
+    ],
+    "minus_voc-v1_mix20": 0.3069,
+    "minus_voc-v1_mix20_ci": [
+     0.2056,
+     0.4171
+    ],
+    "minus_voc-v2_inject20": 0.2468,
+    "minus_voc-v2_inject20_ci": [
+     0.1087,
+     0.3903
+    ],
+    "minus_voc-p5_real44": -0.0243,
+    "minus_voc-p5_real44_ci": [
+     -0.1848,
+     0.1416
+    ]
    }
   }
  },
@@ -1890,25 +1965,10 @@
      -0.1986,
      0.6936
     ],
-    "minus_voc-p2_real-real": 0.3067,
-    "minus_voc-p2_real-real_ci": [
-     -0.0337,
-     0.7288
-    ],
-    "minus_voc-p2_real": 0.2046,
-    "minus_voc-p2_real_ci": [
-     0.0596,
-     0.381
-    ],
-    "minus_voc-pretrained44-real": 0.3671,
-    "minus_voc-pretrained44-real_ci": [
-     0.0483,
-     0.794
-    ],
-    "minus_voc-pretrained44": 0.1798,
-    "minus_voc-pretrained44_ci": [
-     -0.0233,
-     0.3901
+    "minus_voc-p5_real44": 0.1742,
+    "minus_voc-p5_real44_ci": [
+     -0.181,
+     0.5325
     ]
    },
    "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
@@ -2100,25 +2160,10 @@
      -0.0714,
      0.6202
     ],
-    "minus_voc-p2_real-real": 0.3677,
-    "minus_voc-p2_real-real_ci": [
-     0.0472,
-     0.7672
-    ],
-    "minus_voc-p2_real": 0.2656,
-    "minus_voc-p2_real_ci": [
-     0.0082,
-     0.5489
-    ],
-    "minus_voc-pretrained44-real": 0.4281,
-    "minus_voc-pretrained44-real_ci": [
-     0.1077,
-     0.8161
-    ],
-    "minus_voc-pretrained44": 0.2407,
-    "minus_voc-pretrained44_ci": [
-     -0.0718,
-     0.5901
+    "minus_voc-p5_real44": 0.2351,
+    "minus_voc-p5_real44_ci": [
+     -0.1665,
+     0.6862
     ]
    },
    "voc-v2_inject20": {
@@ -2137,25 +2182,10 @@
      -0.6202,
      0.0714
     ],
-    "minus_voc-p2_real-real": 0.1195,
-    "minus_voc-p2_real-real_ci": [
-     -0.2614,
-     0.3989
-    ],
-    "minus_voc-p2_real": 0.0175,
-    "minus_voc-p2_real_ci": [
-     -0.3854,
-     0.3459
-    ],
-    "minus_voc-pretrained44-real": 0.1799,
-    "minus_voc-pretrained44-real_ci": [
-     -0.2104,
-     0.4731
-    ],
-    "minus_voc-pretrained44": -0.0074,
-    "minus_voc-pretrained44_ci": [
-     -0.4321,
-     0.3474
+    "minus_voc-p5_real44": -0.013,
+    "minus_voc-p5_real44_ci": [
+     -0.3532,
+     0.3362
     ]
    },
    "voc-p0_pretrained-real": {
@@ -2258,25 +2288,10 @@
      -0.2947,
      0.4884
     ],
-    "minus_voc-p2_real-real": 0.1595,
-    "minus_voc-p2_real-real_ci": [
-     0.0533,
-     0.2757
-    ],
-    "minus_voc-p2_real": 0.0574,
-    "minus_voc-p2_real_ci": [
-     -0.2646,
-     0.3819
-    ],
-    "minus_voc-pretrained44-real": 0.2199,
-    "minus_voc-pretrained44-real_ci": [
-     0.0856,
-     0.3613
-    ],
-    "minus_voc-pretrained44": 0.0325,
-    "minus_voc-pretrained44_ci": [
-     -0.3239,
-     0.4126
+    "minus_voc-p5_real44": 0.027,
+    "minus_voc-p5_real44_ci": [
+     -0.3613,
+     0.4819
     ]
    },
    "voc-s_stems20b": {
@@ -2383,26 +2398,6 @@
     "minus_voc-v2_inject20_ci": [
      -0.3362,
      0.3532
-    ],
-    "minus_voc-p2_real-real": 0.1325,
-    "minus_voc-p2_real-real_ci": [
-     -0.2635,
-     0.4972
-    ],
-    "minus_voc-p2_real": 0.0305,
-    "minus_voc-p2_real_ci": [
-     -0.2226,
-     0.2627
-    ],
-    "minus_voc-pretrained44-real": 0.1929,
-    "minus_voc-pretrained44-real_ci": [
-     -0.1946,
-     0.5455
-    ],
-    "minus_voc-pretrained44": 0.0056,
-    "minus_voc-pretrained44_ci": [
-     -0.1796,
-     0.1835
     ]
    },
    "voc-p5_real44-real": {
@@ -2519,6 +2514,101 @@
     "minus_voc-pretrained44_ci": [
      -0.5074,
      0.1195
+    ]
+   },
+   "ddsp-nocontact": {
+    "kad": 1.5054,
+    "ci": [
+     0.4823,
+     2.9992
+    ],
+    "minus_ddsp": 0.1566,
+    "minus_ddsp_ci": [
+     0.0699,
+     0.2391
+    ],
+    "minus_voc-v1_mix20": 0.0957,
+    "minus_voc-v1_mix20_ci": [
+     -0.1733,
+     0.4213
+    ]
+   },
+   "ddsp-nonoise": {
+    "kad": 1.0931,
+    "ci": [
+     0.3286,
+     2.3146
+    ],
+    "minus_ddsp": -0.2556,
+    "minus_ddsp_ci": [
+     -0.6724,
+     -0.0266
+    ],
+    "minus_voc-v1_mix20": -0.3166,
+    "minus_voc-v1_mix20_ci": [
+     -0.6739,
+     -0.0341
+    ]
+   },
+   "ddsp-nocontact-nonoise": {
+    "kad": 1.2204,
+    "ci": [
+     0.3981,
+     2.5041
+    ],
+    "minus_ddsp": -0.1283,
+    "minus_ddsp_ci": [
+     -0.5363,
+     0.0975
+    ],
+    "minus_voc-v1_mix20": -0.1892,
+    "minus_voc-v1_mix20_ci": [
+     -0.5126,
+     0.0704
+    ]
+   },
+   "ddsp-nofloor": {
+    "kad": 1.6771,
+    "ci": [
+     0.4726,
+     3.4484
+    ],
+    "minus_ddsp": 0.3284,
+    "minus_ddsp_ci": [
+     0.0308,
+     0.7659
+    ],
+    "minus_voc-v1_mix20": 0.2674,
+    "minus_voc-v1_mix20_ci": [
+     -0.1102,
+     0.8232
+    ]
+   },
+   "voc-p5_v2_mix20_44k": {
+    "kad": 1.7375,
+    "ci": [
+     0.8684,
+     3.08
+    ],
+    "minus_ddsp": 0.3887,
+    "minus_ddsp_ci": [
+     -0.004,
+     0.6929
+    ],
+    "minus_voc-v1_mix20": 0.3278,
+    "minus_voc-v1_mix20_ci": [
+     0.04,
+     0.5879
+    ],
+    "minus_voc-v2_inject20": 0.5759,
+    "minus_voc-v2_inject20_ci": [
+     0.3183,
+     0.8921
+    ],
+    "minus_voc-p5_real44": 0.5629,
+    "minus_voc-p5_real44_ci": [
+     0.2072,
+     0.9733
     ]
    }
   }

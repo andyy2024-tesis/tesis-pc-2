@@ -7,6 +7,7 @@ Folders under analysis/results/e12/kad/clips/ (gitignored):
   realtest        real guitar no model has heard: the 30 GAPS test-split recordings, 20 clips each over the music span
                   (reference B)
   ddsp            the final DDSP (its pair renders)
+  ddsp-no<part>[-no<part>...]  the same without those parts (e.g. ddsp-nocontact; analysis/e12_contact_check.py)
   voc-<run>       a vocoder run (scripts/e12_vocoder.py) on its own DDSP renders (the run's --renders; real-input
                   runs, phase 2 and the pretrained p0_pretrained, take the final DDSP's mix), as in its evaluation.
                   The windows are the same for every renders folder (they depend only on the real audio and notes).
@@ -160,6 +161,11 @@ def main():
             clips = realtest()
         elif name == "ddsp":
             clips = [(f"{rid}_{k:02d}", x[1][0]) for k, (rid, _, x) in enumerate(wins)]
+        elif name.startswith("ddsp-no"):  # the final DDSP without some parts (mix = sum of parts), e.g. ddsp-nocontact-nonoise
+            drop = [q.removeprefix("no") for q in name[5:].split("-")]
+            clips = []
+            for k, (rid, _, (nm, arr)) in enumerate(wins):
+                clips.append((f"{rid}_{k:02d}", arr[0] - sum(arr[1 + nm.index(q)] for q in drop)))
         elif name.startswith("voc-"):
             run = name[4:].removesuffix("-real")
             clips = vocoder(run, wins, name.endswith("-real"), dev)

@@ -254,3 +254,24 @@ re-queued data100 adversarial, renders and V1-100). KAD x 100 against the same 8
   24 kHz ones. Not investigated further (learning rate, data resampling) until the ear says the top band matters.
 - `analysis/e12_kad_clips.py` now handles 44.1 kHz runs (real window at 44.1 kHz or DDSP upsampled, output back to
   24 kHz) and `voc-pretrained44[-real]`; `analysis/e12_kad.py` takes extra paired baselines from `KAD_BASES`.
+
+## The user's ear on page 6 (2026-11-19) and what followed
+
+- By ear V1 and V2 are by far the best ("finally some realism", good room acoustics); favourite V2. Mel refiners
+  (flow, diffusion) sound very ugly. The vocoders tuned only on real audio pass the DDSP's wind through and barely
+  improve the timbre. Agrees with KAD on every point. V2's parts: it adds room/reverb ("through a thick wall") and
+  removes wind and high harmonics.
+- Favourite DDSP by ear: the final DDSP (learned stiffness + adv), not M1 + timbre 32 + adv that KAD ranks first; the
+  user's guess is that the earlier favourite is too clean for the per-window loss. Decision: train V2 on the pairs of
+  M1 + timbre 32 + adv anyway (`v2_fav20`, queued in `restart.sh` after V1-100).
+- 44.1 kHz: hard to tell from 24 kHz (276_jw1wc has more detail at 44.1 kHz); to be discussed before more work.
+  V2 at 44.1 kHz (`p5_v2_mix20_44k`, from p5_real44): loss 6.00 / 6.03 / 6.07 / 6.01 (steps 0-6000; no gain over its
+  input, unlike 5.89 -> 5.76 at 24 kHz); KAD PANNs 1.68 vs 1.35 for V2 at 24 kHz (+0.33 [-0.02, +0.77]), EnCodec 0.43
+  vs 0.18 (+0.25 [+0.11, +0.39]). Up to 12 kHz the whole 44.1 kHz route is worse.
+- "contact sounds like noise, not contact; is it a catch-all and the culprit?" (`analysis/e12_contact_check.py`, pair
+  renders of the 20 recordings, medians): contact is -41 dB of the mix (-29 dB in the quietest 20% of frames), centroid
+  2.6 kHz, its energy within 50 ms of an onset/offset only 1.3x chance (burst 3.2x, body 2.6x), uncorrelated with the
+  noise part (r = 0.03). So it is a quiet high hiss, not finger contact. But it is not the culprit: KAD without it is
+  much worse by PANNs (3.22 -> 8.70, +5.48 [+4.12, +7.09]; unseen real 6.74 -> 14.02), EnCodec unchanged; without the
+  noise part a tie (3.27), without the room floor slightly worse (3.61). The log-mel embedding needs something in the
+  upper bands, which the strings leave nearly empty; real recordings have hiss there.
