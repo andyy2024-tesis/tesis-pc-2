@@ -357,7 +357,7 @@ renders by part; scratch scripts, not kept):
   guess each room from the input; that is the "average sound" reason given for V1-100, not a claim that more data
   generalises.
 
-## The user's decisions and the vocoder recording embedding (2026-11-19 night; `queue_final/v2_nocontact.sh`, `embed.sh`)
+## The user's decisions and the vocoder recording embedding (2026-11-19 night; `queue_final/v2_nocontact.sh`, `embed2.sh`)
 
 - "Final sin contacto" vs the final DDSP by ear: similar; still prefers the final DDSP. What the user calls "wind" is
   the attacks not being smooth: filtered noise at each pluck (less in the final DDSP). V2 on the no-contact DDSP's pairs
@@ -369,7 +369,12 @@ renders by part; scratch scripts, not kept):
   per-channel scale and shift after the input layer and after each of the upsampling stages, so step 0 is the vocoder
   without it (checked: step-0 loss 5.806 vs 5.805 for V1-100's start, 5.891 = v2_inject20's start). Rows' recording
   ids in config.json (`rec_ids`); `refiner_from_config` and `G.rec_of` used by e12_kad_clips and e12_refine_excerpts.
-- Queue, all V2 from p2_real, 6000 steps: `v2_recddsp100` (100-recording pairs, DDSP embedding; vs V2 on 20, 1.35),
-  `v2_recddsp20` and `v2_rectable20` (20-recording pairs: which embedding type). Then the 100-recording DDSP with the
-  20-recording budget per recording (`structured_v12_final_learnedB_data100x5`: 20000 + 15000 adversarial steps) and
-  its pairs; V2 on them with and without the better embedding once it is picked.
+- Queue (`embed2.sh`, replacing `embed.sh` before it started anything). The user: the 100-recording runs use the
+  embedding type that wins on 20 recordings, and every 100-recording vocoder gets the 20-recording training per
+  recording (6000 steps on 20 -> 30000 on 100). All V2 from p2_real:
+  1. `v2_recddsp20` vs `v2_rectable20` (final DDSP's 20-recording pairs, 6000 steps); PANNs KAD picks the type into
+     `queue_final/embed_choice.txt`, read only when step 3 starts (the user's ear can override it).
+  2. The 100-recording DDSP with the 20-recording budget per recording (`structured_v12_final_learnedB_data100x5`:
+     20000 + 15000 adversarial steps), its pairs and KAD.
+  3. V2 on those pairs with the picked embedding (`v2_rec<pick>x5`) and without (`v2_x5`), 30000 steps each.
+  4. V2 + the picked embedding on the first 100-recording DDSP's pairs (`v2_rec<pick>100`), 30000 steps.
