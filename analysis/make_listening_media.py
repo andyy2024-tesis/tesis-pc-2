@@ -105,7 +105,9 @@ LATER = {k + s: k for k in ["structured_v10_m1_burst", "structured_v10_m2_burst"
                             "e6-structured_v12_final_noise_strongD_rise",
                             "e6-structured_v12_final_learnedB_noise_strongD_rise",
                             "structured_v12_final_learnedB_data100",
-                            "e6-structured_v12_final_learnedB_data100_noise_strongD_rise"] for s in ("", "-nonoise")}
+                            "e6-structured_v12_final_learnedB_data100_noise_strongD_rise",
+                            "e6-structured_v13_ahead_strings_noise_strongD_rise",
+                            "e6-structured_v13_final_nocontact_noise_strongD_rise"] for s in ("", "-nonoise")}
 VERSIONS.update(LATER)
 DECK_CLIPS = {
     "023_Ypswc": ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir_nonoise"],

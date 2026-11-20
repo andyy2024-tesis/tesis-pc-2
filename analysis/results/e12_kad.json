@@ -13,11 +13,6 @@
      -0.8587,
      2.739
     ],
-    "minus_voc-v2_inject20": 1.8652,
-    "minus_voc-v2_inject20_ci": [
-     0.4899,
-     3.466
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 1.2221,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      0.5055,
@@ -28,15 +23,15 @@
      -0.3194,
      0.362
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 1.0416,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     0.3191,
-     1.8103
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 1.7579,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      0.9475,
      2.7238
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 1.8234,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     1.0035,
+     2.8742
     ]
    },
    "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
@@ -55,25 +50,20 @@
      -0.7934,
      2.7359
     ],
-    "minus_voc-v2_inject20": 1.8709,
-    "minus_voc-v2_inject20_ci": [
-     0.5682,
-     3.3685
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 1.2278,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      0.6001,
      1.9992
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 1.0473,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     0.445,
-     1.6744
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 1.7636,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      1.0801,
      2.6511
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 1.8291,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     1.0882,
+     2.7865
     ]
    },
    "model-e6-structured_v9_base_t32_noise_strongD": {
@@ -134,25 +124,20 @@
      -1.6652,
      0.9912
     ],
-    "minus_voc-v2_inject20": 0.643,
-    "minus_voc-v2_inject20_ci": [
-     -0.3934,
-     1.7031
-    ],
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -1.2278,
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
      -1.9992,
      -0.6001
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -0.1805,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.7333,
-     0.3012
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.5358,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      0.1054,
      0.9894
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.6013,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     0.0497,
+     1.2358
     ]
    },
    "model-e6-structured_v12_final_noise_strongD_rise": {
@@ -313,11 +298,6 @@
      -2.739,
      0.8587
     ],
-    "minus_voc-v2_inject20": 0.9829,
-    "minus_voc-v2_inject20_ci": [
-     0.5345,
-     1.569
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.3399,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.9912,
@@ -328,15 +308,15 @@
      -2.7359,
      0.7934
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.1593,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -1.4948,
-     1.6973
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.8757,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.2738,
      2.035
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.9412,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.1703,
+     2.137
     ]
    },
    "voc-v2_inject20": {
@@ -825,11 +805,6 @@
      -2.137,
      0.1703
     ],
-    "minus_voc-v2_inject20": 0.0417,
-    "minus_voc-v2_inject20_ci": [
-     -0.7741,
-     0.8498
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.6013,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -1.2358,
@@ -839,11 +814,6 @@
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
      -2.7865,
      -1.0882
-    ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -0.7818,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -1.5556,
-     -0.1644
     ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": -0.0655,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
@@ -993,11 +963,6 @@
      -2.035,
      0.2738
     ],
-    "minus_voc-v2_inject20": 0.1073,
-    "minus_voc-v2_inject20_ci": [
-     -0.6713,
-     0.9418
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.5358,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.9894,
@@ -1008,10 +973,10 @@
      -2.6511,
      -1.0801
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -0.7163,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -1.3581,
-     -0.0969
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.0655,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.4188,
+     0.5596
     ]
    },
    "model-e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise": {
@@ -1223,6 +1188,80 @@
      -0.6839,
      0.9595
     ]
+   },
+   "model-e6-structured_v13_ahead_strings_noise_strongD_rise": {
+    "kad": 2.6841,
+    "ci": [
+     1.878,
+     3.7189
+    ],
+    "minus_ddsp": -0.5304,
+    "minus_ddsp_ci": [
+     -1.2305,
+     0.1551
+    ],
+    "minus_voc-v1_mix20": 0.3518,
+    "minus_voc-v1_mix20_ci": [
+     -1.2688,
+     1.9243
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.6917,
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
+     0.1369,
+     1.3144
+    ],
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -0.5361,
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
+     -1.1864,
+     0.0718
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 1.2275,
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
+     0.5943,
+     1.9558
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 1.293,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     0.6678,
+     2.0108
+    ]
+   },
+   "model-e6-structured_v13_final_nocontact_noise_strongD_rise": {
+    "kad": 1.9808,
+    "ci": [
+     1.3812,
+     2.7304
+    ],
+    "minus_ddsp": -1.2338,
+    "minus_ddsp_ci": [
+     -2.0125,
+     -0.5891
+    ],
+    "minus_voc-v1_mix20": -0.3515,
+    "minus_voc-v1_mix20_ci": [
+     -1.7103,
+     0.9432
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.0116,
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
+     -0.5801,
+     0.5409
+    ],
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -1.2395,
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
+     -1.9719,
+     -0.6473
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.5242,
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
+     0.0516,
+     1.0633
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.5897,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     0.1439,
+     1.1127
+    ]
    }
   }
  },
@@ -1240,11 +1279,6 @@
      1.0463,
      5.0885
     ],
-    "minus_voc-v2_inject20": 3.621,
-    "minus_voc-v2_inject20_ci": [
-     1.8567,
-     5.4219
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 1.3046,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      0.1499,
@@ -1255,15 +1289,15 @@
      -0.2177,
      0.6209
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 1.1469,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     0.134,
-     2.1687
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 2.0344,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      0.7883,
      3.3416
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 2.6855,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     1.428,
+     4.2145
     ]
    },
    "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
@@ -1282,25 +1316,20 @@
      1.0282,
      4.9225
     ],
-    "minus_voc-v2_inject20": 3.444,
-    "minus_voc-v2_inject20_ci": [
-     1.7671,
-     5.1703
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 1.1276,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      0.0426,
      2.2047
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.9699,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     0.0103,
-     1.8749
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 1.8574,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      0.6846,
      3.0592
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 2.5085,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     1.3098,
+     3.8673
     ]
    },
    "model-e6-structured_v9_base_t32_noise_strongD": {
@@ -1361,25 +1390,20 @@
      0.2356,
      3.3056
     ],
-    "minus_voc-v2_inject20": 2.3164,
-    "minus_voc-v2_inject20_ci": [
-     1.0462,
-     3.5618
-    ],
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -1.1276,
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
      -2.2047,
      -0.0426
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -0.1577,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.9843,
-     0.6805
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.7299,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      0.0505,
      1.4338
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 1.3809,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     0.4057,
+     2.4084
     ]
    },
    "model-e6-structured_v12_final_noise_strongD_rise": {
@@ -1540,11 +1564,6 @@
      -5.0885,
      -1.0463
     ],
-    "minus_voc-v2_inject20": 0.5687,
-    "minus_voc-v2_inject20_ci": [
-     -0.0713,
-     1.2871
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -1.7477,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -3.3056,
@@ -1555,15 +1574,15 @@
      -4.9225,
      -1.0282
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -1.9054,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -3.649,
-     -0.3168
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": -1.0179,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -2.475,
      0.4171
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.3668,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -1.7934,
+     0.9804
     ]
    },
    "voc-v2_inject20": {
@@ -1698,11 +1717,6 @@
      -2.8006,
      -0.6434
     ],
-    "minus_voc-v2_inject20": -1.0899,
-    "minus_voc-v2_inject20_ci": [
-     -2.006,
-     -0.3207
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -3.4063,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -4.6146,
@@ -1713,15 +1727,15 @@
      -5.9442,
      -3.1471
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -3.564,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -4.8879,
-     -2.3716
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": -2.6764,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -3.8001,
      -1.6332
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -2.0254,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -3.0131,
+     -0.9872
     ]
    },
    "voc-s_stems20b": {
@@ -2094,11 +2108,6 @@
      -0.9804,
      1.7934
     ],
-    "minus_voc-v2_inject20": 0.9355,
-    "minus_voc-v2_inject20_ci": [
-     -0.0634,
-     1.9945
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -1.3809,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -2.4084,
@@ -2108,11 +2117,6 @@
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
      -3.8673,
      -1.3098
-    ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -1.5386,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -2.7587,
-     -0.5888
     ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": -0.6511,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
@@ -2262,11 +2266,6 @@
      -0.4171,
      2.475
     ],
-    "minus_voc-v2_inject20": 1.5866,
-    "minus_voc-v2_inject20_ci": [
-     0.5315,
-     2.7909
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.7299,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -1.4338,
@@ -2277,10 +2276,10 @@
      -3.0592,
      -0.6846
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -0.8875,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -1.7981,
-     -0.0753
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.6511,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.1237,
+     1.469
     ]
    },
    "model-e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise": {
@@ -2492,6 +2491,80 @@
      -2.1639,
      0.4434
     ]
+   },
+   "model-e6-structured_v13_ahead_strings_noise_strongD_rise": {
+    "kad": 6.5474,
+    "ci": [
+     4.7989,
+     8.7346
+    ],
+    "minus_ddsp": -0.1959,
+    "minus_ddsp_ci": [
+     -1.1893,
+     0.8553
+    ],
+    "minus_voc-v1_mix20": 2.8565,
+    "minus_voc-v1_mix20_ci": [
+     1.2042,
+     4.6288
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 1.1087,
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
+     0.2762,
+     1.9258
+    ],
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -0.0188,
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
+     -0.9155,
+     0.8941
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 1.8386,
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
+     0.9487,
+     2.7995
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 2.4896,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     1.5327,
+     3.596
+    ]
+   },
+   "model-e6-structured_v13_final_nocontact_noise_strongD_rise": {
+    "kad": 5.4928,
+    "ci": [
+     3.8643,
+     7.7654
+    ],
+    "minus_ddsp": -1.2504,
+    "minus_ddsp_ci": [
+     -2.4237,
+     -0.2144
+    ],
+    "minus_voc-v1_mix20": 1.8019,
+    "minus_voc-v1_mix20_ci": [
+     0.2683,
+     3.3552
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.0542,
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
+     -0.8018,
+     0.9319
+    ],
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -1.0734,
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
+     -2.0821,
+     -0.0316
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.784,
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
+     0.0663,
+     1.52
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 1.4351,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     0.595,
+     2.2586
+    ]
    }
   }
  },
@@ -2509,11 +2582,6 @@
      -0.0505,
      0.1593
     ],
-    "minus_voc-v2_inject20": -0.0078,
-    "minus_voc-v2_inject20_ci": [
-     -0.144,
-     0.1313
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.0359,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.1331,
@@ -2524,15 +2592,15 @@
      -0.0352,
      0.0389
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.0407,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.0591,
-     0.1553
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.0653,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.0122,
      0.1622
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.0158,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.0866,
+     0.1067
     ]
    },
    "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
@@ -2551,25 +2619,20 @@
      -0.0577,
      0.1611
     ],
-    "minus_voc-v2_inject20": -0.0065,
-    "minus_voc-v2_inject20_ci": [
-     -0.1427,
-     0.1325
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.0346,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.1169,
      0.0423
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.0421,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.0447,
-     0.1389
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.0666,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.005,
      0.1574
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.0171,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.0789,
+     0.1081
     ]
    },
    "model-e6-structured_v9_base_t32_noise_strongD": {
@@ -2630,25 +2693,20 @@
      -0.0473,
      0.2255
     ],
-    "minus_voc-v2_inject20": 0.0281,
-    "minus_voc-v2_inject20_ci": [
-     -0.1018,
-     0.1688
-    ],
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": 0.0346,
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
      -0.0423,
      0.1169
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.0767,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.006,
-     0.1764
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.1012,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      0.0205,
      0.2002
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.0517,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.0296,
+     0.139
     ]
    },
    "model-e6-structured_v12_final_noise_strongD_rise": {
@@ -2809,11 +2867,6 @@
      -0.1593,
      0.0505
     ],
-    "minus_voc-v2_inject20": -0.06,
-    "minus_voc-v2_inject20_ci": [
-     -0.1726,
-     0.0504
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.0881,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.2255,
@@ -2824,15 +2877,15 @@
      -0.1611,
      0.0577
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -0.0115,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.1241,
-     0.1036
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.013,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.0874,
      0.1221
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.0364,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.1534,
+     0.0738
     ]
    },
    "voc-v2_inject20": {
@@ -3321,11 +3374,6 @@
      -0.0738,
      0.1534
     ],
-    "minus_voc-v2_inject20": -0.0236,
-    "minus_voc-v2_inject20_ci": [
-     -0.1431,
-     0.0998
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.0517,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.139,
@@ -3335,11 +3383,6 @@
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
      -0.1081,
      0.0789
-    ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.0249,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.0375,
-     0.104
     ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.0494,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
@@ -3489,11 +3532,6 @@
      -0.1221,
      0.0874
     ],
-    "minus_voc-v2_inject20": -0.0731,
-    "minus_voc-v2_inject20_ci": [
-     -0.1919,
-     0.0317
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.1012,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.2002,
@@ -3504,10 +3542,10 @@
      -0.1574,
      0.005
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -0.0245,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.0974,
-     0.0452
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.0494,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.1508,
+     0.0264
     ]
    },
    "model-e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise": {
@@ -3719,6 +3757,80 @@
      0.1021,
      0.3589
     ]
+   },
+   "model-e6-structured_v13_ahead_strings_noise_strongD_rise": {
+    "kad": 0.1526,
+    "ci": [
+     0.0618,
+     0.2444
+    ],
+    "minus_ddsp": -0.0231,
+    "minus_ddsp_ci": [
+     -0.0995,
+     0.0408
+    ],
+    "minus_voc-v1_mix20": 0.0292,
+    "minus_voc-v1_mix20_ci": [
+     -0.0747,
+     0.1278
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.059,
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
+     -0.1494,
+     0.0243
+    ],
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -0.0244,
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
+     -0.0915,
+     0.0373
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.0422,
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
+     -0.0163,
+     0.1027
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.0073,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.1022,
+     0.0681
+    ]
+   },
+   "model-e6-structured_v13_final_nocontact_noise_strongD_rise": {
+    "kad": 0.1848,
+    "ci": [
+     0.0855,
+     0.2954
+    ],
+    "minus_ddsp": 0.0091,
+    "minus_ddsp_ci": [
+     -0.0746,
+     0.086
+    ],
+    "minus_voc-v1_mix20": 0.0613,
+    "minus_voc-v1_mix20_ci": [
+     -0.0484,
+     0.1691
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": -0.0268,
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
+     -0.1092,
+     0.0495
+    ],
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": 0.0078,
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
+     -0.0636,
+     0.0771
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.0744,
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
+     -0.0009,
+     0.1623
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.0249,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.0546,
+     0.1046
+    ]
    }
   }
  },
@@ -3736,11 +3848,6 @@
      -0.3215,
      0.2299
     ],
-    "minus_voc-v2_inject20": 0.1872,
-    "minus_voc-v2_inject20_ci": [
-     -0.1986,
-     0.6936
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.3333,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      0.0112,
@@ -3751,15 +3858,15 @@
      0.0359,
      0.2638
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.1786,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.1329,
-     0.6269
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.1849,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.0579,
      0.532
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.1098,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.1793,
+     0.5513
     ]
    },
    "model-e6-structured_v12_final_learnedB_noise_strongD_rise": {
@@ -3778,25 +3885,20 @@
      -0.4993,
      0.0523
     ],
-    "minus_voc-v2_inject20": 0.0411,
-    "minus_voc-v2_inject20_ci": [
-     -0.3105,
-     0.4763
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.1872,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.0746,
      0.6406
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.0325,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.2225,
-     0.4121
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.0388,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.1817,
      0.3251
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.0363,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.2854,
+     0.3218
     ]
    },
    "model-e6-structured_v9_base_t32_noise_strongD": {
@@ -3857,25 +3959,20 @@
      -0.8398,
      -0.0417
     ],
-    "minus_voc-v2_inject20": -0.1461,
-    "minus_voc-v2_inject20_ci": [
-     -0.3707,
-     0.0695
-    ],
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -0.1872,
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
      -0.6406,
      0.0746
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -0.1547,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.3676,
-     0.0132
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": -0.1484,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.4203,
      0.0639
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.2235,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.443,
+     -0.0576
     ]
    },
    "model-e6-structured_v12_final_noise_strongD_rise": {
@@ -4036,11 +4133,6 @@
      -0.2299,
      0.3215
     ],
-    "minus_voc-v2_inject20": 0.2481,
-    "minus_voc-v2_inject20_ci": [
-     -0.0714,
-     0.6202
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.3942,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      0.0417,
@@ -4051,15 +4143,15 @@
      -0.0523,
      0.4993
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.2395,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.0915,
-     0.61
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.2458,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.004,
      0.522
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": 0.1708,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.1127,
+     0.484
     ]
    },
    "voc-v2_inject20": {
@@ -4194,11 +4286,6 @@
      -0.5512,
      0.1016
     ],
-    "minus_voc-v2_inject20": 0.04,
-    "minus_voc-v2_inject20_ci": [
-     -0.2947,
-     0.4884
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.1861,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.1335,
@@ -4209,15 +4296,15 @@
      -0.33,
      0.3383
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.0314,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.2634,
-     0.4166
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.0377,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.2498,
      0.3627
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.0374,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.3342,
+     0.3491
     ]
    },
    "voc-s_stems20b": {
@@ -4590,11 +4677,6 @@
      -0.484,
      0.1127
     ],
-    "minus_voc-v2_inject20": 0.0774,
-    "minus_voc-v2_inject20_ci": [
-     -0.1654,
-     0.3366
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.2235,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      0.0576,
@@ -4604,11 +4686,6 @@
     "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
      -0.3218,
      0.2854
-    ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": 0.0688,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.0621,
-     0.2178
     ],
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": 0.0751,
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
@@ -4758,11 +4835,6 @@
      -0.522,
      0.004
     ],
-    "minus_voc-v2_inject20": 0.0023,
-    "minus_voc-v2_inject20_ci": [
-     -0.2339,
-     0.2756
-    ],
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.1484,
     "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
      -0.0639,
@@ -4773,10 +4845,10 @@
      -0.3251,
      0.1817
     ],
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD": -0.0063,
-    "minus_model-e6-structured_v10_m1_burst_noise_strongD_ci": [
-     -0.1988,
-     0.2314
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.0751,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.2731,
+     0.1426
     ]
    },
    "model-e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise": {
@@ -4987,6 +5059,80 @@
     "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
      -0.2779,
      0.1812
+    ]
+   },
+   "model-e6-structured_v13_ahead_strings_noise_strongD_rise": {
+    "kad": 1.1167,
+    "ci": [
+     0.2783,
+     2.454
+    ],
+    "minus_ddsp": -0.2321,
+    "minus_ddsp_ci": [
+     -0.5966,
+     -0.0119
+    ],
+    "minus_voc-v1_mix20": -0.293,
+    "minus_voc-v1_mix20_ci": [
+     -0.6113,
+     -0.0289
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.1012,
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
+     -0.1,
+     0.3798
+    ],
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -0.0859,
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
+     -0.3839,
+     0.1432
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": -0.0472,
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
+     -0.2154,
+     0.1343
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.1222,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.3272,
+     0.1137
+    ]
+   },
+   "model-e6-structured_v13_final_nocontact_noise_strongD_rise": {
+    "kad": 1.0847,
+    "ci": [
+     0.3335,
+     2.3098
+    ],
+    "minus_ddsp": -0.264,
+    "minus_ddsp_ci": [
+     -0.7167,
+     0.0143
+    ],
+    "minus_voc-v1_mix20": -0.325,
+    "minus_voc-v1_mix20_ci": [
+     -0.6888,
+     -0.0284
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": 0.0693,
+    "minus_model-e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise_ci": [
+     -0.08,
+     0.2404
+    ],
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise": -0.1179,
+    "minus_model-e6-structured_v12_final_learnedB_noise_strongD_rise_ci": [
+     -0.48,
+     0.1044
+    ],
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise": -0.0791,
+    "minus_model-e6-structured_v11_m1_attn_ahead_noise_strongD_rise_ci": [
+     -0.2845,
+     0.1058
+    ],
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD": -0.1542,
+    "minus_model-e6-structured_v10_m1_burst_strings_noise_strongD_ci": [
+     -0.329,
+     0.0002
     ]
    }
   }

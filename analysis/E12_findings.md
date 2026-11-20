@@ -303,3 +303,54 @@ KAD x 100 against the same 85 windows (PANNs / EnCodec), loss at the last evalua
   (+1.23 [+0.60, +2.00] over T4adv); final on 100 recordings 3.26. Strings alone help and contact alone hurts a
   little; the large drop appears only in the full combination, and no existing model isolates which piece causes
   it (candidates: ahead + strings, final without contact). EnCodec sees no clear differences (0.06-0.26).
+
+## Page 7 by ear, the isolating DDSPs and the 100-recording glitches (2026-11-19 evening)
+
+The user's ear (page 7, blind mode):
+- V2 better than S.
+- Phase 4 (V2 on the strings part only): very similar to full V2, no confident winner, but it adds artifacts: 023 at
+  ~6 s a periodic "thu thu thu" (like a spinning wheel), 176 after almost every strum (quiet but noticeable). Full V2
+  stays.
+- V2 on M1 + timbre 32 + adv pairs: agrees it is not better.
+- 100 recordings: the DDSP and V1-100 sound like the 20-recording ones but with glitches (276: an out-of-tune note in
+  the middle and a high beep near the end; 023: a short out-of-tune segment).
+- Chain: attention that anticipates + adv (lowest KAD, 1.46) has a lot of wind, disliked; favourite still the final
+  DDSP; T4adv (+ contact) was close until harmonic ticks on 306 and an artifact on 276.
+
+Isolating DDSPs (`queue_final/isolate.sh`, both 4000 steps + the favourite's adversarial recipe; PANNs KAD x 100 vs the
+same 85 windows, paired differences [95%]; EnCodec 0.15-0.21, no clear differences):
+
+| version | MSS | PANNs |
+|---|---|---|
+| attention that anticipates + adv | 5.87 | 1.46 |
+| + contact (T4adv) | 5.83 | 1.99 |
+| + strings (`v13_ahead_strings`) | 5.83 | 2.68 (+1.23 [+0.59, +1.96] vs ahead) |
+| final (T4adv + strings + recording everywhere 32 + learned stiffness) | 5.82 | 3.22 |
+| final without contact (`v13_final_nocontact`) | 5.81 | 1.98 (-1.24 [-1.97, -0.65] vs final; vs T4adv -0.01) |
+
+- Contact, trained in, is what makes the final DDSP less real by KAD (the user's hunch): +0.54 on attention-ahead and
+  +1.24 on the final. Removing it from the trained final made it far worse (8.70) because the other parts relied on
+  it; trained without it from the start, they adapt.
+- Strings on attention-ahead hurt (1.46 -> 2.68), unlike on M1 (2.17 -> 1.39).
+- The wind meter (catch-all level in quiet passages) does not show attention-ahead + adv as windier than the final
+  (-24.5 vs -23.9 dB; final without contact -24.6, ahead + strings -22.5), so the wind the user hears there is not the
+  catch-all level; not pinned down.
+
+The 100-recording glitches (excerpts of 276_jw1wc and 023_Ypswc; CQT vs the real excerpt and the 20-recording DDSP; pair
+renders by part; scratch scripts, not kept):
+- 276, ~3.7-4.3 s and 6.1-8.7 s: the bass notes C3 and A2 come out ~8 dB louder than with 20 recordings, all in the
+  strings part. A2 (scored end 6.41 s) keeps sounding under the next G2: the model lets a note ring until the next note
+  on its string (here 7.50 s) and has to learn to damp it at the scored end; the player damped it. Two bass notes a
+  tone apart = heard as out of tune. ~3.9 s: partial 22 of E3 (3.6 kHz) +24 dB over both the 20-recording DDSP and
+  the real recording = the beep.
+- The pitches are not off: the learned stiffness moves these partials by under 5 cents in either model.
+- Over all 20 recordings the 100-recording DDSP is not worse on average: level drop after 3748 isolated scored note
+  ends 8.6 dB vs 7.8 dB with 20 recordings (real 6.7), notes > 10 dB too loud 0.4% vs 0.3% (4524 note bodies). Rare
+  local glitches, which KAD (clip averages) barely sees.
+- Both trained the same steps (4000 + 3000), so each recording was visited 5x less with 100; the learned per-string
+  stiffness of the same guitar disagrees between the two runs (276 string 4: x0.87 vs x1.49), i.e. the per-recording
+  settings are not pinned down. The 80 extra recordings pass the same transcription filter as the 20 (f-measure >=
+  0.93, `e4_train.extra_ids`), so no evidence of worse data.
+- V1 (the vocoder) has no recording identity: it only hears the DDSP audio, so with 100 guitars and rooms it has to
+  guess each room from the input; that is the "average sound" reason given for V1-100, not a claim that more data
+  generalises.
