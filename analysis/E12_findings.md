@@ -347,10 +347,29 @@ renders by part; scratch scripts, not kept):
 - Over all 20 recordings the 100-recording DDSP is not worse on average: level drop after 3748 isolated scored note
   ends 8.6 dB vs 7.8 dB with 20 recordings (real 6.7), notes > 10 dB too loud 0.4% vs 0.3% (4524 note bodies). Rare
   local glitches, which KAD (clip averages) barely sees.
-- Both trained the same steps (4000 + 3000), so each recording was visited 5x less with 100; the learned per-string
-  stiffness of the same guitar disagrees between the two runs (276 string 4: x0.87 vs x1.49), i.e. the per-recording
-  settings are not pinned down. The 80 extra recordings pass the same transcription filter as the 20 (f-measure >=
+- Training length (corrected the same evening; first told the user "the same steps"): the 100-recording DDSP had
+  12000 + 3000 steps (E9: 80 recordings plateau from step 8000), the 20-recording one 4000 + 3000, so each recording
+  got ~1.7x fewer steps in the first phase and 5x fewer in the adversarial one. The learned per-string stiffness of the
+  same guitar disagrees between the two runs (276 string 4: x0.87 vs x1.49), i.e. the per-recording settings are not
+  pinned down. The 80 extra recordings pass the same transcription filter as the 20 (f-measure >=
   0.93, `e4_train.extra_ids`), so no evidence of worse data.
 - V1 (the vocoder) has no recording identity: it only hears the DDSP audio, so with 100 guitars and rooms it has to
   guess each room from the input; that is the "average sound" reason given for V1-100, not a claim that more data
   generalises.
+
+## The user's decisions and the vocoder recording embedding (2026-11-19 night; `queue_final/v2_nocontact.sh`, `embed.sh`)
+
+- "Final sin contacto" vs the final DDSP by ear: similar; still prefers the final DDSP. What the user calls "wind" is
+  the attacks not being smooth: filtered noise at each pluck (less in the final DDSP). V2 on the no-contact DDSP's pairs
+  anyway (`v2_nocontact20`, same recipe as v2_inject20).
+- The user keeps the verdict on the 100-recording glitches (the measurements above may not be what was heard).
+- `scripts/e12_vocoder.py --rec-emb ddsp | table`: the vocoder learns which recording a segment comes from. "ddsp" =
+  the DDSP's own recording embedding (frozen, standardised, a buffer saved with the generator), "table" = a fresh
+  embedding learned by the vocoder (10x learning rate); a shared layer (32 -> 128, LeakyReLU) and a zero-initialised
+  per-channel scale and shift after the input layer and after each of the upsampling stages, so step 0 is the vocoder
+  without it (checked: step-0 loss 5.806 vs 5.805 for V1-100's start, 5.891 = v2_inject20's start). Rows' recording
+  ids in config.json (`rec_ids`); `refiner_from_config` and `G.rec_of` used by e12_kad_clips and e12_refine_excerpts.
+- Queue, all V2 from p2_real, 6000 steps: `v2_recddsp100` (100-recording pairs, DDSP embedding; vs V2 on 20, 1.35),
+  `v2_recddsp20` and `v2_rectable20` (20-recording pairs: which embedding type). Then the 100-recording DDSP with the
+  20-recording budget per recording (`structured_v12_final_learnedB_data100x5`: 20000 + 15000 adversarial steps) and
+  its pairs; V2 on them with and without the better embedding once it is picked.

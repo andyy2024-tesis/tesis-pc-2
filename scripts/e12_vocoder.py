@@ -9,6 +9,11 @@ guitar specialist. Phase 3 (V1, V2, S): DDSP render -> real audio on the recordi
 Never trains on the last 15% of the 20 evaluation recordings (their held-out windows) nor on the GAPS test split.
 Losses as BigVGAN-v2: multi-scale mel L1 x15 + multi-period and CQT discriminators with feature matching. Segments are
 peak-normalised to 0.95 like BigVGAN (the same gain on input and target).
+--rec-emb ddsp | table   which recording a segment comes from (the vocoder alone cannot know the guitar, microphone and
+                          room): "ddsp" = the DDSP's own learned recording embedding (frozen, standardised), "table" = a
+                          fresh embedding learned here (10x learning rate); a small MLP turns it into a per-channel scale
+                          and shift after the input layer and after every upsampling stage, zero-initialised (step 0 = the
+                          vocoder without it). The rows' recording ids are saved in config.json (rec_ids).
 Phase 5 (--sr 44100): BigVGAN-v2 44 kHz (128 bands) instead, real audio from data/processed/sr44100 (scripts/
 e12_prep44k.py); positions, notes and DDSP renders stay at 24 kHz and the DDSP input is upsampled per segment; the
 output is brought back to 24 kHz for the evaluation, so every number compares.
@@ -53,9 +58,24 @@ EVAL_IDS = pd.read_csv(RES / "e4_recordings.csv").id.tolist()
 class Refiner(nn.Module):
     """BigVGAN generator with optional extra inputs, all starting at zero so step 0 is the loaded vocoder."""
 
-    def __init__(self, h, n_stems=0, inject=False, ckpt=False):
+    def __init__(self, h, n_stems=0, inject=False, ckpt=False, rec="none", rec_ids=None, rec_dim=32, rec_table=None):
         super().__init__()
         self.g = BigVGAN(h, use_cuda_kernel=False)
+        self.rec_mode, self.rec_ids = rec, list(rec_ids or [])
+        if rec != "none":
+            n = len(self.rec_ids)
+            if rec == "ddsp":  # frozen: a buffer, saved with the generator
+                self.register_buffer("rec_table", torch.zeros(n, rec_dim) if rec_table is None else rec_table.float())
+            else:
+                assert rec == "table", rec
+                self.rec_table = nn.Parameter(torch.randn(n, rec_dim) * 0.1)
+            self.rec_mlp = nn.Sequential(nn.Linear(rec_dim, 128), nn.LeakyReLU(0.1))
+            chans = [h.upsample_initial_channel] + [h.upsample_initial_channel // 2 ** (i + 1)
+                                                    for i in range(len(h.upsample_rates))]
+            self.film = nn.ModuleList(nn.Linear(128, 2 * c) for c in chans)
+            for f in self.film:
+                nn.init.zeros_(f.weight)
+                nn.init.zeros_(f.bias)
         self.h = h
         self.ckpt = ckpt  # recompute each AMP block in the backward pass: BigVGAN's anti-aliased activations are huge
         self.stem_in = None
@@ -75,9 +95,22 @@ class Refiner(nn.Module):
                 nn.init.zeros_(conv.bias)
                 self.src.append(conv)
 
-    def forward(self, mel, stems=None, src=None):
+    def rec_of(self, rids, dev):
+        """Embedding rows of these recordings (None without --rec-emb)."""
+        if self.rec_mode == "none":
+            return None
+        return torch.tensor([self.rec_ids.index(r) for r in rids], device=dev)
+
+    def _film(self, k, x, c):
+        gam, bet = self.film[k](c)[..., None].chunk(2, 1)
+        return x * (1 + gam) + bet
+
+    def forward(self, mel, stems=None, src=None, rec=None):
         g = self.g
+        c = self.rec_mlp(self.rec_table[rec]) if rec is not None else None
         x = g.conv_pre(mel)
+        if c is not None:
+            x = self._film(0, x, c)
         if self.stem_in is not None:
             # log-mels floor at log(1e-5) = -11.5: a silent part is a large constant over all its channels, and
             # fed raw it blew up the first S run once the zero-initialised layer moved (mel loss 1.6 -> 12.9 by step
@@ -89,6 +122,8 @@ class Refiner(nn.Module):
             if self.src is not None:
                 s = self.src[i](src)
                 x = x + s[..., :x.shape[-1]]
+            if c is not None:
+                x = self._film(i + 1, x, c)
             xs = None
             for j in range(g.num_kernels):
                 blk = g.resblocks[i * g.num_kernels + j]
@@ -124,16 +159,19 @@ class Data:
                 self.items.append((rid, y, lo, hi, x))
         w = np.array([hi - lo for _, _, lo, hi, _ in self.items], np.float64)
         self.p = w / w.sum()
+        self.last_rids = []  # recordings of the last batch
         print(f"data: {len(self.items)} recordings, {w.sum() / SR / 3600:.2f} h", flush=True)
 
     def batch(self, B, seg, rng, parts=()):
         """seg: samples at the output rate. At 44.1 kHz the segment starts at a 24 kHz sample s (real audio from
         round(s * 147 / 80), within half a 44.1 kHz sample) and the DDSP input is upsampled with a margin."""
         ys, xs = [], []
+        self.last_rids = []
         up = self.out_sr != SR
         nb = int(np.ceil(seg * SR / self.out_sr)) + 1 if up else seg  # base-rate samples covering the segment
         for k in rng.choice(len(self.items), B, p=self.p):
             rid, y, lo, hi, x = self.items[k]
+            self.last_rids.append(rid)
             if up:
                 s = int(rng.integers(lo + M, hi - nb - M))
                 s2 = int(round(s * UP[0] / UP[1]))
@@ -196,9 +234,30 @@ class Inputs:
         return out
 
 
+def ddsp_rec_table(renders_name):
+    """(recording ids, standardised embedding rows) of the DDSP whose renders these are (its e6 or e4 run)."""
+    run = RES / "e6" / renders_name
+    if not run.exists():
+        run = RES / "e4" / renders_name
+    base = json.loads((run / "meta.json").read_text())["base"] if (run / "meta.json").exists() else renders_name
+    ids = EVAL_IDS + json.loads((RES / "e4" / base / "config.json").read_text()).get("extra_ids", [])
+    sd = torch.load(run / "model.pt", map_location="cpu", weights_only=False)
+    sd = sd if isinstance(sd, dict) else sd.state_dict()
+    E = sd.get("model", sd)["rec_emb.weight"].float()
+    assert E.shape[0] == len(ids), (E.shape, len(ids))
+    return ids, (E - E.mean(0)) / E.std()
+
+
+def refiner_from_config(cfg, h, inputs):
+    """The generator a saved run used (its weights still to be loaded)."""
+    return Refiner(h, n_stems=len(inputs.groups), inject=cfg.get("inject", "none") != "none",
+                   rec=cfg.get("rec_emb", "none"), rec_ids=cfg.get("rec_ids"), rec_dim=cfg.get("rec_dim", 32))
+
+
 @torch.no_grad()
-def vocode_long(G, inputs, y, x, dev, win=SR * 6, xf=SR // 2):
-    """Vocode a long excerpt in crossfaded windows (segment-level peak gain as in training, undone afterwards)."""
+def vocode_long(G, inputs, y, x, dev, win=SR * 6, xf=SR // 2, rec=None):
+    """Vocode a long excerpt in crossfaded windows (segment-level peak gain as in training, undone afterwards).
+    rec: the recording's embedding row (G.rec_of), for a run with --rec-emb."""
     n = y.shape[-1]
     out, wsum = np.zeros(n + win, np.float32), np.zeros(n + win, np.float32)
     ramp = np.ones(win, np.float32)
@@ -214,7 +273,10 @@ def vocode_long(G, inputs, y, x, dev, win=SR * 6, xf=SR // 2):
         g = 0.95 / max(float(ref.abs().max()), 1e-4)
         yy = torch.nn.functional.pad(yy, (0, pad)) * g
         xx = torch.nn.functional.pad(xx, (0, pad)) * g if xx is not None else None
-        o = G(**inputs(yy.to(dev), xx.to(dev) if xx is not None else None))[0, 0, :m].float().cpu().numpy() / g
+        kw = inputs(yy.to(dev), xx.to(dev) if xx is not None else None)
+        if rec is not None:
+            kw["rec"] = rec
+        o = G(**kw)[0, 0, :m].float().cpu().numpy() / g
         out[a:a + m] += o * ramp[:m]
         wsum[a:a + m] += ramp[:m]
     k = wsum > 1e-3
@@ -272,10 +334,19 @@ def main():
     ap.add_argument("--eval-every", type=int, default=5000)
     ap.add_argument("--no-ckpt", action="store_true", help="keep activations (needs far more GPU memory)")
     ap.add_argument("--sr", type=int, choices=sorted(CKPTS), default=SR, help="output rate (phase 5: 44100)")
+    ap.add_argument("--rec-emb", choices=["none", "ddsp", "table"], default="none")
     a = ap.parse_args()
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     out = RES / "e12" / a.tag
     out.mkdir(parents=True, exist_ok=True)
+    rec_table = None
+    if a.rec_emb == "ddsp":
+        assert a.renders, "--rec-emb ddsp needs the DDSP's renders"
+        a.rec_ids, rec_table = ddsp_rec_table(a.renders)
+        a.rec_dim = rec_table.shape[1]
+    elif a.rec_emb == "table":
+        assert a.renders, "--rec-emb table: the recordings are the rendered ones"
+        a.rec_ids, a.rec_dim = sorted(p.stem for p in (RES / "e12" / "renders" / a.renders).glob("*.npz")), 32
     (out / "config.json").write_text(json.dumps(vars(a), indent=1))
     ck = CKPTS[a.sr]
     h = AttrDict(json.loads((ck / "config.json").read_text()))
@@ -292,12 +363,17 @@ def main():
     inputs = Inputs(a, h, names)
     data = Data(ids, renders, a.sr)
 
-    G = Refiner(h, n_stems=len(inputs.groups), inject=a.inject != "none", ckpt=not a.no_ckpt).to(dev)
+    G = Refiner(h, n_stems=len(inputs.groups), inject=a.inject != "none", ckpt=not a.no_ckpt, rec=a.rec_emb,
+                rec_ids=getattr(a, "rec_ids", None), rec_dim=getattr(a, "rec_dim", 32), rec_table=rec_table).to(dev)
     mpd, cqtd = MultiPeriodDiscriminator(h).to(dev), MultiScaleSubbandCQTDiscriminator(h).to(dev)
-    opt_g = torch.optim.AdamW(G.parameters(), a.lr, betas=(h.adam_b1, h.adam_b2))
+    table = [p for n, p in G.named_parameters() if n == "rec_table"]  # a fresh embedding learns 10x faster
+    groups = [dict(params=[p for n, p in G.named_parameters() if n != "rec_table"], mult=1.0)]
+    if table:
+        groups.append(dict(params=table, mult=10.0))
+    opt_g = torch.optim.AdamW(groups, a.lr, betas=(h.adam_b1, h.adam_b2))
     # same parameter order as BigVGAN's train.py (CQT discriminator first), so its saved Adam moments fit
     opt_d = torch.optim.AdamW(list(cqtd.parameters()) + list(mpd.parameters()), a.lr, betas=(h.adam_b1, h.adam_b2))
-    new_params = inputs.groups or a.inject != "none"
+    new_params = inputs.groups or a.inject != "none" or a.rec_emb != "none"
     if a.init == "pretrained":
         G.g.load_state_dict(torch.load(ck / "bigvgan_generator.pt", map_location="cpu")["generator"])
         sd = torch.load(ck / "bigvgan_discriminator_optimizer.pt", map_location="cpu", weights_only=False)
@@ -309,6 +385,8 @@ def main():
         missing, unexpected = G.load_state_dict(sd["G"], strict=False)
         assert not unexpected, unexpected
         print("new (zero-initialised) parameters:", sorted({k.split(".")[0] for k in missing}), flush=True)
+        if a.rec_emb == "ddsp":  # the loaded vocoder has no table: keep the DDSP's
+            assert torch.equal(G.rec_table.cpu(), rec_table.float())
         mpd.load_state_dict(sd["mpd"])
         cqtd.load_state_dict(sd["cqtd"])
         opt_state = dict(g=sd.get("opt_g"), d=sd.get("opt_d"))
@@ -319,7 +397,7 @@ def main():
         opt_g.load_state_dict(opt_state["g"])
     for o in (opt_g, opt_d):
         for pg in o.param_groups:
-            pg["lr"] = pg["initial_lr"] = a.lr
+            pg["lr"] = pg["initial_lr"] = a.lr * pg.get("mult", 1.0)
     del sd, opt_state
     warm = 1000  # linear warm-up of both learning rates
     sched = [torch.optim.lr_scheduler.LambdaLR(o, lambda s: min(1.0, (s + 1) / warm)) for o in (opt_g, opt_d)]
@@ -338,7 +416,7 @@ def main():
                 nm, arr = x
                 rows = [0] + [1 + nm.index(p) for p in inputs.parts]
                 xt = torch.tensor(arr[rows])[None]
-            o = vocode_long(G, inputs, yt, xt, dev, win=a.sr * 6, xf=a.sr // 2)
+            o = vocode_long(G, inputs, yt, xt, dev, win=a.sr * 6, xf=a.sr // 2, rec=G.rec_of([w[0]], dev))
             if a.sr != SR:
                 o = resample_poly(o, UP[1], UP[0]).astype(np.float32)[:len(y)]
             vals.append(mss(torch.tensor(o)[None], torch.tensor(y)[None]).item())
@@ -360,7 +438,10 @@ def main():
         y, x = data.batch(a.batch, a.seg, rng, inputs.parts)
         y = y.to(dev)
         x = x.to(dev) if x is not None else None
-        y_hat = G(**inputs(y, x))
+        kw = inputs(y, x)
+        if a.rec_emb != "none":
+            kw["rec"] = G.rec_of(data.last_rids, dev)
+        y_hat = G(**kw)
         # discriminators
         r, g, _, _ = mpd(y, y_hat.detach())
         loss_d = discriminator_loss(r, g)[0]

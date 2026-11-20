@@ -31,7 +31,7 @@ import torch
 import torch.nn.functional as F
 
 sys.path.insert(0, "scripts")
-from e12_vocoder import CKPTS, D, RES, SR, UP, Inputs, Refiner, eval_windows, vocode_long  # noqa: E402
+from e12_vocoder import CKPTS, D, RES, SR, UP, Inputs, Refiner, eval_windows, refiner_from_config, vocode_long  # noqa: E402
 from scipy.signal import resample_poly  # noqa: E402
 from env import AttrDict  # noqa: E402
 
@@ -83,7 +83,7 @@ def vocoder(run, wins, real_in, dev):
     h = AttrDict(json.loads((CKPTS[sr] / "config.json").read_text()))
     names = wins[0][2][0]
     inputs = Inputs(a, h, names)
-    G = Refiner(h, n_stems=len(inputs.groups), inject=a.inject != "none").to(dev)
+    G = refiner_from_config(cfg, h, inputs).to(dev)
     if pre44:
         G.g.load_state_dict(torch.load(CKPTS[sr] / "bigvgan_generator.pt", map_location="cpu")["generator"])
     else:
@@ -95,7 +95,7 @@ def vocoder(run, wins, real_in, dev):
         rid, y, (nm, arr) = w[:3]
         yt = torch.tensor(w[3] if len(w) > 3 else y)[None, None]
         xt = None if real_in else torch.tensor(arr[[0] + [1 + nm.index(p) for p in inputs.parts]])[None]
-        o = vocode_long(G, inputs, yt, xt, dev, win=sr * 6, xf=sr // 2)
+        o = vocode_long(G, inputs, yt, xt, dev, win=sr * 6, xf=sr // 2, rec=G.rec_of([rid], dev))
         if sr != SR:  # scored at 24 kHz, as every loss
             o = resample_poly(o, UP[1], UP[0]).astype(np.float32)[:len(y)]
         out.append((f"{rid}_{k:02d}", o))

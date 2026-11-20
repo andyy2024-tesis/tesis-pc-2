@@ -20,7 +20,7 @@ import torch
 from scipy.signal import resample_poly
 
 sys.path.insert(0, "scripts")
-from e12_vocoder import CKPTS, RES, SR, UP, Inputs, Refiner, vocode_long  # noqa: E402
+from e12_vocoder import CKPTS, RES, SR, UP, Inputs, refiner_from_config, vocode_long  # noqa: E402
 from env import AttrDict  # noqa: E402
 
 from render_stems import AUDIO, LISTEN_IDS  # noqa: E402
@@ -39,7 +39,7 @@ def main():
     h = AttrDict(json.loads((CKPTS[sr] / "config.json").read_text()))
     inputs = Inputs(a, h, PARTS)
     dev = "cuda" if torch.cuda.is_available() else "cpu"
-    G = Refiner(h, n_stems=len(inputs.groups), inject=a.inject != "none").to(dev)
+    G = refiner_from_config(cfg, h, inputs).to(dev)
     G.load_state_dict(torch.load(RES / "e12" / run / "generator.pt", map_location="cpu"))
     G.g.remove_weight_norm()
     G.eval()
@@ -58,7 +58,8 @@ def main():
                 xa = resample_poly(xa, *UP, axis=1).astype(np.float32)
             x = torch.tensor(xa)[None]
             y = np.zeros(xa.shape[1], np.float32)  # only its length is used when there is a DDSP input
-        out = vocode_long(G, inputs, torch.tensor(y)[None, None], x, dev, win=sr * 6, xf=sr // 2)
+        out = vocode_long(G, inputs, torch.tensor(y)[None, None], x, dev, win=sr * 6, xf=sr // 2,
+                          rec=G.rec_of([rid], dev))
         sf.write(AUDIO / rid / f"voc-{run}-{label}.wav", out, h.sampling_rate, subtype="FLOAT")
         print("done", rid, flush=True)
 
