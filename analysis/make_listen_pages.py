@@ -19,7 +19,8 @@ TITLES = {2: ("Ataque y ruido", "El ataque y el ruido: noche del 15 al 16 de nov
           4: ("Modelo final", "El modelo final: noche del 16 al 17 de noviembre"),
           5: ("Grabación y cuerdas", "La grabación en todas las partes y las cuerdas: noche del 16 al 17 de noviembre"),
           6: ("DDSP final y vocoder", "El DDSP final y el vocoder: noche del 17 al 18 de noviembre"),
-          7: ("Vocoder: S, cuerdas y 44.1 kHz", "El vocoder: S, solo las cuerdas y 44.1 kHz, 18 de noviembre")}
+          7: ("Vocoder: S, cuerdas y 44.1 kHz", "El vocoder: S, solo las cuerdas y 44.1 kHz, 18 de noviembre"),
+          8: ("100 grabaciones y embedding", "100 grabaciones, 5× entrenamiento y el embedding de grabación: 19 al 22 de noviembre")}
 
 
 def sections(html):

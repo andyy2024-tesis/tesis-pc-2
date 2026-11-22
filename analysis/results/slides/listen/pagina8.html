@@ -1,0 +1,1733 @@
+<title>100 grabaciones y embedding</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:wght@600&display=swap">
+<style>
+/* Layout: one column of experiment sections; each holds a recordings × versions grid of play buttons; a sticky player bar at the bottom. */
+:root {
+  --bg: #F5F3EE; --surface: #FFFDF8; --line: #E2DED4; --fg: #1B1F27; --muted: #5A6170;
+  --accent: #A9531A; --accent-soft: #F3E3D6; --play: #2F5E8C; --play-soft: #DCE6F0; --on-play: #FFFFFF;
+  --serif: 'Source Serif 4', Georgia, serif; --sans: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #14181F; --surface: #1D232C; --line: #2E3542; --fg: #F0EDE6; --muted: #A8AEB8;
+  --accent: #E9943A; --accent-soft: #3A2A1B; --play: #8DB8E3; --play-soft: #24364A; --on-play: #14181F; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #14181F; --surface: #1D232C; --line: #2E3542; --fg: #F0EDE6; --muted: #A8AEB8;
+  --accent: #E9943A; --accent-soft: #3A2A1B; --play: #8DB8E3; --play-soft: #24364A; --on-play: #14181F; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 40px 140px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 48px; }
+header { display: flex; flex-direction: column; gap: 12px; max-width: 68ch; }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+h1 { font-family: var(--serif); font-size: clamp(32px, 5vw, 48px); line-height: 1.1; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--serif); font-size: 26px; line-height: 1.2; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.lede { color: var(--muted); font-size: 17px; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 15px; color: var(--muted); }
+.opts label { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+kbd { font-family: var(--mono); font-size: 13px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--surface); color: var(--fg); }
+nav { display: flex; flex-wrap: wrap; gap: 8px; }
+nav a { font-size: 14px; color: var(--fg); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; background: var(--surface); }
+nav a:hover, nav a:focus-visible { border-color: var(--accent); color: var(--accent); }
+section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 24px; }
+.sec-head { display: flex; flex-direction: column; gap: 6px; max-width: 72ch; }
+.sec-num { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.note { color: var(--muted); }
+.heard { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 10px 14px; border-radius: 0 8px 8px 0; max-width: 72ch; }
+.heard b { font-weight: 600; }
+/* The -6px margin sits on the scroller, not the table: inside it, it makes the scroller overflow vertically, and that scrollbar flickering on and off resizes the table every frame while a clip plays. */
+.grid-scroll { overflow-x: auto; overflow-y: hidden; margin: -6px; }
+table.clips { border-collapse: separate; border-spacing: 6px; }
+table.clips th { font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; vertical-align: bottom; padding: 0 4px 2px; min-width: 80px; }
+table.clips th.rec { text-align: left; min-width: 56px; }
+td.rec { font-family: var(--mono); font-weight: 500; font-size: 15px; padding-right: 6px; }
+button.cell { position: relative; overflow: hidden; width: 100%; min-width: 88px; height: 44px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--surface); color: var(--fg); font: 500 14px var(--sans); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+button.cell:hover { border-color: var(--play); }
+button.cell:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; }
+button.cell .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--play-soft); }
+button.cell .lbl { position: relative; display: inline-flex; align-items: center; gap: 6px; }
+button.cell.orig { border-style: dashed; }
+button.cell.on { border-color: var(--play); }
+button.cell.on.playing { background: var(--play); color: var(--on-play); }
+button.cell.on.playing .fill { background: rgba(255,255,255,.18); }
+th button.colhead { all: unset; box-sizing: border-box; display: block; width: 100%; cursor: pointer; text-align: center; color: var(--fg); font-size: 13px; font-weight: 600; padding: 2px 4px; border-radius: 6px; }
+th button.colhead .hint { display: block; font-weight: 500; font-size: 12px; color: var(--play); text-decoration: underline; text-underline-offset: 2px; }
+th button.colhead .hint::after { content: " ▾"; text-decoration: none; display: inline-block; }
+th button.colhead[aria-expanded="true"] { background: var(--play-soft); }
+th button.colhead[aria-expanded="true"] .hint::after { content: " ▴"; }
+th button.colhead:hover .hint { color: var(--accent); }
+th button.colhead:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; }
+.stems-tip { font-size: 14px; }
+.stems[hidden] { display: none; }
+.stems { border: 1px solid var(--line); border-left: 3px solid var(--play); border-radius: 0 8px 8px 0; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.stems-head { display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; }
+.stems-head h3 { font-family: var(--serif); font-size: 19px; margin: 0 0 4px; }
+.stems-head .note { font-size: 14px; max-width: 72ch; }
+.stems-close { flex: none; font: 500 14px var(--sans); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; min-height: 36px; cursor: pointer; }
+.stems-close:hover { border-color: var(--play); }
+.stems-close:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; }
+table.clips th .sub { display: block; font-weight: 400; font-size: 12px; font-family: var(--mono); color: var(--muted); white-space: nowrap; }
+button.cell.mixcell { border-style: dashed; border-color: var(--play); }
+button.cell.off { cursor: default; color: var(--muted); background: transparent; border-style: dotted; font-size: 12px; }
+button.cell.off:hover { border-color: var(--line); }
+.var { display: block; font-weight: 400; font-style: italic; color: var(--accent); }
+.overview { gap: 20px; }
+/* Blind mode: versions shuffled under letters; names, notes and scores hidden until "Revelar". */
+button.pill { font: 500 14px var(--sans); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; min-height: 36px; cursor: pointer; }
+button.pill:hover { border-color: var(--play); }
+button.pill:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; }
+button.pill[aria-pressed="true"] { background: var(--play); color: var(--on-play); border-color: var(--play); }
+.blindopt { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.blindopt .note { font-size: 14px; }
+body.blind .overview { display: none; }
+th .letter { font-family: var(--mono); font-size: 16px; font-weight: 600; }
+.blind-tools { display: flex; flex-direction: column; gap: 10px; max-width: 72ch; }
+.blind-tools label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--muted); }
+.blind-tools input { font: 15px var(--sans); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; min-height: 40px; width: 100%; box-sizing: border-box; }
+.blind-tools input:focus-visible { outline: 2px solid var(--play); outline-offset: 1px; }
+.blind-tools .row { display: flex; flex-wrap: wrap; gap: 8px; }
+ol.reveal { list-style: none; margin: 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+ol.reveal b { font-family: var(--mono); }
+ol.reveal .tv { color: var(--muted); }
+.live { display: flex; flex-direction: column; gap: 6px; }
+.live ul { margin: 6px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.live a { color: var(--fg); font-weight: 500; }
+.tagm { font-size: 12px; font-weight: 600; color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 0 7px; white-space: nowrap; }
+.rel { font-size: 12px; color: var(--muted); font-style: italic; white-space: nowrap; }
+.tv { font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
+details.cat { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); max-width: 100%; }
+details.cat > summary { cursor: pointer; padding: 10px 14px; font-weight: 500; font-size: 15px; }
+details.cat > summary:focus-visible { outline: 2px solid var(--play); outline-offset: 2px; border-radius: 8px; }
+.catbody { padding: 0 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+.catnote { font-size: 14px; color: var(--muted); max-width: 80ch; }
+.catscroll { overflow-x: auto; }
+table.cat { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 14px; line-height: 1.35; }
+table.cat th, table.cat td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--line); min-width: 0; }
+table.cat thead th { color: var(--muted); font-size: 13px; font-weight: 600; }
+table.cat tbody th { font-weight: 500; color: var(--fg); font-size: 14px; min-width: 150px; }
+table.cat td:nth-child(2) { min-width: 130px; }
+table.cat .num { text-align: right; font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+table.cat tr.away th, table.cat tr.away td { color: var(--muted); font-weight: 400; }
+.tree ul { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 1px solid var(--line); }
+.tree > ul { padding-left: 0; border-left: none; }
+.tree li { padding: 7px 0 0 10px; }
+.tree > ul > li { padding-left: 0; }
+.tree li.cont > .tn { color: var(--accent); }
+.tree .tn { font-weight: 500; }
+.tc { font-size: 14px; color: var(--muted); max-width: 72ch; }
+@media (max-width: 560px) { .tree ul { padding-left: 8px; } .tree li { padding-left: 6px; } .tv { white-space: normal; } }
+.ico { width: 10px; height: 12px; display: inline-block; }
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--surface); border-top: 1px solid var(--line);
+  padding-block: 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar-in { max-width: 1080px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+.bar button { flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--play); color: var(--on-play); cursor: pointer; display: grid; place-items: center; }
+.bar button:disabled { opacity: .4; cursor: default; }
+.bar button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.now { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.now-t { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.now-t b { font-family: var(--mono); font-weight: 500; }
+.ico { pointer-events: none; }
+.seek { width: 100%; accent-color: var(--play); margin: 0; }
+.time { flex: none; font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .time { display: none; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Tesis · DDSP para guitarra</p>
+    <h1>100 grabaciones, 5× entrenamiento y el embedding de grabación: 19 al 22 de noviembre</h1>
+    <p class="lede">Cada botón toca una sola versión de un fragmento de test de 9 s. Las versiones de una misma grabación tienen la misma ganancia, así que los niveles y el ruido se pueden comparar. La fila es la grabación (023, 176, 276, 277, 306); la columna, la versión.</p>
+    <p class="lede" id="pages"></p>
+    <div class="opts">
+      <span><kbd>←</kbd> <kbd>→</kbd> versión · <kbd>↑</kbd> <kbd>↓</kbd> grabación · <kbd>Espacio</kbd> pausa</span>
+    </div>
+    <div class="blindopt">
+      <button id="blind" class="pill" type="button" aria-pressed="false">Modo ciego</button>
+      <span class="note">Baraja las versiones de cada sección y oculta nombres, notas y puntajes hasta que pulses «Revelar».</span>
+    </div>
+  </header>
+  <section class="overview" aria-label="Modelos">
+    <div class="live"><h2>Modelos vivos</h2><p class="note">Los candidatos actuales, con su loss, su viento y su KAD.</p><ul id="live"></ul></div>
+    <details class="cat"><summary>Árbol completo de modelos</summary><div class="catbody">
+      <p class="catnote"><b>Continúa:</b> sigue entrenando con los pesos del modelo de arriba (los adversariales). <b>Desde cero:</b> misma receta que el de arriba más un cambio, entrenado de nuevo. Un modelo con el ruido apagado no aparece aquí: es el mismo modelo, generado distinto. Entre dos entrenamientos idénticos con otra semilla, la loss se mueve hasta 0.03: una diferencia menor no significa nada.</p>
+      <p class="catnote">Todas las losses son la media sobre las mismas 85 ventanas de test, medidas con el mismo script; las tablas de E4 traían medianas, por eso no coinciden con esas. Viento: ruido residual en el 20 % más silencioso de cada ventana, relativo al original. KAD: qué tan lejos suena del original en general, no nota por nota (Kernel Audio Distance ×100, sobre las mismas 85 ventanas; menor = más real). Dos números: PANNs (cómo suena en general) · EnCodec (el detalle acústico fino). La loss compara con una grabación concreta y premia un promedio liso, así que para el vocoder decide KAD; diferencias de menos de ~0.5 (PANNs) o ~0.1 (EnCodec) pueden ser azar. Medida solo en los modelos de la página 6. † Tomada de los resultados; sus pesos no se guardaron.</p>
+      <div id="tree" class="tree"></div></div></details>
+  </section>
+  <nav id="toc" aria-label="Experimentos"></nav>
+  <div id="sections" style="display:flex;flex-direction:column;gap:56px"></div>
+</div>
+
+<div class="bar" role="region" aria-label="Reproductor">
+  <div class="bar-in">
+    <button id="pp" type="button" aria-label="Reproducir" disabled></button>
+    <div class="now">
+      <p class="now-t" id="nowt">Elige una versión para escuchar</p>
+      <input class="seek" id="seek" type="range" min="0" max="9" step="0.01" value="0" aria-label="Posición" disabled>
+    </div>
+    <span class="time" id="time">0.0 / 9.0 s</span>
+  </div>
+</div>
+
+<script>
+/*STEMS*/const STEMS = {"e6-structured_v9_t32_no_gate_noise_strongD":{"023_Ypswc":{"strings":-0.0,"burst":-123.3,"click":-63.2,"body":-23.6,"floor":-46.9,"noise":-34.2},"176_mM1wc":{"strings":-0.0,"burst":-112.7,"click":-54.7,"body":-16.2,"floor":-56.6,"noise":-27.3},"276_jw1wc":{"strings":-0.1,"burst":-116.5,"click":-60.5,"body":-18.2,"floor":-57.6,"noise":-34.9},"277_Pw1wc":{"strings":-0.0,"burst":-119.6,"click":-62.3,"body":-23.4,"floor":-55.6,"noise":-34.6},"306_7c1wc":{"strings":-0.1,"burst":-107.0,"click":-52.0,"body":-15.8,"floor":-72.3,"noise":-28.0}},"e6-structured_v5_body_audio_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-80.4,"body":-20.1,"floor":-51.5,"noise":-32.1},"176_mM1wc":{"strings":-0.1,"burst":-63.3,"body":-13.4,"floor":-60.8,"noise":-28.3},"276_jw1wc":{"strings":-0.1,"burst":-67.4,"body":-16.2,"floor":-67.6,"noise":-34.9},"277_Pw1wc":{"strings":-0.1,"burst":-56.9,"body":-14.5,"floor":-68.0,"noise":-34.2},"306_7c1wc":{"strings":-0.2,"burst":-56.8,"body":-13.9,"floor":-70.9,"noise":-28.3}},"structured_v9_base_t32":{"023_Ypswc":{"strings":-0.0,"burst":-82.6,"body":-22.6,"floor":-54.5,"noise":-33.1},"176_mM1wc":{"strings":-0.0,"burst":-73.3,"body":-18.1,"floor":-61.4,"noise":-28.5},"276_jw1wc":{"strings":-0.1,"burst":-75.0,"body":-19.7,"floor":-68.4,"noise":-33.4},"277_Pw1wc":{"strings":-0.0,"burst":-73.1,"body":-21.5,"floor":-68.5,"noise":-33.1},"306_7c1wc":{"strings":-0.1,"burst":-66.4,"body":-18.7,"floor":-71.4,"noise":-28.1}},"e6-structured_v9_base_t32_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-83.2,"body":-19.1,"floor":-53.9,"noise":-32.0},"176_mM1wc":{"strings":-0.1,"burst":-76.8,"body":-14.3,"floor":-61.0,"noise":-24.5},"276_jw1wc":{"strings":-0.1,"burst":-80.7,"body":-16.5,"floor":-67.7,"noise":-30.3},"277_Pw1wc":{"strings":-0.1,"burst":-72.5,"body":-16.1,"floor":-67.9,"noise":-30.8},"306_7c1wc":{"strings":-0.2,"burst":-67.3,"body":-13.8,"floor":-70.9,"noise":-25.1}},"structured_v9_t32_no_gate":{"023_Ypswc":{"strings":-0.0,"burst":-103.8,"click":-64.7,"body":-25.5,"floor":-47.5,"noise":-34.0},"176_mM1wc":{"strings":-0.0,"burst":-97.6,"click":-56.9,"body":-17.4,"floor":-56.8,"noise":-29.3},"276_jw1wc":{"strings":-0.1,"burst":-100.4,"click":-61.9,"body":-19.2,"floor":-57.7,"noise":-34.7},"277_Pw1wc":{"strings":-0.0,"burst":-103.9,"click":-63.7,"body":-24.9,"floor":-55.9,"noise":-33.9},"306_7c1wc":{"strings":-0.1,"burst":-93.0,"click":-53.1,"body":-16.8,"floor":-72.5,"noise":-30.1}},"structured_v10_m1_burst":{"023_Ypswc":{"strings":-0.0,"burst":-36.2,"body":-22.7,"floor":-54.6,"noise":-31.3},"176_mM1wc":{"strings":-0.0,"burst":-36.3,"body":-18.0,"floor":-61.0,"noise":-29.7},"276_jw1wc":{"strings":-0.1,"burst":-41.2,"body":-19.1,"floor":-68.2,"noise":-34.3},"277_Pw1wc":{"strings":-0.0,"burst":-35.9,"body":-20.8,"floor":-68.1,"noise":-35.5},"306_7c1wc":{"strings":-0.1,"burst":-31.8,"body":-17.1,"floor":-71.5,"noise":-31.9}},"structured_v10_m2_burst":{"023_Ypswc":{"strings":-0.0,"burst":-34.6,"click":-65.7,"body":-24.6,"floor":-47.6,"noise":-29.9},"176_mM1wc":{"strings":-0.0,"burst":-38.1,"click":-57.1,"body":-17.7,"floor":-55.5,"noise":-28.3},"276_jw1wc":{"strings":-0.0,"burst":-40.6,"click":-64.3,"body":-21.0,"floor":-60.1,"noise":-31.5},"277_Pw1wc":{"strings":-0.0,"burst":-40.4,"click":-64.5,"body":-24.9,"floor":-54.1,"noise":-29.4},"306_7c1wc":{"strings":-0.1,"burst":-30.4,"click":-53.7,"body":-16.9,"floor":-72.6,"noise":-26.3}},"structured_v10_m2_lstm":{"023_Ypswc":{"strings":-0.0,"burst":-103.4,"click":-64.4,"body":-22.6,"floor":-47.2,"noise":-33.3},"176_mM1wc":{"strings":-0.0,"burst":-95.6,"click":-57.1,"body":-19.0,"floor":-54.6,"noise":-26.8},"276_jw1wc":{"strings":-0.1,"burst":-97.6,"click":-61.1,"body":-19.9,"floor":-49.0,"noise":-29.7},"277_Pw1wc":{"strings":-0.0,"burst":-102.4,"click":-62.9,"body":-23.6,"floor":-53.3,"noise":-33.0},"306_7c1wc":{"strings":-0.1,"burst":-95.4,"click":-53.5,"body":-16.3,"floor":-70.9,"noise":-31.4}},"structured_v10_m2_floor":{"023_Ypswc":{"strings":-0.0,"burst":-103.6,"click":-64.6,"body":-25.0,"floor":-43.1,"noise":-36.1},"176_mM1wc":{"strings":0.0,"burst":-97.5,"click":-56.5,"body":-17.6,"floor":-39.9,"noise":-30.6},"276_jw1wc":{"strings":-0.1,"burst":-100.2,"click":-62.0,"body":-20.4,"floor":-43.3,"noise":-37.7},"277_Pw1wc":{"strings":-0.0,"burst":-101.4,"click":-63.3,"body":-25.3,"floor":-38.5,"noise":-33.7},"306_7c1wc":{"strings":-0.1,"burst":-94.4,"click":-53.5,"body":-16.4,"floor":-63.2,"noise":-28.1}},"structured_v10_m2_bilstm":{"023_Ypswc":{"strings":-0.0,"burst":-104.4,"click":-64.0,"body":-25.9,"floor":-47.8,"noise":-34.6},"176_mM1wc":{"strings":0.0,"burst":-98.2,"click":-57.4,"body":-17.0,"floor":-56.2,"noise":-29.8},"276_jw1wc":{"strings":-0.0,"burst":-101.0,"click":-62.0,"body":-20.6,"floor":-52.7,"noise":-33.8},"277_Pw1wc":{"strings":-0.0,"burst":-105.1,"click":-63.8,"body":-24.2,"floor":-54.6,"noise":-34.9},"306_7c1wc":{"strings":-0.1,"burst":-92.9,"click":-53.6,"body":-17.2,"floor":-72.9,"noise":-30.4}},"structured_v10_m2_slow":{"023_Ypswc":{"strings":-0.1,"burst":-104.2,"click":-64.9,"body":-20.5,"floor":-49.4,"noise":-30.8},"176_mM1wc":{"strings":0.0,"burst":-98.0,"click":-56.5,"body":-16.5,"floor":-56.0,"noise":-29.2},"276_jw1wc":{"strings":-0.0,"burst":-100.4,"click":-63.4,"body":-20.8,"floor":-60.7,"noise":-33.4},"277_Pw1wc":{"strings":-0.0,"burst":-99.2,"click":-63.0,"body":-26.4,"floor":-54.6,"noise":-35.3},"306_7c1wc":{"strings":-0.1,"burst":-92.8,"click":-53.3,"body":-17.0,"floor":-70.3,"noise":-32.5}},"e6-structured_v10_m1_burst_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-32.1,"body":-18.9,"floor":-53.8,"noise":-31.7},"176_mM1wc":{"strings":-0.1,"burst":-32.7,"body":-14.2,"floor":-60.5,"noise":-26.2},"276_jw1wc":{"strings":-0.1,"burst":-37.4,"body":-16.0,"floor":-67.3,"noise":-32.4},"277_Pw1wc":{"strings":-0.1,"burst":-33.2,"body":-16.5,"floor":-67.3,"noise":-34.5},"306_7c1wc":{"strings":-0.2,"burst":-30.3,"body":-13.5,"floor":-70.7,"noise":-28.9}},"structured_v10_m2_attn":{"023_Ypswc":{"strings":-0.0,"burst":-102.8,"click":-66.1,"body":-24.5,"floor":-45.8,"noise":-31.0},"176_mM1wc":{"strings":0.0,"burst":-98.7,"click":-57.7,"body":-17.3,"floor":-48.0,"noise":-29.6},"276_jw1wc":{"strings":-0.1,"burst":-101.5,"click":-62.8,"body":-19.8,"floor":-46.2,"noise":-35.4},"277_Pw1wc":{"strings":-0.0,"burst":-104.1,"click":-64.3,"body":-24.2,"floor":-49.1,"noise":-32.3},"306_7c1wc":{"strings":-0.1,"burst":-96.0,"click":-54.5,"body":-16.3,"floor":-66.5,"noise":-28.9}},"structured_v10_m2_strings":{"023_Ypswc":{"strings":-0.0,"burst":-100.1,"click":-64.3,"body":-22.6,"floor":-46.0,"noise":-35.0},"176_mM1wc":{"strings":-0.0,"burst":-96.0,"click":-55.3,"body":-17.8,"floor":-54.7,"noise":-31.8},"276_jw1wc":{"strings":-0.1,"burst":-98.3,"click":-61.9,"body":-21.1,"floor":-57.9,"noise":-35.2},"277_Pw1wc":{"strings":-0.0,"burst":-98.3,"click":-63.6,"body":-25.1,"floor":-39.7,"noise":-38.1},"306_7c1wc":{"strings":-0.1,"burst":-94.0,"click":-53.7,"body":-16.6,"floor":-70.2,"noise":-33.4}},"e6-structured_v9_t32_no_gate_noise_strongD_contact_rise":{"023_Ypswc":{"strings":-0.0,"burst":-129.0,"click":-62.5,"contact":-71.9,"body":-23.8,"floor":-46.8,"noise":-32.8},"176_mM1wc":{"strings":-0.1,"burst":-116.5,"click":-53.8,"contact":-101.3,"body":-16.1,"floor":-56.6,"noise":-27.8},"276_jw1wc":{"strings":-0.1,"burst":-122.2,"click":-60.1,"contact":-96.7,"body":-18.2,"floor":-57.6,"noise":-34.0},"277_Pw1wc":{"strings":-0.0,"burst":-124.7,"click":-61.4,"contact":-94.5,"body":-23.6,"floor":-55.7,"noise":-32.5},"306_7c1wc":{"strings":-0.1,"burst":-110.8,"click":-51.5,"contact":-105.9,"body":-16.0,"floor":-72.4,"noise":-27.0}},"structured_v10_m1_burst_floor":{"023_Ypswc":{"strings":-0.0,"burst":-34.6,"body":-22.1,"floor":-42.2,"noise":-36.5},"176_mM1wc":{"strings":0.0,"burst":-35.7,"body":-18.2,"floor":-59.7,"noise":-31.8},"276_jw1wc":{"strings":-0.1,"burst":-40.5,"body":-20.5,"floor":-46.2,"noise":-39.4},"277_Pw1wc":{"strings":-0.0,"burst":-36.1,"body":-21.0,"floor":-50.2,"noise":-41.1},"306_7c1wc":{"strings":-0.1,"burst":-32.0,"body":-16.2,"floor":-69.7,"noise":-37.1}},"structured_v10_m2_strings_xvoice":{"023_Ypswc":{"strings":-0.0,"burst":-108.6,"click":-66.1,"body":-22.1,"floor":-45.4,"noise":-34.4},"176_mM1wc":{"strings":0.0,"burst":-99.3,"click":-57.2,"body":-18.2,"floor":-52.5,"noise":-30.2},"276_jw1wc":{"strings":-0.0,"burst":-99.5,"click":-63.3,"body":-21.2,"floor":-47.3,"noise":-34.7},"277_Pw1wc":{"strings":-0.0,"burst":-104.6,"click":-64.6,"body":-26.9,"floor":-55.7,"noise":-33.9},"306_7c1wc":{"strings":-0.1,"burst":-100.6,"click":-54.6,"body":-17.5,"floor":-67.4,"noise":-31.5}},"e6-structured_v10_m2_strings_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-116.4,"click":-63.1,"body":-20.7,"floor":-45.4,"noise":-31.9},"176_mM1wc":{"strings":-0.1,"burst":-108.7,"click":-53.4,"body":-15.9,"floor":-54.4,"noise":-29.1},"276_jw1wc":{"strings":-0.1,"burst":-111.8,"click":-60.4,"body":-18.6,"floor":-57.3,"noise":-31.9},"277_Pw1wc":{"strings":-0.0,"burst":-111.7,"click":-62.5,"body":-23.3,"floor":-39.3,"noise":-35.6},"306_7c1wc":{"strings":-0.1,"burst":-105.6,"click":-52.4,"body":-15.1,"floor":-69.9,"noise":-31.3}},"structured_v10_m2_strings_attn":{"023_Ypswc":{"strings":-0.0,"burst":-102.3,"click":-65.9,"body":-21.2,"floor":-45.3,"noise":-35.3},"176_mM1wc":{"strings":0.0,"burst":-100.9,"click":-55.9,"body":-19.0,"floor":-49.6,"noise":-29.0},"276_jw1wc":{"strings":-0.0,"burst":-104.2,"click":-63.2,"body":-20.0,"floor":-45.2,"noise":-34.4},"277_Pw1wc":{"strings":-0.0,"burst":-103.5,"click":-65.4,"body":-25.0,"floor":-42.6,"noise":-32.2},"306_7c1wc":{"strings":-0.1,"burst":-102.1,"click":-54.9,"body":-16.0,"floor":-68.0,"noise":-32.4}},"structured_v10_m1_burst_strings":{"023_Ypswc":{"strings":-0.0,"burst":-36.3,"body":-22.5,"floor":-55.1,"noise":-32.6},"176_mM1wc":{"strings":0.0,"burst":-36.0,"body":-17.7,"floor":-61.1,"noise":-29.2},"276_jw1wc":{"strings":-0.1,"burst":-40.9,"body":-19.9,"floor":-69.0,"noise":-35.0},"277_Pw1wc":{"strings":-0.0,"burst":-36.9,"body":-23.2,"floor":-68.4,"noise":-33.8},"306_7c1wc":{"strings":-0.1,"burst":-32.0,"body":-17.6,"floor":-71.8,"noise":-30.8}},"e6-structured_v10_m2_strings_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-121.1,"click":-63.0,"body":-20.7,"floor":-45.5,"noise":-33.0},"176_mM1wc":{"strings":-0.1,"burst":-111.1,"click":-53.4,"body":-15.9,"floor":-54.5,"noise":-29.6},"276_jw1wc":{"strings":-0.0,"burst":-114.7,"click":-60.4,"body":-18.9,"floor":-57.4,"noise":-32.8},"277_Pw1wc":{"strings":-0.0,"burst":-113.0,"click":-62.4,"body":-23.1,"floor":-39.3,"noise":-36.5},"306_7c1wc":{"strings":-0.1,"burst":-108.0,"click":-52.9,"body":-15.3,"floor":-69.9,"noise":-32.0}},"e6-structured_v10_m1_burst_strings_noise_strongD":{"023_Ypswc":{"strings":-0.0,"burst":-35.2,"body":-18.7,"floor":-54.5,"noise":-29.4},"176_mM1wc":{"strings":-0.1,"burst":-34.5,"body":-13.1,"floor":-60.4,"noise":-25.0},"276_jw1wc":{"strings":-0.1,"burst":-39.5,"body":-16.5,"floor":-68.4,"noise":-28.2},"277_Pw1wc":{"strings":-0.0,"burst":-35.4,"body":-17.8,"floor":-67.7,"noise":-30.2},"306_7c1wc":{"strings":-0.2,"burst":-30.5,"body":-12.8,"floor":-71.0,"noise":-27.0}},"structured_v10_m1_burst_floor_strings":{"023_Ypswc":{"strings":-0.0,"burst":-37.0,"body":-22.1,"floor":-42.2,"noise":-38.8},"176_mM1wc":{"strings":-0.1,"burst":-35.0,"body":-18.0,"floor":-60.7,"noise":-33.8},"276_jw1wc":{"strings":-0.0,"burst":-39.6,"body":-20.0,"floor":-48.7,"noise":-39.7},"277_Pw1wc":{"strings":-0.0,"burst":-36.2,"body":-20.0,"floor":-62.3,"noise":-38.2},"306_7c1wc":{"strings":-0.1,"burst":-31.5,"body":-17.6,"floor":-71.0,"noise":-34.5}},"structured_v10_m2_strings_bilstm":{"023_Ypswc":{"strings":-0.0,"burst":-106.0,"click":-65.0,"body":-22.7,"floor":-47.2,"noise":-33.2},"176_mM1wc":{"strings":0.0,"burst":-100.1,"click":-55.3,"body":-17.2,"floor":-54.7,"noise":-28.7},"276_jw1wc":{"strings":-0.1,"burst":-100.3,"click":-63.4,"body":-19.6,"floor":-62.3,"noise":-32.5},"277_Pw1wc":{"strings":-0.0,"burst":-98.9,"click":-63.8,"body":-26.0,"floor":-54.4,"noise":-37.4},"306_7c1wc":{"strings":-0.1,"burst":-98.3,"click":-53.1,"body":-16.5,"floor":-71.0,"noise":-33.9}},"structured_v10_m2_strings_seed1":{"023_Ypswc":{"strings":-0.0,"burst":-106.1,"click":-65.3,"body":-22.3,"floor":-55.1,"noise":-32.5},"176_mM1wc":{"strings":-0.1,"burst":-96.4,"click":-56.0,"body":-16.0,"floor":-55.1,"noise":-30.9},"276_jw1wc":{"strings":-0.0,"burst":-99.9,"click":-61.8,"body":-20.8,"floor":-60.1,"noise":-33.9},"277_Pw1wc":{"strings":-0.0,"burst":-103.8,"click":-62.9,"body":-24.1,"floor":-54.9,"noise":-33.0},"306_7c1wc":{"strings":-0.1,"burst":-98.2,"click":-54.1,"body":-17.0,"floor":-71.1,"noise":-31.9}},"e6-structured_v10_m1_burst_floor_strings_noise_strongD":{"023_Ypswc":{"strings":-0.1,"burst":-33.9,"body":-19.1,"floor":-41.6,"noise":-33.9},"176_mM1wc":{"strings":-0.2,"burst":-33.8,"body":-13.3,"floor":-60.2,"noise":-28.4},"276_jw1wc":{"strings":-0.1,"burst":-38.5,"body":-16.4,"floor":-47.6,"noise":-34.1},"277_Pw1wc":{"strings":-0.1,"burst":-35.0,"body":-14.9,"floor":-61.3,"noise":-30.8},"306_7c1wc":{"strings":-0.2,"burst":-30.4,"body":-13.0,"floor":-70.3,"noise":-30.6}},"e6-structured_v10_m1_burst_floor_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-35.4,"body":-18.8,"floor":-41.3,"noise":-35.2},"176_mM1wc":{"strings":-0.1,"burst":-32.9,"body":-14.2,"floor":-58.9,"noise":-27.8},"276_jw1wc":{"strings":-0.1,"burst":-38.9,"body":-17.2,"floor":-45.0,"noise":-36.4},"277_Pw1wc":{"strings":-0.1,"burst":-33.9,"body":-16.7,"floor":-49.2,"noise":-37.9},"306_7c1wc":{"strings":-0.2,"burst":-30.1,"body":-12.8,"floor":-69.0,"noise":-31.5}},"structured_v11_m1_attn":{"023_Ypswc":{"strings":-0.0,"burst":-38.4,"body":-22.1,"floor":-41.3,"noise":-35.1},"176_mM1wc":{"strings":-0.0,"burst":-35.9,"body":-18.3,"floor":-44.2,"noise":-33.0},"276_jw1wc":{"strings":-0.1,"burst":-41.1,"body":-19.4,"floor":-43.1,"noise":-37.9},"277_Pw1wc":{"strings":-0.0,"burst":-37.2,"body":-20.5,"floor":-39.0,"noise":-40.6},"306_7c1wc":{"strings":-0.1,"burst":-33.0,"body":-16.2,"floor":-43.5,"noise":-35.4}},"structured_v11_m1_attn_ahead":{"023_Ypswc":{"strings":-0.0,"burst":-36.7,"body":-21.8,"floor":-41.3,"noise":-39.4},"176_mM1wc":{"strings":-0.1,"burst":-36.0,"body":-17.5,"floor":-43.1,"noise":-33.8},"276_jw1wc":{"strings":-0.0,"burst":-41.6,"body":-18.7,"floor":-43.0,"noise":-38.5},"277_Pw1wc":{"strings":-0.0,"burst":-37.0,"body":-22.5,"floor":-38.8,"noise":-39.2},"306_7c1wc":{"strings":-0.1,"burst":-32.3,"body":-16.4,"floor":-64.0,"noise":-34.8}},"structured_v11_m1_attn_ahead_xvoice":{"023_Ypswc":{"strings":-0.0,"burst":-36.7,"body":-22.0,"floor":-41.7,"noise":-37.3},"176_mM1wc":{"strings":-0.0,"burst":-36.8,"body":-18.1,"floor":-42.3,"noise":-28.5},"276_jw1wc":{"strings":-0.1,"burst":-39.1,"body":-18.6,"floor":-43.3,"noise":-36.3},"277_Pw1wc":{"strings":-0.0,"burst":-37.5,"body":-20.9,"floor":-38.1,"noise":-37.8},"306_7c1wc":{"strings":-0.1,"burst":-32.7,"body":-16.9,"floor":-60.3,"noise":-34.1}},"e6-structured_v11_m1_attn_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-35.6,"body":-19.2,"floor":-40.6,"noise":-37.3},"176_mM1wc":{"strings":-0.2,"burst":-34.0,"body":-14.5,"floor":-43.5,"noise":-32.6},"276_jw1wc":{"strings":-0.1,"burst":-39.3,"body":-16.5,"floor":-42.4,"noise":-36.3},"277_Pw1wc":{"strings":-0.1,"burst":-35.1,"body":-16.6,"floor":-38.4,"noise":-38.5},"306_7c1wc":{"strings":-0.2,"burst":-31.1,"body":-12.8,"floor":-42.7,"noise":-32.2}},"structured_v11_m1_attn_ahead_contact":{"023_Ypswc":{"strings":-0.0,"burst":-35.8,"contact":-46.6,"body":-23.5,"floor":-41.4,"noise":-37.1},"176_mM1wc":{"strings":0.0,"burst":-35.8,"contact":-44.4,"body":-18.3,"floor":-36.0,"noise":-29.6},"276_jw1wc":{"strings":-0.1,"burst":-41.0,"contact":-42.5,"body":-19.1,"floor":-42.5,"noise":-41.9},"277_Pw1wc":{"strings":-0.0,"burst":-34.9,"contact":-36.3,"body":-19.9,"floor":-37.6,"noise":-45.3},"306_7c1wc":{"strings":-0.1,"burst":-32.6,"contact":-34.0,"body":-16.8,"floor":-37.6,"noise":-46.2}},"e6-structured_v11_m1_attn_ahead_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-34.7,"body":-19.1,"floor":-40.8,"noise":-40.9},"176_mM1wc":{"strings":-0.2,"burst":-34.3,"body":-14.6,"floor":-42.9,"noise":-28.6},"276_jw1wc":{"strings":-0.1,"burst":-40.0,"body":-16.4,"floor":-42.4,"noise":-36.8},"277_Pw1wc":{"strings":-0.1,"burst":-34.4,"body":-18.3,"floor":-38.3,"noise":-38.6},"306_7c1wc":{"strings":-0.2,"burst":-30.6,"body":-13.2,"floor":-63.2,"noise":-30.3}},"e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-35.8,"body":-18.3,"floor":-41.1,"noise":-32.9},"176_mM1wc":{"strings":-0.2,"burst":-36.2,"body":-14.5,"floor":-41.2,"noise":-28.4},"276_jw1wc":{"strings":-0.1,"burst":-40.4,"body":-15.9,"floor":-42.3,"noise":-32.9},"277_Pw1wc":{"strings":-0.1,"burst":-37.4,"body":-16.7,"floor":-37.4,"noise":-34.6},"306_7c1wc":{"strings":-0.3,"burst":-31.7,"body":-12.9,"floor":-58.9,"noise":-27.4}},"structured_v11_m1_attn_ahead_rec":{"023_Ypswc":{"strings":-0.0,"burst":-41.0,"body":-23.3,"floor":-42.1,"noise":-36.7},"176_mM1wc":{"strings":0.0,"burst":-37.2,"body":-18.1,"floor":-48.7,"noise":-31.0},"276_jw1wc":{"strings":-0.1,"burst":-42.0,"body":-19.0,"floor":-44.2,"noise":-35.6},"277_Pw1wc":{"strings":-0.0,"burst":-39.1,"body":-20.4,"floor":-40.7,"noise":-36.9},"306_7c1wc":{"strings":-0.1,"burst":-33.1,"body":-16.8,"floor":-66.3,"noise":-32.7}},"e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise":{"023_Ypswc":{"strings":-0.0,"burst":-35.3,"contact":-48.7,"body":-20.5,"floor":-40.7,"noise":-36.2},"176_mM1wc":{"strings":-0.1,"burst":-35.7,"contact":-45.5,"body":-15.5,"floor":-35.7,"noise":-26.1},"276_jw1wc":{"strings":-0.1,"burst":-40.0,"contact":-41.6,"body":-17.1,"floor":-42.0,"noise":-35.7},"277_Pw1wc":{"strings":-0.1,"burst":-32.4,"contact":-32.9,"body":-15.8,"floor":-37.1,"noise":-42.2},"306_7c1wc":{"strings":-0.2,"burst":-32.0,"contact":-32.8,"body":-13.4,"floor":-37.0,"noise":-41.6}},"e6-structured_v11_m1_attn_ahead_rec_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-39.3,"body":-20.1,"floor":-41.8,"noise":-34.5},"176_mM1wc":{"strings":-0.0,"burst":-35.4,"body":-16.0,"floor":-48.6,"noise":-29.4},"276_jw1wc":{"strings":-0.1,"burst":-39.8,"body":-16.7,"floor":-43.7,"noise":-32.3},"277_Pw1wc":{"strings":-0.1,"burst":-36.4,"body":-17.1,"floor":-40.2,"noise":-36.2},"306_7c1wc":{"strings":-0.2,"burst":-31.7,"body":-13.7,"floor":-65.8,"noise":-28.3}},"structured_v11_m1_strings_oldB":{"023_Ypswc":{"strings":-0.0,"burst":-37.7,"body":-22.8,"floor":-41.9,"noise":-37.2},"176_mM1wc":{"strings":0.0,"burst":-35.4,"body":-18.4,"floor":-60.3,"noise":-31.2},"276_jw1wc":{"strings":-0.1,"burst":-39.7,"body":-19.1,"floor":-45.7,"noise":-35.7},"277_Pw1wc":{"strings":-0.0,"burst":-35.4,"body":-20.5,"floor":-58.7,"noise":-38.1},"306_7c1wc":{"strings":-0.1,"burst":-31.5,"body":-17.4,"floor":-70.8,"noise":-35.2}},"structured_v11_m2_rec":{"023_Ypswc":{"strings":-0.0,"burst":-46.2,"click":-60.3,"body":-24.3,"floor":-48.5,"noise":-31.6},"176_mM1wc":{"strings":-0.0,"burst":-49.1,"click":-53.4,"body":-19.0,"floor":-56.4,"noise":-29.2},"276_jw1wc":{"strings":-0.0,"burst":-54.9,"click":-60.8,"body":-21.1,"floor":-62.6,"noise":-33.7},"277_Pw1wc":{"strings":-0.0,"burst":-50.8,"click":-56.6,"body":-24.8,"floor":-57.6,"noise":-33.5},"306_7c1wc":{"strings":-0.1,"burst":-43.3,"click":-48.7,"body":-16.8,"floor":-72.4,"noise":-28.6}},"structured_v11_m1_strings_guitarB":{"023_Ypswc":{"strings":-0.0,"burst":-40.4,"body":-23.7,"floor":-42.1,"noise":-37.8},"176_mM1wc":{"strings":-0.0,"burst":-36.1,"body":-18.4,"floor":-61.1,"noise":-32.6},"276_jw1wc":{"strings":-0.0,"burst":-41.3,"body":-20.7,"floor":-46.4,"noise":-38.5},"277_Pw1wc":{"strings":-0.0,"burst":-36.9,"body":-20.9,"floor":-61.9,"noise":-38.7},"306_7c1wc":{"strings":-0.1,"burst":-31.8,"body":-17.9,"floor":-71.1,"noise":-36.3}},"structured_v11_m1_strings_decay":{"023_Ypswc":{"strings":-0.0,"burst":-36.9,"body":-22.8,"floor":-42.3,"noise":-40.5},"176_mM1wc":{"strings":-0.1,"burst":-36.0,"body":-18.0,"floor":-61.2,"noise":-33.2},"276_jw1wc":{"strings":-0.1,"burst":-41.1,"body":-20.0,"floor":-48.1,"noise":-38.6},"277_Pw1wc":{"strings":-0.0,"burst":-36.3,"body":-20.1,"floor":-62.1,"noise":-34.5},"306_7c1wc":{"strings":-0.1,"burst":-31.7,"body":-17.3,"floor":-70.7,"noise":-33.6}},"structured_v11_m1_strings_oldvoices":{"023_Ypswc":{"strings":-0.0,"burst":-39.0,"body":-20.5,"floor":-42.2,"noise":-35.0},"176_mM1wc":{"strings":-0.0,"burst":-37.7,"body":-17.7,"floor":-61.0,"noise":-30.6},"276_jw1wc":{"strings":-0.1,"burst":-41.7,"body":-18.3,"floor":-46.3,"noise":-39.2},"277_Pw1wc":{"strings":-0.0,"burst":-37.5,"body":-20.3,"floor":-58.0,"noise":-36.9},"306_7c1wc":{"strings":-0.1,"burst":-32.9,"body":-17.3,"floor":-70.9,"noise":-35.2}},"structured_v11_m1_attn_ahead_rec32":{"023_Ypswc":{"strings":-0.0,"burst":-39.4,"body":-21.3,"floor":-42.0,"noise":-38.9},"176_mM1wc":{"strings":-0.0,"burst":-38.5,"body":-17.3,"floor":-48.2,"noise":-30.5},"276_jw1wc":{"strings":-0.1,"burst":-42.1,"body":-18.7,"floor":-43.6,"noise":-36.5},"277_Pw1wc":{"strings":-0.0,"burst":-39.9,"body":-19.8,"floor":-38.9,"noise":-34.7},"306_7c1wc":{"strings":-0.1,"burst":-34.4,"body":-16.8,"floor":-63.9,"noise":-33.7}},"structured_v12_final":{"023_Ypswc":{"strings":-0.0,"burst":-37.1,"contact":-48.5,"body":-21.2,"floor":-42.1,"noise":-39.9},"176_mM1wc":{"strings":-0.1,"burst":-33.5,"contact":-44.9,"body":-15.1,"floor":-34.2,"noise":-32.9},"276_jw1wc":{"strings":-0.1,"burst":-41.0,"contact":-41.8,"body":-19.1,"floor":-44.3,"noise":-38.8},"277_Pw1wc":{"strings":-0.0,"burst":-38.9,"contact":-34.8,"body":-20.2,"floor":-39.7,"noise":-38.3},"306_7c1wc":{"strings":-0.1,"burst":-34.4,"contact":-31.1,"body":-15.7,"floor":-42.4,"noise":-38.2}},"structured_v12_final_learnedB":{"023_Ypswc":{"strings":-0.0,"burst":-35.1,"contact":-49.4,"body":-23.1,"floor":-39.4,"noise":-41.1},"176_mM1wc":{"strings":-0.1,"burst":-37.9,"contact":-45.6,"body":-15.1,"floor":-33.4,"noise":-31.0},"276_jw1wc":{"strings":-0.1,"burst":-41.6,"contact":-42.7,"body":-18.0,"floor":-43.2,"noise":-46.5},"277_Pw1wc":{"strings":-0.0,"burst":-39.4,"contact":-35.3,"body":-21.8,"floor":-37.6,"noise":-47.3},"306_7c1wc":{"strings":-0.1,"burst":-34.7,"contact":-33.8,"body":-17.0,"floor":-37.7,"noise":-44.6}},"e6-structured_v12_final_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-32.6,"contact":-48.6,"body":-18.8,"floor":-41.6,"noise":-35.3},"176_mM1wc":{"strings":-0.2,"burst":-29.3,"contact":-45.4,"body":-12.7,"floor":-33.8,"noise":-27.3},"276_jw1wc":{"strings":-0.1,"burst":-37.7,"contact":-41.3,"body":-16.4,"floor":-43.7,"noise":-37.5},"277_Pw1wc":{"strings":-0.1,"burst":-36.1,"contact":-31.8,"body":-16.3,"floor":-38.9,"noise":-32.5},"306_7c1wc":{"strings":-0.3,"burst":-32.4,"contact":-30.2,"body":-12.6,"floor":-41.5,"noise":-31.4}},"e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-33.5,"contact":-48.9,"body":-19.4,"floor":-38.4,"noise":-39.8},"176_mM1wc":{"strings":-0.2,"burst":-34.7,"contact":-46.7,"body":-12.2,"floor":-32.9,"noise":-25.5},"276_jw1wc":{"strings":-0.1,"burst":-38.2,"contact":-41.4,"body":-15.8,"floor":-42.4,"noise":-39.5},"277_Pw1wc":{"strings":-0.0,"burst":-36.6,"contact":-33.3,"body":-17.1,"floor":-36.9,"noise":-45.4},"306_7c1wc":{"strings":-0.2,"burst":-32.1,"contact":-33.8,"body":-13.3,"floor":-36.6,"noise":-41.7}},"voc-bigvgan24-original":{"023_Ypswc":{"entrada":0.2,"anadido":-23.2,"quitado":-17.6},"176_mM1wc":{"entrada":0.4,"anadido":-21.8,"quitado":-16.9},"276_jw1wc":{"entrada":0.3,"anadido":-23.6,"quitado":-17.2},"277_Pw1wc":{"entrada":0.4,"anadido":-22.1,"quitado":-15.8},"306_7c1wc":{"entrada":0.3,"anadido":-20.0,"quitado":-16.2}},"voc-bigvgan24-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":0.1,"anadido":-22.8,"quitado":-20.4},"176_mM1wc":{"entrada":0.3,"anadido":-22.1,"quitado":-18.0},"276_jw1wc":{"entrada":0.4,"anadido":-24.3,"quitado":-16.3},"277_Pw1wc":{"entrada":0.2,"anadido":-22.2,"quitado":-18.5},"306_7c1wc":{"entrada":0.3,"anadido":-20.5,"quitado":-17.4}},"voc-bigvgan44-original48":{"023_Ypswc":{"entrada":0.6,"anadido":-18.9,"quitado":-13.4},"176_mM1wc":{"entrada":0.9,"anadido":-18.4,"quitado":-11.7},"276_jw1wc":{"entrada":0.6,"anadido":-19.7,"quitado":-14.0},"277_Pw1wc":{"entrada":0.7,"anadido":-19.6,"quitado":-13.8},"306_7c1wc":{"entrada":0.7,"anadido":-19.1,"quitado":-14.2}},"voc-discoder-original44k":{"023_Ypswc":{"entrada":0.1,"anadido":-19.2,"quitado":-19.1},"176_mM1wc":{"entrada":0.1,"anadido":-17.1,"quitado":-17.2},"276_jw1wc":{"entrada":0.1,"anadido":-18.6,"quitado":-19.0},"277_Pw1wc":{"entrada":0.1,"anadido":-18.4,"quitado":-17.6},"306_7c1wc":{"entrada":-0.0,"anadido":-16.8,"quitado":-16.7}},"voc-bigvgan44-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":0.6,"anadido":-19.8,"quitado":-13.3},"176_mM1wc":{"entrada":1.0,"anadido":-18.5,"quitado":-11.7},"276_jw1wc":{"entrada":0.8,"anadido":-20.8,"quitado":-13.7},"277_Pw1wc":{"entrada":0.6,"anadido":-19.6,"quitado":-13.8},"306_7c1wc":{"entrada":0.6,"anadido":-20.1,"quitado":-15.1}},"voc-discoder-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":0.1,"anadido":-18.7,"quitado":-18.6},"176_mM1wc":{"entrada":-0.1,"anadido":-18.6,"quitado":-20.1},"276_jw1wc":{"entrada":0.0,"anadido":-19.4,"quitado":-19.3},"277_Pw1wc":{"entrada":0.1,"anadido":-18.2,"quitado":-17.7},"306_7c1wc":{"entrada":0.0,"anadido":-18.0,"quitado":-18.0}},"voc-p2_real-original":{"023_Ypswc":{"entrada":0.6,"anadido":-20.8,"quitado":-13.8},"176_mM1wc":{"entrada":0.5,"anadido":-21.0,"quitado":-14.3},"276_jw1wc":{"entrada":0.4,"anadido":-21.9,"quitado":-15.9},"277_Pw1wc":{"entrada":0.3,"anadido":-19.6,"quitado":-15.2},"306_7c1wc":{"entrada":0.4,"anadido":-20.0,"quitado":-15.4}},"voc-p2_real-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":0.5,"anadido":-20.1,"quitado":-13.7},"176_mM1wc":{"entrada":0.3,"anadido":-19.9,"quitado":-14.9},"276_jw1wc":{"entrada":0.4,"anadido":-21.8,"quitado":-15.5},"277_Pw1wc":{"entrada":0.3,"anadido":-20.3,"quitado":-15.4},"306_7c1wc":{"entrada":0.3,"anadido":-20.3,"quitado":-16.9}},"voc-p2_real-v3_x0res-d20-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":-1.8,"anadido":-8.3,"quitado":-14.9},"176_mM1wc":{"entrada":-1.8,"anadido":-8.3,"quitado":-13.1},"276_jw1wc":{"entrada":-1.8,"anadido":-8.6,"quitado":-13.6},"277_Pw1wc":{"entrada":-1.5,"anadido":-8.7,"quitado":-12.8},"306_7c1wc":{"entrada":-2.0,"anadido":-7.2,"quitado":-14.5}},"voc-p2_real-v3b_flow-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":-1.2,"anadido":-10.3,"quitado":-14.1},"176_mM1wc":{"entrada":-0.6,"anadido":-8.6,"quitado":-9.2},"276_jw1wc":{"entrada":-0.6,"anadido":-10.8,"quitado":-12.4},"277_Pw1wc":{"entrada":-1.8,"anadido":-8.4,"quitado":-12.8},"306_7c1wc":{"entrada":-1.1,"anadido":-9.2,"quitado":-13.7}},"voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":-0.4,"anadido":-13.3,"quitado":-17.4},"176_mM1wc":{"entrada":-1.4,"anadido":-10.0,"quitado":-15.5},"276_jw1wc":{"entrada":-0.6,"anadido":-12.5,"quitado":-15.3},"277_Pw1wc":{"entrada":-1.0,"anadido":-10.6,"quitado":-15.2},"306_7c1wc":{"entrada":-0.8,"anadido":-10.2,"quitado":-14.2}},"voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":-0.7,"anadido":-14.7,"quitado":-20.0},"176_mM1wc":{"entrada":-1.0,"anadido":-10.8,"quitado":-15.0},"276_jw1wc":{"entrada":-0.2,"anadido":-14.2,"quitado":-15.6},"277_Pw1wc":{"entrada":-0.5,"anadido":-12.0,"quitado":-15.0},"306_7c1wc":{"entrada":-0.9,"anadido":-11.0,"quitado":-16.6}},"voc-s_stems20b-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":-0.1,"anadido":-13.4,"quitado":-16.3},"176_mM1wc":{"entrada":-1.3,"anadido":-10.3,"quitado":-14.3},"276_jw1wc":{"entrada":-0.0,"anadido":-13.5,"quitado":-13.7},"277_Pw1wc":{"entrada":-0.6,"anadido":-10.6,"quitado":-14.0},"306_7c1wc":{"entrada":-0.8,"anadido":-11.4,"quitado":-15.7}},"voc-p4_v2_strings20-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":-0.9,"anadido":-12.5,"quitado":-21.8},"176_mM1wc":{"entrada":-1.6,"anadido":-10.1,"quitado":-17.8},"276_jw1wc":{"entrada":-1.2,"anadido":-12.0,"quitado":-20.7},"277_Pw1wc":{"entrada":-1.0,"anadido":-10.7,"quitado":-18.3},"306_7c1wc":{"entrada":-1.6,"anadido":-9.1,"quitado":-18.7}},"voc-p5_real44-original":{"023_Ypswc":{"entrada":0.4,"anadido":-17.2,"quitado":-12.5},"176_mM1wc":{"entrada":1.3,"anadido":-18.1,"quitado":-8.6},"276_jw1wc":{"entrada":1.4,"anadido":-19.0,"quitado":-9.6},"277_Pw1wc":{"entrada":1.0,"anadido":-18.6,"quitado":-10.6},"306_7c1wc":{"entrada":1.0,"anadido":-17.5,"quitado":-11.1}},"voc-p5_real44-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":0.5,"anadido":-17.7,"quitado":-12.6},"176_mM1wc":{"entrada":1.1,"anadido":-17.8,"quitado":-9.6},"276_jw1wc":{"entrada":1.4,"anadido":-19.9,"quitado":-10.5},"277_Pw1wc":{"entrada":1.0,"anadido":-18.9,"quitado":-11.0},"306_7c1wc":{"entrada":1.0,"anadido":-20.2,"quitado":-12.4}},"structured_v12_final_learnedB_data100":{"023_Ypswc":{"strings":-0.0,"burst":-36.2,"contact":-48.8,"body":-23.2,"floor":-38.5,"noise":-41.4},"176_mM1wc":{"strings":0.0,"burst":-36.3,"contact":-44.5,"body":-19.6,"floor":-35.6,"noise":-30.0},"276_jw1wc":{"strings":-0.1,"burst":-43.5,"contact":-41.4,"body":-19.7,"floor":-43.1,"noise":-39.6},"277_Pw1wc":{"strings":-0.0,"burst":-39.1,"contact":-33.6,"body":-19.7,"floor":-38.3,"noise":-44.6},"306_7c1wc":{"strings":-0.1,"burst":-34.5,"contact":-34.3,"body":-16.5,"floor":-38.6,"noise":-47.0}},"e6-structured_v12_final_learnedB_data100_noise_strongD_rise":{"023_Ypswc":{"strings":-0.0,"burst":-33.2,"contact":-51.7,"body":-21.4,"floor":-38.3,"noise":-36.6},"176_mM1wc":{"strings":-0.0,"burst":-32.3,"contact":-46.1,"body":-17.2,"floor":-35.6,"noise":-28.3},"276_jw1wc":{"strings":-0.1,"burst":-38.4,"contact":-41.8,"body":-18.9,"floor":-42.9,"noise":-35.4},"277_Pw1wc":{"strings":-0.1,"burst":-33.9,"contact":-34.8,"body":-16.7,"floor":-37.9,"noise":-40.4},"306_7c1wc":{"strings":-0.2,"burst":-31.5,"contact":-34.4,"body":-14.1,"floor":-38.2,"noise":-42.6}},"voc-v1_mix100-e6-structured_v12_final_learnedB_data100_noise_strongD_rise":{"023_Ypswc":{"entrada":0.7,"anadido":-17.1,"quitado":-12.3},"176_mM1wc":{"entrada":0.4,"anadido":-14.2,"quitado":-11.1},"276_jw1wc":{"entrada":0.8,"anadido":-15.3,"quitado":-11.0},"277_Pw1wc":{"entrada":0.7,"anadido":-15.4,"quitado":-11.1},"306_7c1wc":{"entrada":0.3,"anadido":-15.0,"quitado":-13.5}},"voc-v2_fav20-e6-structured_v9_base_t32_noise_strongD":{"023_Ypswc":{"entrada":-0.1,"anadido":-14.7,"quitado":-17.2},"176_mM1wc":{"entrada":-0.7,"anadido":-11.4,"quitado":-14.7},"276_jw1wc":{"entrada":-0.7,"anadido":-13.1,"quitado":-17.7},"277_Pw1wc":{"entrada":-1.0,"anadido":-11.3,"quitado":-16.7},"306_7c1wc":{"entrada":-0.9,"anadido":-10.4,"quitado":-15.6}},"e6-structured_v13_ahead_strings_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-34.5,"body":-17.9,"floor":-39.7,"noise":-38.2},"176_mM1wc":{"strings":-0.1,"burst":-35.7,"body":-14.4,"floor":-52.6,"noise":-31.1},"276_jw1wc":{"strings":-0.1,"burst":-31.3,"body":-16.7,"floor":-42.6,"noise":-37.9},"277_Pw1wc":{"strings":-0.0,"burst":-35.4,"body":-17.5,"floor":-38.1,"noise":-36.5},"306_7c1wc":{"strings":-0.3,"burst":-31.2,"body":-12.5,"floor":-66.4,"noise":-31.1}},"e6-structured_v13_final_nocontact_noise_strongD_rise":{"023_Ypswc":{"strings":-0.1,"burst":-38.9,"body":-18.3,"floor":-40.6,"noise":-41.5},"176_mM1wc":{"strings":-0.2,"burst":-36.6,"body":-12.5,"floor":-41.6,"noise":-31.3},"276_jw1wc":{"strings":-0.1,"burst":-42.8,"body":-16.8,"floor":-43.8,"noise":-37.0},"277_Pw1wc":{"strings":-0.1,"burst":-37.8,"body":-16.7,"floor":-37.7,"noise":-33.5},"306_7c1wc":{"strings":-0.3,"burst":-30.9,"body":-12.3,"floor":-58.0,"noise":-30.7}},"e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise":{"023_Ypswc":{"strings":-0.0,"burst":-31.9,"contact":-45.0,"body":-20.7,"floor":-35.4,"noise":-40.3},"176_mM1wc":{"strings":-0.2,"burst":-31.5,"contact":-44.5,"body":-13.6,"floor":-32.2,"noise":-28.4},"276_jw1wc":{"strings":-0.1,"burst":-38.3,"contact":-37.6,"body":-17.1,"floor":-41.2,"noise":-33.3},"277_Pw1wc":{"strings":-0.1,"burst":-29.5,"contact":-32.0,"body":-15.8,"floor":-36.9,"noise":-38.6},"306_7c1wc":{"strings":-0.3,"burst":-31.2,"contact":-30.6,"body":-12.8,"floor":-37.6,"noise":-37.0}},"voc-v2_recddsp20-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":-0.5,"anadido":-14.5,"quitado":-19.1},"176_mM1wc":{"entrada":-1.3,"anadido":-10.4,"quitado":-15.0},"276_jw1wc":{"entrada":-0.6,"anadido":-12.8,"quitado":-16.9},"277_Pw1wc":{"entrada":-0.6,"anadido":-12.1,"quitado":-15.1},"306_7c1wc":{"entrada":-1.1,"anadido":-10.3,"quitado":-16.4}},"voc-v2_rectable20-e6-structured_v12_final_learnedB_noise_strongD_rise":{"023_Ypswc":{"entrada":-1.0,"anadido":-13.5,"quitado":-21.1},"176_mM1wc":{"entrada":-1.1,"anadido":-10.4,"quitado":-15.0},"276_jw1wc":{"entrada":-0.8,"anadido":-12.8,"quitado":-18.1},"277_Pw1wc":{"entrada":-0.9,"anadido":-11.0,"quitado":-16.3},"306_7c1wc":{"entrada":-1.2,"anadido":-10.1,"quitado":-16.7}},"voc-v2_nocontact20-e6-structured_v13_final_nocontact_noise_strongD_rise":{"023_Ypswc":{"entrada":-0.6,"anadido":-14.2,"quitado":-20.4},"176_mM1wc":{"entrada":-0.7,"anadido":-10.8,"quitado":-13.6},"276_jw1wc":{"entrada":-0.1,"anadido":-13.3,"quitado":-14.7},"277_Pw1wc":{"entrada":-1.0,"anadido":-11.2,"quitado":-16.8},"306_7c1wc":{"entrada":-1.2,"anadido":-10.3,"quitado":-15.8}},"voc-v2_x5-e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise":{"023_Ypswc":{"entrada":-0.0,"anadido":-15.4,"quitado":-17.7},"176_mM1wc":{"entrada":-0.5,"anadido":-13.3,"quitado":-15.9},"276_jw1wc":{"entrada":-0.3,"anadido":-13.5,"quitado":-15.8},"277_Pw1wc":{"entrada":-0.6,"anadido":-11.6,"quitado":-15.5},"306_7c1wc":{"entrada":-0.9,"anadido":-11.8,"quitado":-16.8}},"voc-v2_recddspx5-e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise":{"023_Ypswc":{"entrada":-0.0,"anadido":-14.3,"quitado":-17.4},"176_mM1wc":{"entrada":-0.0,"anadido":-13.1,"quitado":-13.8},"276_jw1wc":{"entrada":-0.1,"anadido":-14.3,"quitado":-13.9},"277_Pw1wc":{"entrada":-0.5,"anadido":-11.6,"quitado":-15.1},"306_7c1wc":{"entrada":-1.1,"anadido":-11.4,"quitado":-16.4}},"voc-v2_recddsp100-e6-structured_v12_final_learnedB_data100_noise_strongD_rise":{"023_Ypswc":{"entrada":0.4,"anadido":-15.2,"quitado":-15.2},"176_mM1wc":{"entrada":-0.3,"anadido":-14.0,"quitado":-15.6},"276_jw1wc":{"entrada":-0.3,"anadido":-13.5,"quitado":-14.0},"277_Pw1wc":{"entrada":-0.1,"anadido":-13.4,"quitado":-14.7},"306_7c1wc":{"entrada":-0.8,"anadido":-11.8,"quitado":-16.2}}};/*END STEMS*/
+const RECS = [["023_Ypswc", "023"], ["176_mM1wc", "176"], ["276_jw1wc", "276"], ["277_Pw1wc", "277"], ["306_7c1wc", "306"]];
+const ADV3K = "e6-structured_v5_body_audio_nonoise_strongD", ADV9K = "e6-structured_v5_body_audio_nonoise_strongD_9k";
+const ADVN = "e6-structured_v5_body_audio_noise_strongD";
+/*MODELS-START*/
+const MODELS = {
+"structured_v2": {
+"name": "S1 Estructurado",
+"parent": null,
+"rel": null,
+"change": "Primer modelo estructurado: parciales de cuerda rígida, plantilla por nota, decaimiento físico y corrección de la GRU. Solo partitura.",
+"loss": 6.302,
+"wind": -15.9
+},
+"structured_v2_bodyir": {
+"name": "S1 + cuerpo",
+"parent": "structured_v2",
+"rel": "rec",
+"change": "Respuesta del cuerpo excitada por cada pulsación, hasta 600 Hz.",
+"loss": 6.321,
+"wind": -22.7
+},
+"structured_v2_bodyir_nonoise": {
+"name": "S1 + cuerpo · entrenado sin ruido",
+"parent": "structured_v2_bodyir",
+"rel": "rec",
+"change": "Se entrena sin el ruido residual.",
+"loss": 6.364,
+"wind": null
+},
+"ddsp_v2": {
+"name": "D1 DDSP",
+"parent": null,
+"rel": null,
+"change": "DDSP simple: armónicos más ruido, sin estructura. Solo partitura.",
+"loss": 6.348,
+"wind": -17.5
+},
+"ddsp_v2_nonoise": {
+"name": "D1 · entrenado sin ruido",
+"parent": "ddsp_v2",
+"rel": "rec",
+"change": "Se entrena sin el ruido residual.",
+"loss": 6.629,
+"wind": null
+},
+"structured_v4_body": {
+"name": "S2",
+"parent": "structured_v2_bodyir",
+"rel": "rec",
+"change": "Ajustes por grabación en tablas propias (cuerpo, piso de ruido, transitorio), con 10× de learning rate. La config no lo muestra: viene del código (E4, ronda 3) y se confirma en los pesos.",
+"loss": 6.278,
+"wind": -20.7
+},
+"structured_v4_body_reverb": {
+"name": "S2 + reverb",
+"parent": "structured_v4_body",
+"rel": "rec",
+"change": "Reverb de sala por grabación.",
+"loss": 6.316,
+"wind": -20.3
+},
+"structured_v5_body_audio": {
+"name": "M1 Base",
+"parent": "structured_v4_body",
+"rel": "rec",
+"change": "Features de audio: loudness y pitch de cada nota cada 10 ms (resíntesis).",
+"loss": 6.003,
+"wind": -25.2
+},
+"ddsp_v5_audio": {
+"name": "D2",
+"parent": "ddsp_v2",
+"rel": "rec",
+"change": "Las mismas features de audio.",
+"loss": 6.087,
+"wind": -16.5
+},
+"e6-structured_v5_body_audio_nonoise_strongD": {
+"name": "M1 sin ruido + adv",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos, quitándole el ruido. Los pasos y el discriminator vienen de E6_findings: este meta.json no los guarda.",
+"loss": 6.635,
+"wind": null
+},
+"structured_v6_mel_noise": {
+"name": "M1 · loss mel",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Se entrena con loss mel en vez de la espectral lineal + log.",
+"loss": 6.072,
+"wind": -19.8
+},
+"structured_v6_mel_nonoise": {
+"name": "M1 · loss mel, entrenado sin ruido",
+"parent": "structured_v6_mel_noise",
+"rel": "rec",
+"change": "Se entrena sin el ruido residual.",
+"loss": 6.18,
+"wind": null
+},
+"adv9k-step2000": {
+"name": "M1 sin ruido + adv · 2000 pasos",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Paso 2000 de la corrida de 9000. Esos pesos no se guardaron: la loss viene de E6_findings y no se volvió a medir.",
+"loss": 6.79,
+"wind": null,
+"findings": true
+},
+"e6-structured_v5_body_audio_nonoise_strongD_9k": {
+"name": "M1 sin ruido + adv · 9000 pasos",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Reiniciado desde M1 con los mismos ajustes, 9000 pasos.",
+"loss": 6.613,
+"wind": null
+},
+"e6-structured_v5_body_audio_noise_strongD": {
+"name": "M1 + adv",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos, conservando el ruido.",
+"loss": 6.118,
+"wind": -23.5
+},
+"e6-structured_v5_body_audio_noise_strongD_linonly": {
+"name": "M1 + adv · loss solo lineal",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Como M1 + adv, pero la loss espectral no tiene el término log.",
+"loss": 6.303,
+"wind": -20.1
+},
+"e6-structured_v5_body_audio_noise_strongD_9k": {
+"name": "M1 + adv · 9000 pasos",
+"parent": "e6-structured_v5_body_audio_noise_strongD",
+"rel": "cont",
+"change": "Sigue hasta 9000 pasos.",
+"loss": 6.148,
+"wind": -19.9
+},
+"structured_v8_symp": {
+"name": "M1 + simpática",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Las cuerdas al aire resuenan con los parciales cercanos.",
+"loss": 6.027,
+"wind": -22.3
+},
+"structured_v8_click": {
+"name": "M1 + clic",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Forma de onda aprendida de uña y dedo en cada ataque.",
+"loss": 6.003,
+"wind": -22.9
+},
+"structured_v8_bodyhi": {
+"name": "M1 + cuerpo 6 kHz",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Respuesta del cuerpo hasta 6 kHz (antes 600 Hz) y EQ hasta 8 kHz.",
+"loss": 6.018,
+"wind": -21.0
+},
+"structured_v8_squeak": {
+"name": "M1 + squeak",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Ruido justo antes de las notas en las cuerdas entorchadas.",
+"loss": 6.026,
+"wind": -23.9
+},
+"structured_v8_twodecay": {
+"name": "M1 + dos decaimientos",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Dos polarizaciones por parcial, cada una con su decaimiento.",
+"loss": 6.04,
+"wind": -22.8
+},
+"e6-structured_v5_body_audio_noise_strongD_both": {
+"name": "M1 + adv · D complejo + log",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Como M1 + adv, con un discriminator que ve el complejo y la magnitud log.",
+"loss": 6.15,
+"wind": -22.3
+},
+"structured_v8_combo": {
+"name": "M2 Combinado",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Junta cuerpo 6 kHz, dos decaimientos y clic.",
+"loss": 6.002,
+"wind": -21.8
+},
+"e6-structured_v5_body_audio_noise_strongD_logmag": {
+"name": "M1 + adv · D solo log",
+"parent": "structured_v5_body_audio",
+"rel": "cont",
+"change": "Como M1 + adv, con un discriminator que solo ve la magnitud log.",
+"loss": 6.153,
+"wind": -22.5
+},
+"e6-structured_v8_combo_noise_strongD_both": {
+"name": "M2 + adv · D complejo + log",
+"parent": "structured_v8_combo",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos, discriminator complejo + log.",
+"loss": 6.169,
+"wind": -20.2
+},
+"structured_v8_combo_nonoise": {
+"name": "M2 · entrenado sin ruido",
+"parent": "structured_v8_combo",
+"rel": "rec",
+"change": "Se entrena sin el ruido residual. No es lo mismo que M2 con el ruido apagado.",
+"loss": 6.03,
+"wind": null
+},
+"structured_v5_gated": {
+"name": "M1 + compuerta",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "El ruido solo suena alrededor de cada ataque.",
+"loss": 6.145,
+"wind": -41.3
+},
+"structured_v8_gated": {
+"name": "M2 + compuerta",
+"parent": "structured_v8_combo",
+"rel": "rec",
+"change": "El ruido solo suena alrededor de cada ataque.",
+"loss": 6.001,
+"wind": -59.3
+},
+"e6-structured_v5_gated_noise_strongD": {
+"name": "M1 + compuerta + adv",
+"parent": "structured_v5_gated",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 6.223,
+"wind": -41.3
+},
+"structured_v9_timbre": {
+"name": "M2 + compuerta + timbre 16",
+"parent": "structured_v8_gated",
+"rel": "rec",
+"change": "La red de cada nota lee del audio el timbre del ataque: 16 armónicos.",
+"loss": 5.821,
+"wind": -52.0
+},
+"e6-structured_v8_gated_noise_strongD": {
+"name": "M2 + compuerta + adv",
+"parent": "structured_v8_gated",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 6.094,
+"wind": -56.3
+},
+"structured_v9_timbre32": {
+"name": "M2 + compuerta + timbre 32",
+"parent": "structured_v9_timbre",
+"rel": "rec",
+"change": "Lee 32 armónicos en vez de 16.",
+"loss": 5.772,
+"wind": -51.3
+},
+"e6-structured_v9_timbre_noise_strongD": {
+"name": "M2 + compuerta + timbre 16 + adv",
+"parent": "structured_v9_timbre",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 5.864,
+"wind": -52.8
+},
+"e6-structured_v9_timbre32_noise_strongD": {
+"name": "M2 + compuerta + timbre 32 + adv",
+"parent": "structured_v9_timbre32",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 5.84,
+"wind": -51.6
+},
+"e6-structured_v9_timbre32_noise_strongD_9k": {
+"name": "M2 + compuerta + timbre 32 + adv · 9000 pasos",
+"parent": "e6-structured_v9_timbre32_noise_strongD",
+"rel": "cont",
+"change": "Sigue hasta 9000 pasos.",
+"loss": 5.882,
+"wind": -45.1
+},
+"structured_v9_timbre32late": {
+"name": "M2 + compuerta + timbre 32 + lectura tardía",
+"parent": "structured_v9_timbre32",
+"rel": "rec",
+"change": "También lee los armónicos 150–235 ms después del ataque.",
+"loss": 5.792,
+"wind": -54.0
+},
+"structured_v9_t32_no_gate": {
+"name": "M2 + timbre 32",
+"parent": "structured_v8_combo",
+"rel": "rec",
+"change": "Timbre de 32 armónicos, con el ruido sonando todo el tiempo.",
+"loss": 5.786,
+"wind": -21.3,
+"live": true
+},
+"structured_v9_t32_simple": {
+"name": "M1 + cuerpo 6 kHz + compuerta + timbre 32",
+"parent": "structured_v9_timbre32",
+"rel": "rec",
+"change": "M2 + compuerta + timbre 32, sin dos decaimientos y sin clic.",
+"loss": 5.786,
+"wind": -49.2
+},
+"structured_v9_base_t32": {
+"name": "M1 + timbre 32",
+"parent": "structured_v5_body_audio",
+"rel": "rec",
+"change": "Timbre de 32 armónicos sobre la base, con el ruido sonando todo el tiempo.",
+"loss": 5.823,
+"wind": -21.5,
+"live": true
+},
+"e6-structured_v9_base_t32_noise_strongD": {
+"name": "M1 + timbre 32 + adv",
+"parent": "structured_v9_base_t32",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos. Es M1 + adv con el timbre como único cambio.",
+"loss": 5.931,
+"wind": -19.0,
+"fav": true,
+"live": true,
+"kad": [
+1.5366,
+0.1712
+]
+},
+"e6-structured_v9_t32_no_gate_noise_strongD": {
+"name": "M2 + timbre 32 + adv",
+"parent": "structured_v9_t32_no_gate",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos.",
+"loss": 5.865,
+"wind": -21.1,
+"live": true
+},
+"structured_v10_m2_burst": {
+"name": "M2 + timbre 32 + ataque por nota",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "La ráfaga de ataque deja de ser un solo espectro por grabación con un decaimiento global: cada nota tiene su propio nivel y su propio decaimiento en cada banda, según su altura, volumen, timbre y la grabación.",
+"loss": 5.773,
+"wind": -17.9
+},
+"structured_v10_m1_burst": {
+"name": "M1 + timbre 32 + ataque por nota",
+"parent": "structured_v9_base_t32",
+"rel": "rec",
+"change": "El mismo ataque por nota, sobre M1 + timbre 32, donde el ruido hace de «tambor».",
+"loss": 5.774,
+"wind": -21.7
+},
+"structured_v10_m2_slow": {
+"name": "M2 + timbre 32 + ruido lento",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "El ruido residual solo puede cambiar lento: sus bandas se suavizan en 200 ms, así que no puede seguir cada ataque ni hacer ráfagas.",
+"loss": 5.754,
+"wind": -21.5
+},
+"structured_v10_m2_floor": {
+"name": "M2 + timbre 32 + fondo medido",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "El ruido residual es gratis hasta el fondo medido de cada grabación (lo más bajo que se oye entre los parciales mientras suena la pieza) y se penaliza por encima.",
+"loss": 5.816,
+"wind": -22.4
+},
+"structured_v10_m1_burst_floor": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido",
+"parent": "structured_v10_m1_burst",
+"rel": "rec",
+"change": "Ataque por nota y fondo medido, sobre M1.",
+"loss": 5.811,
+"wind": -25.7
+},
+"structured_v10_m2_lstm": {
+"name": "M2 + timbre 32 · LSTM",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "La red recurrente es una LSTM en vez de una GRU (como en Jonason), del mismo tamaño.",
+"loss": 5.799,
+"wind": -19.0
+},
+"structured_v10_m2_bilstm": {
+"name": "M2 + timbre 32 · LSTM bidireccional",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "Una LSTM que también lee hacia atrás: cada cuadro ve lo que viene. Mismo tamaño total; no sirve en tiempo real.",
+"loss": 5.705,
+"wind": -19.8
+},
+"structured_v10_m2_attn": {
+"name": "M2 + timbre 32 · atención",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "En vez de la GRU, dos capas de self-attention: cada cuadro de cada voz mira los últimos 64 cuadros (640 ms) de esa misma voz.",
+"loss": 5.728,
+"wind": -21.4
+},
+"structured_v10_m2_strings": {
+"name": "M2 + timbre 32 + cuerdas",
+"parent": "structured_v9_t32_no_gate",
+"rel": "rec",
+"change": "Cada voz es una cuerda, según la tablatura alineada al MIDI (99 % de las notas). La red sabe qué cuerda y qué traste; la inarmonicidad es la medida en cada cuerda y sube con el traste (las entorchadas resultaron 3–4 veces menos rígidas que lo que decía la ley única).",
+"loss": 5.666,
+"wind": -22.9
+},
+"structured_v10_m2_strings_xvoice": {
+"name": "M2 + timbre 32 + cuerdas · atención entre cuerdas",
+"parent": "structured_v10_m2_strings",
+"rel": "rec",
+"change": "Además, una capa de self-attention entre las 6 cuerdas en cada cuadro.",
+"loss": 5.644,
+"wind": -22.2
+},
+"e6-structured_v9_t32_no_gate_noise_strongD_contact_rise": {
+"name": "M2 + timbre 32 + adv · contacto",
+"parent": "structured_v9_t32_no_gate",
+"rel": "cont",
+"change": "Como M2 + timbre 32 + adv, con un ruido de contacto por voz (dedo o uña tocando la cuerda) y una penalización a las subidas rápidas de los armónicos agudos: así imitaba el adversarial ese contacto, con los «agudos cortos».",
+"loss": 5.869,
+"wind": -19.9
+},
+"e6-structured_v10_m1_burst_noise_strongD": {
+"name": "M1 + timbre 32 + ataque por nota + adv",
+"parent": "structured_v10_m1_burst",
+"rel": "cont",
+"change": "La receta del favorito (adversarial de 3000 pasos) sobre M1 + timbre 32 + ataque por nota: el favorito más el ataque por nota.",
+"loss": 5.865,
+"wind": -19.9,
+"kad": [
+2.173,
+0.135
+]
+},
+"e6-structured_v10_m2_strings_noise_strongD": {
+"name": "M2 + timbre 32 + cuerdas + adv",
+"parent": "structured_v10_m2_strings",
+"rel": "cont",
+"change": "Adversarial de 3000 pasos sobre M2 + timbre 32 + cuerdas.",
+"loss": 5.724,
+"wind": -20.0
+},
+"structured_v10_m2_strings_attn": {
+"name": "M2 + timbre 32 + cuerdas · atención",
+"parent": "structured_v10_m2_strings",
+"rel": "rec",
+"change": "Cuerdas, y en vez de la GRU la self-attention sobre los últimos 64 cuadros de cada cuerda.",
+"loss": 5.713,
+"wind": -21.3
+},
+"structured_v10_m1_burst_strings": {
+"name": "M1 + timbre 32 + ataque por nota + cuerdas",
+"parent": "structured_v10_m1_burst",
+"rel": "rec",
+"change": "El ataque por nota (que le quitó el «tambor» al ruido de M1) más las cuerdas.",
+"loss": 5.688,
+"wind": -22.7
+},
+"e6-structured_v10_m1_burst_strings_noise_strongD": {
+"name": "M1 + timbre 32 + ataque por nota + cuerdas + adv",
+"parent": "structured_v10_m1_burst_strings",
+"rel": "cont",
+"change": "La receta del favorito (adversarial de 3000 pasos) sobre M1 + timbre 32 + ataque por nota + cuerdas.",
+"loss": 5.803,
+"wind": -18.9,
+"kad": [
+1.3911,
+0.1599
+]
+},
+"e6-structured_v10_m2_strings_noise_strongD_rise": {
+"name": "M2 + timbre 32 + cuerdas + adv · sin agudos",
+"parent": "structured_v10_m2_strings",
+"rel": "cont",
+"change": "Como M2 + timbre 32 + cuerdas + adv, con la penalización a las subidas rápidas de los armónicos agudos que quitó los «agudos cortos».",
+"loss": 5.732,
+"wind": -20.4
+},
+"structured_v10_m2_strings_seed1": {
+"name": "M2 + timbre 32 + cuerdas · semilla 1",
+"parent": "structured_v10_m2_strings",
+"rel": "rec",
+"change": "Lo mismo que M2 + timbre 32 + cuerdas con otra semilla: ¿la mejora de las cuerdas se repite?",
+"loss": 5.721,
+"wind": -21.3
+},
+"structured_v10_m1_burst_floor_strings": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas",
+"parent": "structured_v10_m1_burst_floor",
+"rel": "rec",
+"change": "El M1 sin tambor y con menos viento, más las cuerdas.",
+"loss": 5.701,
+"wind": -25.5
+},
+"structured_v10_m2_strings_bilstm": {
+"name": "M2 + timbre 32 + cuerdas · LSTM bidireccional",
+"parent": "structured_v10_m2_strings",
+"rel": "rec",
+"change": "Cuerdas con la LSTM bidireccional en vez de la GRU (no sirve en tiempo real).",
+"loss": 5.683,
+"wind": -20.5
+},
+"e6-structured_v10_m1_burst_floor_strings_noise_strongD": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas + adv",
+"parent": "structured_v10_m1_burst_floor_strings",
+"rel": "cont",
+"change": "La receta del favorito sobre el M1 sin tambor, con menos viento y con cuerdas.",
+"loss": 5.781,
+"wind": -22.0,
+"kad": [
+1.449,
+0.0978
+]
+},
+"e6-structured_v10_m1_burst_floor_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + adv · sin agudos",
+"parent": "structured_v10_m1_burst_floor",
+"rel": "cont",
+"change": "Control de los candidatos finales: la receta del favorito, con la penalización de los agudos cortos, sobre M1 con ataque por nota y fondo medido (GRU).",
+"loss": 5.92,
+"wind": -23.4,
+"kad": [
+2.1783,
+0.1377
+]
+},
+"structured_v11_m1_attn": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención",
+"parent": "structured_v10_m1_burst_floor",
+"rel": "rec",
+"change": "La atención con ventana (la que preferiste en M2) en vez de la GRU, ahora sobre M1.",
+"loss": 5.803,
+"wind": -24.2
+},
+"e6-structured_v11_m1_attn_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención + adv · sin agudos",
+"parent": "structured_v11_m1_attn",
+"rel": "cont",
+"change": "Candidato final: la receta del favorito sobre M1 con atención.",
+"loss": 5.881,
+"wind": -25.3,
+"kad": [
+1.9412,
+0.1345
+]
+},
+"structured_v11_m1_attn_ahead": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa",
+"parent": "structured_v11_m1_attn",
+"rel": "rec",
+"change": "La atención también ve 160 ms hacia adelante en la partitura (como la LSTM bidireccional, que ganó en los rasgueos). Solo sirve fuera de tiempo real.",
+"loss": 5.757,
+"wind": -26.8
+},
+"e6-structured_v11_m1_attn_ahead_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + adv · sin agudos",
+"parent": "structured_v11_m1_attn_ahead",
+"rel": "cont",
+"change": "Candidato final: la receta del favorito sobre M1 con atención que anticipa.",
+"loss": 5.867,
+"wind": -24.5,
+"kad": [
+1.4566,
+0.1105
+]
+},
+"structured_v11_m1_attn_ahead_xvoice": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + entre voces",
+"parent": "structured_v11_m1_attn_ahead",
+"rel": "rec",
+"change": "Además, en cada instante cada voz ve lo que hacen las otras (para los rasgueos).",
+"loss": 5.713,
+"wind": -23.7
+},
+"e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + entre voces + adv · sin agudos",
+"parent": "structured_v11_m1_attn_ahead_xvoice",
+"rel": "cont",
+"change": "Candidato final: la receta del favorito sobre M1 con atención que anticipa y entre voces.",
+"loss": 5.813,
+"wind": -20.5,
+"kad": [
+1.4549,
+0.0635
+]
+},
+"structured_v11_m1_attn_ahead_contact": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + contacto",
+"parent": "structured_v11_m1_attn_ahead",
+"rel": "rec",
+"change": "Una parte propia para los eventos agudos y rápidos (dedo o uña tocando la cuerda), entrenada desde cero, con la penalización de los agudos cortos también en el entrenamiento: los armónicos ya no pueden hacerlos.",
+"loss": 5.73,
+"wind": -26.9
+},
+"e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + contacto + adv · sin agudos",
+"parent": "structured_v11_m1_attn_ahead_contact",
+"rel": "cont",
+"change": "Candidato final: la receta del favorito sobre M1 con atención que anticipa y la parte de contacto.",
+"loss": 5.833,
+"wind": -24.3,
+"kad": [
+1.9924,
+0.2116
+]
+},
+"structured_v11_m1_attn_ahead_rec": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + grabación en todo",
+"parent": "structured_v11_m1_attn_ahead",
+"rel": "rec",
+"change": "Todas las partes que pueden depender de la guitarra, el micrófono o la sala leen la grabación: el decaimiento de cada parcial, un EQ fino del cuerpo (24 bandas hasta 800 Hz, puede mover las resonancias de cada guitarra), el tiempo de ataque y el apagado al final de la nota, y la rigidez (cada guitarra medida respecto al promedio).",
+"loss": 5.722,
+"wind": -23.6
+},
+"e6-structured_v11_m1_attn_ahead_rec_noise_strongD_rise": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + grabación en todo + adv · sin agudos",
+"parent": "structured_v11_m1_attn_ahead_rec",
+"rel": "cont",
+"change": "Candidato final: la receta del favorito sobre M1 con atención que anticipa y la grabación en todas las partes.",
+"loss": 5.818,
+"wind": -21.3,
+"kad": [
+1.8305,
+0.0764
+]
+},
+"structured_v11_m2_rec": {
+"name": "M2 + timbre 32 + ataque por nota + grabación en todo",
+"parent": "structured_v10_m2_burst",
+"rel": "rec",
+"change": "M2 con todas sus partes leyendo la grabación: además de lo de «grabación en todo» en M1 (decaimiento, EQ fino del cuerpo, ahora hasta 8 kHz, ataque, apagado y rigidez), el doble decaimiento y el batido, y el espectro del clic. ¿M2 falló porque esas partes eran iguales para todas las guitarras?",
+"loss": 5.748,
+"wind": -19.4
+},
+"structured_v11_m1_attn_ahead_rec32": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido · atención que anticipa + grabación en todo · embedding 32",
+"parent": "structured_v11_m1_attn_ahead_rec",
+"rel": "rec",
+"change": "El mismo modelo con un embedding de grabación de 32 dimensiones en vez de 16: con 20 grabaciones y 16 dimensiones, las lecturas lineales por grabación no pueden darle a cada una un valor independiente.",
+"loss": 5.749,
+"wind": -23.8
+},
+"structured_v11_m1_strings_oldB": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · rigidez antigua",
+"parent": "structured_v10_m1_burst_floor_strings",
+"rel": "rec",
+"change": "Cuerdas, pero con la ley de rigidez de antes (una recta sobre la altura): los bordones vuelven a ser más inarmónicos.",
+"loss": 5.751,
+"wind": -24.3
+},
+"structured_v11_m1_strings_guitarB": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · rigidez por guitarra",
+"parent": "structured_v10_m1_burst_floor_strings",
+"rel": "rec",
+"change": "La rigidez de cada cuerda medida en cada grabación (cada una es otra guitarra y otro juego de cuerdas), no un promedio de todas.",
+"loss": 5.693,
+"wind": -25.8
+},
+"structured_v11_m1_strings_decay": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · decaimiento por cuerda",
+"parent": "structured_v10_m1_burst_floor_strings",
+"rel": "rec",
+"change": "El decaimiento de cada parcial también sabe la cuerda, el traste y la grabación (antes solo la altura y la frecuencia).",
+"loss": 5.716,
+"wind": -25.0
+},
+"structured_v11_m1_strings_oldvoices": {
+"name": "M1 + timbre 32 + ataque por nota + fondo medido + cuerdas · voces de antes",
+"parent": "structured_v10_m1_burst_floor_strings",
+"rel": "rec",
+"change": "La red sabe la cuerda y el traste, pero las notas se reparten en voces como antes, no una voz por cuerda.",
+"loss": 5.729,
+"wind": -26.1
+},
+"structured_v12_final": {
+"name": "Final · rigidez compartida",
+"parent": "structured_v11_m1_attn_ahead_contact",
+"rel": "rec",
+"change": "El modelo final: T4 (atención que anticipa + contacto) + cuerdas de la tablatura + la grabación en todas las partes (embedding de 32). Una tabla de rigidez por cuerda, igual para todas las guitarras.",
+"loss": 5.693,
+"wind": -26.5
+},
+"structured_v12_final_learnedB": {
+"name": "Final · rigidez aprendida",
+"parent": "structured_v11_m1_attn_ahead_contact",
+"rel": "rec",
+"change": "Igual, pero la rigidez de cada cuerda se corrige por guitarra desde el embedding de la grabación (aprendida, no medida).",
+"loss": 5.711,
+"wind": -31.6,
+"kad": [
+7.2156,
+0.1874
+]
+},
+"e6-structured_v12_final_noise_strongD_rise": {
+"name": "Final · rigidez compartida + adv",
+"parent": "structured_v12_final",
+"rel": "cont",
+"change": "La receta adversarial del favorito (3000 pasos, sin agudos).",
+"loss": 5.811,
+"wind": -20.6,
+"kad": [
+3.6648,
+0.2574
+]
+},
+"e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final · rigidez aprendida + adv",
+"parent": "structured_v12_final_learnedB",
+"rel": "cont",
+"change": "La receta adversarial del favorito (3000 pasos, sin agudos). El DDSP final de la tesis.",
+"loss": 5.815,
+"wind": -23.9,
+"kad": [
+3.2203,
+0.1771
+]
+},
+"structured_v13_ahead_strings": {
+"name": "Atención que anticipa + cuerdas",
+"parent": "structured_v11_m1_attn_ahead",
+"rel": "rec",
+"change": "M1 + timbre 32 + ataque por nota + fondo medido con atención que anticipa, más las cuerdas de la tablatura (y la penalización de los agudos cortos): sin contacto ni grabación en todo. ¿Las cuerdas sobre la atención que anticipa?",
+"loss": 5.718,
+"wind": -24.0
+},
+"e6-structured_v13_ahead_strings_noise_strongD_rise": {
+"name": "Atención que anticipa + cuerdas + adv",
+"parent": "structured_v13_ahead_strings",
+"rel": "cont",
+"change": "La receta adversarial del favorito (3000 pasos, sin agudos).",
+"loss": 5.833,
+"wind": -22.5,
+"kad": [
+2.6841,
+0.1526
+]
+},
+"structured_v13_final_nocontact": {
+"name": "Final sin contacto",
+"parent": "structured_v12_final_learnedB",
+"rel": "rec",
+"change": "El DDSP final (rigidez aprendida) entrenado desde cero sin la parte de contacto: lo demás es igual.",
+"loss": 5.706,
+"wind": -25.0
+},
+"e6-structured_v13_final_nocontact_noise_strongD_rise": {
+"name": "Final sin contacto + adv",
+"parent": "structured_v13_final_nocontact",
+"rel": "cont",
+"change": "La receta adversarial del favorito (3000 pasos, sin agudos).",
+"loss": 5.813,
+"wind": -24.6,
+"kad": [
+1.9808,
+0.1848
+]
+},
+"structured_v12_final_learnedB_data100": {
+"name": "Final · 100 grabaciones",
+"parent": "structured_v12_final_learnedB",
+"rel": "rec",
+"change": "El mismo DDSP final entrenado con 100 grabaciones en vez de 20 (las 20 de siempre más 80 del resto de GAPS, 12000 pasos); se evalúa en las mismas 85 ventanas, que ninguna de las dos versiones vio.",
+"loss": 5.645,
+"wind": -26.6
+},
+"e6-structured_v12_final_learnedB_data100_noise_strongD_rise": {
+"name": "Final · 100 grabaciones + adv",
+"parent": "structured_v12_final_learnedB_data100",
+"rel": "cont",
+"change": "La misma receta adversarial sobre el DDSP de 100 grabaciones. Sus pares DDSP → grabación (unas 5 h, 7 veces más que con 20) entrenan V1-100.",
+"loss": 5.721,
+"wind": -24.3,
+"kad": [
+3.256,
+0.1156
+]
+},
+"structured_v12_final_learnedB_data100x5": {
+"name": "Final · 100 grabaciones · 5× entrenamiento",
+"parent": "structured_v12_final_learnedB_data100",
+"rel": "rec",
+"change": "El DDSP de 100 grabaciones con el mismo entrenamiento por grabación que el de 20: 20000 pasos en vez de 12000 (mismo modelo, mismos datos).",
+"loss": 5.617,
+"wind": -24.7
+},
+"e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise": {
+"name": "Final · 100 grabaciones · 5× entrenamiento + adv",
+"parent": "structured_v12_final_learnedB_data100x5",
+"rel": "cont",
+"change": "La receta adversarial con 15000 pasos en vez de 3000 (5 veces más, igual por grabación que con 20).",
+"loss": 5.817,
+"wind": -21.9,
+"kad": [
+1.2334,
+0.2025
+]
+},
+"voc-bigvgan24-original": {
+"name": "Original → BigVGAN 24 kHz",
+"parent": null,
+"rel": "voc",
+"change": "La grabación real convertida a mel y de vuelta a audio por BigVGAN-v2 preentrenado (24 kHz, sin entrenar en guitarra): el techo de un vocoder de mel.",
+"loss": 4.238,
+"wind": "na",
+"kad": [
+1.7504,
+0.0201
+]
+},
+"voc-bigvgan24-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → BigVGAN 24 kHz",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "El DDSP final por BigVGAN-v2 preentrenado, sin entrenar en guitarra.",
+"loss": 6.105,
+"wind": "na",
+"kad": [
+1.7757,
+0.2639
+]
+},
+"original44k": {
+"name": "Original 44.1 kHz",
+"parent": null,
+"rel": null,
+"change": "La grabación real en banda completa (44.1 kHz), sin pasar por ningún modelo.",
+"loss": null,
+"wind": "na",
+"ref": true
+},
+"voc-bigvgan44-original48": {
+"name": "Original → BigVGAN 44 kHz",
+"parent": "original44k",
+"rel": "voc",
+"change": "La grabación real en banda completa por BigVGAN-v2 preentrenado de 44 kHz.",
+"loss": 4.402,
+"wind": "na",
+"kad": [
+2.3768,
+0.0678
+]
+},
+"voc-discoder-original44k": {
+"name": "Original → DisCoder",
+"parent": "original44k",
+"rel": "voc",
+"change": "La grabación real en banda completa por DisCoder (vocoder de música, 44.1 kHz, preentrenado).",
+"loss": 4.459,
+"wind": "na"
+},
+"voc-bigvgan44-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → BigVGAN 44 kHz",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "El DDSP final (24 kHz) por BigVGAN-v2 de 44 kHz: tiene que inventar lo que está por encima de 12 kHz.",
+"loss": 6.033,
+"wind": "na",
+"kad": [
+2.1504,
+0.3838
+]
+},
+"voc-discoder-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → DisCoder",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "El DDSP final (24 kHz) por DisCoder: también inventa lo que está por encima de 12 kHz.",
+"loss": 6.107,
+"wind": "na"
+},
+"voc-p2_real-original": {
+"name": "Original → BigVGAN afinado",
+"parent": null,
+"rel": "voc",
+"change": "La grabación real por BigVGAN-v2 de 24 kHz después de afinarlo 8000 pasos con las grabaciones reales de GAPS (fase 2): el nuevo techo.",
+"loss": 4.082,
+"wind": "na",
+"kad": [
+1.4611,
+0.0291
+]
+},
+"voc-p2_real-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → BigVGAN afinado",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "El DDSP final por el BigVGAN afinado en guitarra real. Nunca vio un DDSP en el entrenamiento.",
+"loss": 5.891,
+"wind": "na",
+"kad": [
+1.821,
+0.2209
+]
+},
+"voc-p2_real-v3_x0res-d20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → mel reparado (difusión) → BigVGAN afinado",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "El mel del DDSP pasa por una red de difusión superficial (se le añade ruido hasta el paso 20 de 100 y se quita, aprendiendo a dejarlo como el mel real) y luego por el BigVGAN afinado.",
+"loss": 6.078,
+"wind": "na",
+"kad": [
+6.9643,
+0.5948
+]
+},
+"voc-p2_real-v3b_flow-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → mel reparado (flujo) → BigVGAN afinado",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "El mel del DDSP pasa por un flujo rectificado que lo lleva en línea recta hacia el mel real, y luego por el BigVGAN afinado.",
+"loss": 5.874,
+"wind": "na",
+"kad": [
+7.3303,
+0.3996
+]
+},
+"voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → vocoder entrenado con DDSP (V1)",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "El BigVGAN afinado, entrenado 6000 pasos más con pares DDSP → grabación real: entra el mel del DDSP final y tiene que salir la grabación real (pérdida de mel + adversarial). 20 grabaciones, 0.69 h de pares.",
+"loss": 5.796,
+"wind": "na",
+"kad": [
+2.3323,
+0.1235
+]
+},
+"voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → vocoder con la onda del DDSP (V2)",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "Como V1, pero además la onda del DDSP entra en cada etapa del vocoder (como la fuente en NSF-HiFiGAN), no solo su mel: el vocoder puede copiar la fase y los ataques del DDSP en vez de inventarlos. 20 grabaciones, 0.69 h de pares.",
+"loss": 5.762,
+"wind": "na",
+"kad": [
+1.3494,
+0.1835
+]
+},
+"voc-s_stems20b-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → vocoder con cada parte del DDSP (S)",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "Como V1, pero además del mel de la mezcla entra el mel de cada parte del DDSP por separado (cuerdas, cuerpo, ataque, contacto, fondo, ruido), para que el vocoder sepa qué es cada cosa. 20 grabaciones, 0.69 h de pares.",
+"loss": 5.763,
+"wind": "na",
+"kad": [
+2.2766,
+0.4498
+]
+},
+"voc-p4_v2_strings20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Solo las cuerdas del DDSP → V2 (fase 4)",
+"parent": null,
+"rel": "voc",
+"change": "V2 entrenado con solo la parte armónica del DDSP (las cuerdas): sin cuerpo, ataque, contacto, fondo ni ruido. Todo lo demás lo tiene que poner el vocoder. «Entrada» es la parte de cuerdas sola.",
+"loss": 6.17,
+"wind": "na",
+"kad": [
+1.1748,
+0.1501
+]
+},
+"voc-v1_mix100-e6-structured_v12_final_learnedB_data100_noise_strongD_rise": {
+"name": "100 grabaciones + adv → V1 entrenado con sus pares (V1-100)",
+"parent": "e6-structured_v12_final_learnedB_data100_noise_strongD_rise",
+"rel": "voc",
+"change": "V1 (solo el mel del DDSP), entrenado con los pares del DDSP de 100 grabaciones: unas 5 h de pares en vez de 0.69 h. Entra el DDSP de 100 grabaciones.",
+"loss": 5.753,
+"wind": "na",
+"kad": [
+3.375,
+0.5154
+]
+},
+"voc-v2_fav20-e6-structured_v9_base_t32_noise_strongD": {
+"name": "Tu favorito anterior + adv → V2 entrenado con sus pares",
+"parent": "e6-structured_v9_base_t32_noise_strongD",
+"rel": "voc",
+"change": "V2 (mel + onda del DDSP), igual que con el DDSP final, pero con los pares de M1 + timbre 32 + adv, el DDSP más real según KAD.",
+"loss": 5.792,
+"wind": "na",
+"kad": [
+1.6409,
+0.3368
+]
+},
+"voc-v2_recddsp20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → V2 + embedding del DDSP",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "V2 con un embedding de grabación: el vocoder sabe de qué grabación viene cada fragmento. Usa el embedding que ya aprendió el DDSP (congelado) y una capa pequeña que aprende a usarlo. 20 grabaciones, 6000 pasos.",
+"loss": 5.719,
+"wind": "na",
+"kad": [
+1.2366,
+0.2192
+]
+},
+"voc-v2_rectable20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → V2 + embedding propio",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "V2 con un embedding de grabación nuevo, una tabla que el vocoder aprende desde cero. 20 grabaciones, 6000 pasos.",
+"loss": 5.742,
+"wind": "na",
+"kad": [
+1.3083,
+0.2224
+]
+},
+"voc-v2_nocontact20-e6-structured_v13_final_nocontact_noise_strongD_rise": {
+"name": "Final sin contacto + adv → V2 entrenado con sus pares",
+"parent": "e6-structured_v13_final_nocontact_noise_strongD_rise",
+"rel": "voc",
+"change": "V2 (mel + onda del DDSP), igual que con el DDSP final, pero con los pares del DDSP final entrenado sin contacto. 20 grabaciones, 6000 pasos.",
+"loss": 5.761,
+"wind": "na",
+"kad": [
+1.7631,
+0.3788
+]
+},
+"voc-v2_x5-e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise": {
+"name": "100 grabaciones 5× + adv → V2 sin embedding",
+"parent": "e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise",
+"rel": "voc",
+"change": "V2 entrenado con los pares del DDSP de 100 grabaciones con 5× entrenamiento, sin embedding de grabación. 30000 pasos (el mismo entrenamiento por grabación que 6000 con 20).",
+"loss": 5.724,
+"wind": "na",
+"kad": [
+1.7264,
+0.3625
+]
+},
+"voc-v2_recddspx5-e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise": {
+"name": "100 grabaciones 5× + adv → V2 + embedding del DDSP",
+"parent": "e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise",
+"rel": "voc",
+"change": "Lo mismo, con el embedding de grabación del DDSP (el ganador en 20 grabaciones). 30000 pasos.",
+"loss": 5.661,
+"wind": "na",
+"kad": [
+1.196,
+0.3121
+]
+},
+"voc-v2_recddsp100-e6-structured_v12_final_learnedB_data100_noise_strongD_rise": {
+"name": "100 grabaciones + adv → V2 + embedding del DDSP",
+"parent": "e6-structured_v12_final_learnedB_data100_noise_strongD_rise",
+"rel": "voc",
+"change": "V2 con el embedding del DDSP, entrenado con los pares del primer DDSP de 100 grabaciones (12000 + 3000 pasos). 30000 pasos.",
+"loss": 5.646,
+"wind": "na",
+"kad": [
+1.0766,
+0.1957
+]
+},
+"voc-p5_real44-original": {
+"name": "Original 44.1 kHz → BigVGAN 44 kHz afinado",
+"parent": "original44k",
+"rel": "voc",
+"change": "La grabación real en banda completa por BigVGAN-v2 de 44 kHz después de afinarlo 8000 pasos con las grabaciones reales de GAPS a 44.1 kHz (fase 5, como la fase 2 a 24 kHz).",
+"loss": 4.493,
+"wind": "na",
+"kad": [
+2.1604,
+0.2535
+]
+},
+"voc-p5_real44-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+"name": "Final + adv → BigVGAN 44 kHz afinado",
+"parent": "e6-structured_v12_final_learnedB_noise_strongD_rise",
+"rel": "voc",
+"change": "El DDSP final (24 kHz) por el BigVGAN de 44 kHz afinado en guitarra real: nunca vio un DDSP y tiene que inventar lo que está por encima de 12 kHz.",
+"loss": 6.002,
+"wind": "na",
+"kad": [
+2.1457,
+0.4547
+]
+}
+};
+/*MODELS-END*/
+const LIVE_SECTION = "timbre-sin-compuerta";
+const VARIANTS = { "-nonoise": "ruido apagado", "-noise": "solo el ruido +20 dB" };
+const ALL_SECTIONS = [
+  { id: "rondas", title: "D1 vs S1 vs S1 + cuerpo", tag: "Paso 4 · Rondas 1–2",
+    note: "Modelos solo con la partitura: MIDI + loudness por nota leído de la mezcla.",
+    v: ["original", "ddsp_v2", "structured_v2", "structured_v2_bodyir"],
+    heard: "Ronda 1 (modelos anteriores a estos): todos suenan igual de mal. Ronda 2: los estructurados suenan un poco mejor que D1. 023 suena notablemente bien; 176, 276 y 277 suenan como un teclado MIDI barato; 306, intermedio." },
+  { id: "sin-ruido", title: "Entrenados sin ruido residual", tag: "Paso 4 · Ronda 2",
+    note: "Sin la salida fácil del ruido. Por métricas, D1 empeora bastante (6.35 → 6.63) y S1 + cuerpo poco (6.32 → 6.36).",
+    v: ["original", "ddsp_v2", "ddsp_v2_nonoise", "structured_v2_bodyir", "structured_v2_bodyir_nonoise"] },
+  { id: "reverb", title: "S2: sin y con reverb de sala", tag: "Paso 4 · Ronda 3",
+    note: "La reverb no mejoró las métricas (6.28 → 6.32). En el original, 276 y 306 tienen una reverb muy clara.",
+    v: ["original", "structured_v4_body", "structured_v4_body_reverb"] },
+  { id: "features", title: "Features de audio: D2 y M1", tag: "Paso 4 · Ronda 4",
+    note: "Ambos modelos reciben el loudness y el pitch de cada nota cada 10 ms (resíntesis).",
+    v: ["original", "ddsp_v5_audio", "structured_v5_body_audio"],
+    heard: "Con las features de audio todos suenan mejor. 176 todavía suena a MIDI barato, y aparece un ruido de fondo como viento." },
+  { id: "viento", title: "M1: qué es el viento", tag: "Calidad perceptual",
+    note: "La última columna es solo el ruido residual de M1, amplificado +20 dB para que se oiga.",
+    v: ["original", "structured_v5_body_audio", "structured_v5_body_audio-noise"],
+    heard: "El ruido residual solo suena exactamente como el viento; el piso de ruido y el cuerpo, solos, no se oyen." },
+  { id: "mel-adversarial", title: "M1: loss lineal, loss mel y adversarial", tag: "Calidad perceptual",
+    note: "M1 sin ruido + adv usa un discriminator fuerte y 3000 pasos.",
+    v: ["original", "structured_v5_body_audio", "structured_v6_mel_noise", "structured_v6_mel_nonoise", "e6-structured_v5_body_audio_nonoise_strongD"],
+    heard: "En las 5, el mejor es M1 sin ruido + adv, aunque con artefactos (en 176, súper feos); en 306 suena realista. El resto suena a MIDI barato, salvo 023. M1 · loss mel, entrenado sin ruido: armónicos horribles. M1 · loss mel: algo de viento, armónicos limpios. En 277, M1 suena mucho mejor que M1 · loss mel; en 276, un poco mejor." },
+  { id: "adversarial-largo", title: "M1 sin ruido + adv: 2000 vs 9000 pasos", tag: "Calidad perceptual",
+    note: "Reiniciado con los mismos ajustes y entrenado 9000 pasos. Por números, el flapping baja a la mitad después de 6000 pasos.",
+    v: ["original", "adv9k-step2000", "e6-structured_v5_body_audio_nonoise_strongD_9k"],
+    heard: "176 suena igual de feo después de 9000 pasos. Las otras mejoran un poco, pero los artefactos siguen y suenan muy feos. Coincide con la loss, que casi no se mueve: entrenar más no es la solución." },
+  { id: "adversarial-ruido", title: "M1 + adv: el adversarial sin quitar el ruido", tag: "Calidad perceptual",
+    note: "Mismo discriminator fuerte y 3000 pasos, pero sin quitarle el ruido a M1. Por números: menos flapping que sin ruido (176: +0.7 dB vs +1.6 dB), pero el viento sube un poco (−25.2 → −23.5 dB). Las dos últimas columnas son solo el ruido residual, +20 dB.",
+    v: ["original", "structured_v5_body_audio", "e6-structured_v5_body_audio_nonoise_strongD_9k", "e6-structured_v5_body_audio_noise_strongD", "structured_v5_body_audio-noise", "e6-structured_v5_body_audio_noise_strongD-noise"],
+    heard: "M1 + adv gana claramente: quita los artefactos por completo y da realismo, pero vuelve el viento raro. En 276 suena igual que M1 sin ruido + adv, sin los artefactos; en 306 no se le parece." },
+  { id: "adv-variantes", title: "M1 + adv: más pasos y loss solo lineal", tag: "Calidad perceptual · Noche 28–29 oct",
+    note: "Seguir hasta 9000 pasos: la loss no baja, el ruido sube +7 dB y el viento también (−23.5 → −19.9 dB), y el flapping vuelve (176: +1.6 dB). Loss solo lineal (sin el término log): el ruido crece ~9 dB. Por números, ninguna de las dos ayuda.",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "e6-structured_v5_body_audio_noise_strongD_9k", "e6-structured_v5_body_audio_noise_strongD_linonly", "e6-structured_v5_body_audio_noise_strongD_9k-noise", "e6-structured_v5_body_audio_noise_strongD_linonly-noise"],
+    heard: "M1 + adv · 9000 pasos suena mejor que M1 + adv, sobre todo en 306: me sentí un poco más en la sala, aunque el viento empeoró un poco. Quizás falta la acústica de la sala o la posición del micrófono: cada original viene de un montaje de grabación completamente distinto. M1 + adv · loss solo lineal es por lejos la que más viento tiene, pero sin el ruido no suena mal." },
+  { id: "fenomenos", title: "M1 + cada fenómeno nuevo, y M2 Combinado", tag: "Fenómenos · 4000 pasos cada uno",
+    note: "Cada columna es M1 más una parte nueva, entrenado desde cero; M2 junta tres de ellas. Con el ruido disponible, por números casi no cambian; la diferencia aparece al apagar el ruido (sección siguiente).",
+    v: ["original", "structured_v5_body_audio", "structured_v8_bodyhi", "structured_v8_twodecay", "structured_v8_click", "structured_v8_symp", "structured_v8_squeak", "structured_v8_combo"],
+    heard: "Igual que la sección siguiente: sin una diferencia clara entre las partes. Lo único: el viento volvió." },
+  { id: "ruido-apagado", title: "Los mismos modelos con el ruido apagado", tag: "Fenómenos",
+    note: "Se apaga el ruido residual al generar, sin reentrenar: queda lo que cubren las partes deterministas. Loss con el ruido apagado: M1 7.82, M1 + cuerpo 6 kHz 6.95, M1 + dos decaimientos 7.36, M1 + clic 7.55, M2 6.42 (con ruido, todos ≈ 6.0).",
+    v: ["original", "structured_v5_body_audio-nonoise", "structured_v8_bodyhi-nonoise", "structured_v8_twodecay-nonoise", "structured_v8_click-nonoise", "structured_v8_combo-nonoise"],
+    heard: "Sin una diferencia clara que pueda afirmar con seguridad. Si M2 tiene mejores números, quedarse con ese." },
+  { id: "discriminator", title: "M1 + adv: qué ve el discriminator", tag: "Discriminator",
+    note: "Complejo: el de siempre, en M1 + adv (partes real e imaginaria). Log: ve la magnitud en escala log, donde el viento de los pasajes silenciosos se ve tanto como las notas. Los dos con log distinguen mejor (loss ~1.5 y ~1.2 vs ~1.8) y solo log tiene el menor flapping (277: +0.3 vs +1.0 dB), pero el viento queda igual (−22 a −23 dB).",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "e6-structured_v5_body_audio_noise_strongD_both", "e6-structured_v5_body_audio_noise_strongD_logmag", "e6-structured_v5_body_audio_noise_strongD-noise", "e6-structured_v5_body_audio_noise_strongD_both-noise", "e6-structured_v5_body_audio_noise_strongD_logmag-noise"],
+    heard: "Suenan parecidos; M1 + adv es el mejor y M1 + adv · D complejo + log el peor, pero las diferencias son pequeñas (escuché muchas veces). Todos sufren con el viento, como se esperaba; 176, como siempre, con mucho viento." },
+  { id: "combinado-adversarial", title: "M2 + adv", tag: "Fenómenos + discriminator",
+    note: "M2 con adversarial de 3000 pasos y discriminator complejo + log. Flapping igual al original (+0.0 dB), pero el ruido crece como antes (viento −21.8 → −20.2 dB).",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "structured_v8_combo", "e6-structured_v8_combo_noise_strongD_both", "e6-structured_v8_combo_noise_strongD_both-noise"],
+    heard: "M2 + adv y M1 + adv suenan parecidos. En 176 aparece un ruido raro y en 023 M2 + adv se desafina un poco; en el resto no hay diferencia clara. M1 + adv sigue siendo el mejor." },
+  { id: "combinado-sin-ruido", title: "M2: entrenado sin ruido vs ruido apagado", tag: "Fenómenos",
+    note: "M2 · entrenado sin ruido es otro modelo, entrenado desde cero sin el ruido residual: sin viento posible. Loss 6.03 vs 6.00 de M2 (S1 + cuerpo · entrenado sin ruido: 6.36), flapping igual al original (−0.0 dB). M2 con el ruido apagado es el mismo M2, generado sin ruido.",
+    v: ["original", "structured_v8_combo", "structured_v8_combo-nonoise", "structured_v8_combo_nonoise", "e6-structured_v5_body_audio_noise_strongD"],
+    heard: "Gana M1 + adv: un poco más realista, aunque M2 suena más limpio. M2 con el ruido apagado suena casi igual que M2, pero sin viento: el ruido casi no aporta. M2 · entrenado sin ruido tiene artefactos feos; por lo demás suena como los otros dos. Todos suenan un poco a MIDI barato." },
+  { id: "adv-ruido-apagado", title: "M1 + adv y sus variantes, con el ruido apagado", tag: "Calidad perceptual",
+    note: "M1 + adv, M1 + adv · 9000 pasos y M1 + adv · loss solo lineal, generados con el ruido residual apagado, sin reentrenar. Lo que queda es lo que el adversarial le enseñó a las partes deterministas.",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "e6-structured_v5_body_audio_noise_strongD-nonoise", "e6-structured_v5_body_audio_noise_strongD_9k-nonoise", "e6-structured_v5_body_audio_noise_strongD_linonly", "e6-structured_v5_body_audio_noise_strongD_linonly-nonoise"],
+    heard: "M1 + adv con y sin ruido suenan prácticamente igual si se quita el viento: el ruido solo agrega viento. Con M1 + adv · 9000 pasos no lo puedo afirmar con seguridad; quizás después de muchos pasos el filtro de ruido sí aprendió algo más útil que el viento. M1 + adv · loss solo lineal con el ruido apagado suena bastante bien, pero el mejor sigue siendo M1 + adv, con ruido." },
+  { id: "ruido-en-ataque", title: "La compuerta: ruido solo alrededor de cada ataque", tag: "Ruido",
+    note: "El ruido residual solo puede sonar desde 20 ms antes de cada ataque hasta ~60 ms después; el fondo constante de cada grabación queda a cargo del piso fijo, que no puede hacer ráfagas. Ruido en el 20 % más silencioso: −56 dB (M2 + compuerta + adv) vs −23.5 dB (M1 + adv). Loss: M2 + compuerta 6.00, igual que M2; M2 + compuerta + adv 6.09 vs M1 + adv 6.12.",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD", "structured_v8_gated", "e6-structured_v8_gated_noise_strongD", "e6-structured_v5_gated_noise_strongD", "e6-structured_v8_gated_noise_strongD-noise", "e6-structured_v5_body_audio_noise_strongD-noise"],
+    heard: "En general volvieron los artefactos. El ruido ya no se oye por ningún lado, pero algunos armónicos suenan raros y aparecen sonidos raros al azar. Si se ignoran los artefactos, al menos M1 + compuerta + adv suena bastante bien." },
+  { id: "timbre", title: "El timbre de cada ataque, con compuerta", tag: "Fenómenos",
+    note: "La red de cada nota también lee del audio el timbre del ataque: el nivel de los primeros armónicos justo después de la nota, relativo a su promedio (ahí se ve dónde se pulsó la cuerda, uña o yema, qué cuerda). Antes, todas las notas de la misma altura y volumen tenían el mismo timbre. Con 16 armónicos, loss 5.82 vs 6.00 de M2 + compuerta; con los timbres intercambiados entre notas de la misma altura sube a 6.17, así que usa el de cada nota. Con 32: 5.77; + adv: 5.84. Con 9000 pasos de adv: 5.88 y vuelve algo de viento (−45 dB vs −52 dB). La lectura tardía empata (5.79). Sin dos decaimientos ni clic también empata (5.79; tres semillas de M2 + compuerta + timbre 32: 5.77, 5.80, 5.80).",
+    v: ["original", "structured_v8_gated", "structured_v9_timbre", "structured_v9_timbre32", "structured_v9_timbre32late", "structured_v9_t32_simple", "e6-structured_v9_timbre_noise_strongD", "e6-structured_v9_timbre32_noise_strongD", "e6-structured_v9_timbre32_noise_strongD_9k", "e6-structured_v5_body_audio_noise_strongD"],
+    heard: "Todos estos modelos usan la compuerta, así que es difícil juzgarlos: todos tienen artefactos. Por lo que escuché, el timbre suena prometedor; hay que repetirlo sin la compuerta." },
+  { id: "timbre-sin-compuerta", title: "El timbre de cada ataque, sin compuerta", tag: "Fenómenos",
+    note: "El timbre de 32 armónicos, con el ruido residual sonando todo el tiempo, sobre M1 y sobre M2, con y sin adversarial. Cada uno aparece también con el ruido apagado, sin reentrenar. Si los armónicos siguen limpios con el ruido apagado, el ruido ayuda durante el entrenamiento y no solo al escuchar. M1 + adv queda como referencia. Por métricas, el timbre baja la pérdida unas 0.2 en M1, M1 + adv y M2. En M1 el viento empeora unos 4 dB; en M2 casi no cambia. Medido después: en estos modelos la corrección de la GRU cambia menos de 1 dB cada 10 ms; en M2 · entrenado sin ruido y en M2 + compuerta + timbre 32, unos 14 dB. Medido sobre las partes (85 ventanas de test): en M1 + adv, M1 + timbre 32 y M1 + timbre 32 + adv, el ruido residual suena 11–14 dB más fuerte justo después de cada ataque que entre notas, por encima de 1 kHz, y pone el 92–100 % de la energía no armónica del ataque: es el «tambor» que se oye en el ruido. En los dos M2 + timbre 32 el ruido es un fondo parejo (2–6 dB más bajo en los ataques que entre notas); el ataque lo pone su cuerpo, que en M2 llega hasta 6 kHz (en M1, hasta 600 Hz). En todos, la ráfaga de ataque quedó prácticamente apagada.",
+    v: ["original", "e6-structured_v5_body_audio_noise_strongD",
+        "structured_v9_base_t32", "structured_v9_base_t32-nonoise",
+        "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v9_base_t32_noise_strongD-nonoise",
+        "structured_v9_t32_no_gate", "structured_v9_t32_no_gate-nonoise",
+        "e6-structured_v9_t32_no_gate_noise_strongD", "e6-structured_v9_t32_no_gate_noise_strongD-nonoise"],
+    heard: "Con el ruido apagado no hay ninguno de los artefactos de antes: los armónicos suenan limpios. Empiezo a pensar que el ruido casi no aporta al sonido y solo evita que otras partes aprendan lo que no deben durante el entrenamiento. Con el ruido encendido siempre está ese viento molesto: compensa algo que no hemos identificado. 023: todos superan a M1 + adv; el timbre ayudó mucho y, cuando suena más de una cuerda, se oye más color; sin un ganador claro. 176: más o menos igual. 276: mi favorito es M1 + timbre 32 + adv; los que tienen adv suenan un poco mejor. 277: los que tienen adv suenan un poco mejor; mis favoritos son M1 + timbre 32 + adv y M2 + timbre 32 + adv. 306: los que tienen adv tienen más color; mi favorito es M2 + timbre 32 + adv y M1 + timbre 32 + adv también suena muy bien. M2 + timbre 32 + adv a veces tiene armónicos raros: en 306 y 277 se oyen agudos cortos y aislados, también con el ruido apagado." },
+  { id: "ataque-por-nota", page: 2, title: "El ataque de cada nota y el ruido", tag: "Ataque y ruido · Noche 15–16 nov",
+    note: "Antes, la ráfaga de ataque tenía un solo espectro por grabación y un decaimiento global, y quedó apagada en todos los modelos. Ahora cada nota tiene su propio nivel y su propio decaimiento en cada banda, según su altura, volumen, timbre y la grabación. En M1 + timbre 32, el ataque por nota se queda con el ataque: el ruido pasa de poner el 99–100 % de la energía no armónica del ataque (sobre 1 kHz) al 16–19 %, y sube 6 dB después de cada pulsación en vez de 12 (el «tambor» baja a la mitad). Loss 5.77 vs 5.82. Pero entre notas, el ruido de M1 sigue unos 7 dB por encima del fondo medido de la sala. En M2 el cuerpo ya ponía el ataque y el ruido no tenía tambor: el ataque por nota queda por debajo del cuerpo, la loss empata (5.77 vs 5.79) y el ruido en los pasajes más silenciosos sube 3 dB. Con el ataque por nota y además el fondo medido de la sala (el ruido es gratis hasta ese fondo y se penaliza por encima), el ruido de M1 deja de seguir los ataques (+2 dB o menos después de cada pulsación; pone el 2–7 % del ataque), el viento baja 4 dB (−25.7 vs −21.7) y hasta 4 kHz el ruido queda al nivel del fondo de la sala (sobre 4 kHz, todavía unos 5 dB por encima). Loss 5.81 vs 5.77. Con cuerdas además (última columna de M1): loss 5.70, con el mismo ruido limpio (viento −25.5 dB, sin tambor): el mejor M1 sin adversarial; su versión con adversarial está en entrenamiento. Clic en el nombre de un modelo para oír sus partes: «Ataque (ráfaga)» es la parte nueva.",
+    v: ["original", "structured_v9_base_t32", "structured_v10_m1_burst", "structured_v10_m1_burst_floor", "structured_v10_m1_burst_floor_strings", "structured_v9_t32_no_gate", "structured_v10_m2_burst"],
+    panel: ["structured_v10_m1_burst_floor_strings-nonoise", "structured_v10_m1_burst_floor-nonoise", "structured_v10_m1_burst-nonoise", "structured_v10_m2_burst-nonoise", "structured_v9_base_t32-nonoise", "structured_v9_t32_no_gate-nonoise"] },
+  { id: "favorito-ataque", page: 2, title: "El favorito con ataque por nota", tag: "Ataque y ruido · Noche 15–16 nov",
+    note: "La receta del favorito (adversarial de 3000 pasos) sobre M1 + timbre 32 + ataque por nota: es M1 + timbre 32 + adv con el ataque por nota como único cambio. Loss 5.87 vs 5.93. El «tambor» del ruido baja de +14 a +5.5 dB (cuánto más fuerte suena el ruido justo después de cada pulsación que entre notas, sobre 1 kHz), y el ruido pasa de poner el 99–100 % de la energía no armónica del ataque al 11–16 %: ahora el ataque lo pone «Ataque (ráfaga)». Entre notas, el ruido queda unos 5 dB por encima del fondo de la sala (antes, 8). Agudos cortos en los armónicos: 4 vs 5. Con cuerdas además (la misma receta sobre M1 + timbre 32 + ataque por nota + cuerdas): 5.80; antes del adversarial, las cuerdas bajaron la loss de M1 + ataque por nota de 5.77 a 5.69, pero el ruido queda igual (tambor +7 dB, unos 6 dB sobre el fondo de la sala). Última columna, el sucesor directo del favorito: la misma receta sobre M1 + timbre 32 + ataque por nota + fondo medido + cuerdas. Loss 5.78 vs 5.93; viento −22.0 vs −19.0 dB; tambor −2 / +1 dB en vez de +14 / +12 (el ruido ya no sigue los ataques: pone el 2–7 % del ataque, antes el 99–100 %); hasta 4 kHz el ruido queda por debajo del fondo de la sala (sobre 4 kHz, unos 4 dB por encima, antes 8.5); agudos cortos: 5, igual que el favorito.",
+    v: ["original", "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v10_m1_burst_noise_strongD", "structured_v10_m1_burst_strings", "e6-structured_v10_m1_burst_strings_noise_strongD", "e6-structured_v10_m1_burst_floor_strings_noise_strongD"],
+    panel: ["e6-structured_v9_base_t32_noise_strongD-nonoise", "e6-structured_v10_m1_burst_noise_strongD-nonoise", "structured_v10_m1_burst_strings-nonoise", "e6-structured_v10_m1_burst_strings_noise_strongD-nonoise", "e6-structured_v10_m1_burst_floor_strings_noise_strongD-nonoise"] },
+  { id: "ruido-sala", page: 2, title: "El ruido de M2: fondo de la sala y ruido lento", tag: "Ataque y ruido · Noche 15–16 nov",
+    note: "Medido: el ruido de M2 + timbre 32 casi siempre está al nivel del fondo de su grabación (lo más bajo que se oye entre los parciales mientras suena la pieza), pero un tercio del tiempo sube 6 dB o más por encima: las ráfagas, el «viento violento». Fondo medido: el ruido es gratis hasta ese fondo y se penaliza por encima. Baja unos 10 dB bajo el fondo hasta 4 kHz, pero sobre 4 kHz el 28 % del tiempo sigue 6 dB o más por encima, y el ruido en los pasajes más silenciosos casi no cambia (−22.4 vs −21.3 dB). Loss 5.82 vs 5.79. Ruido lento: sus bandas se suavizan en 200 ms. Loss 5.75, pero tampoco baja las ráfagas, y duplica los «agudos cortos» de los armónicos (21 vs 10): si el ruido no puede hacer eventos rápidos, los hacen los armónicos.",
+    v: ["original", "structured_v9_t32_no_gate", "structured_v10_m2_floor", "structured_v10_m2_slow"],
+    panel: ["structured_v9_t32_no_gate-nonoise", "structured_v10_m2_floor-nonoise", "structured_v10_m2_slow-nonoise"] },
+  { id: "redes", page: 3, title: "La red: GRU, LSTM y atención", tag: "Redes · Noche 15–16 nov",
+    note: "Mismo M2 + timbre 32, mismas entradas y salidas; solo cambia la red que sigue cada voz en el tiempo. LSTM (como en Jonason), del mismo tamaño: loss 5.80 vs 5.79 de la GRU, un empate (entre semillas, las corridas varían 0.03), con menos «agudos cortos» en los armónicos (4 vs 10 en los cinco fragmentos). LSTM bidireccional, del mismo tamaño total: también lee hacia atrás, así que cada cuadro sabe lo que viene (no sirve en tiempo real). Loss 5.70, la mejor de la noche (−0.08, bien por encima de la variación entre semillas). Antes, una GRU del doble de tamaño empató (5.77): lo que ayuda es ver lo que viene, no el tamaño. Atención (tu idea 2): en vez de la GRU, dos capas de self-attention donde cada cuadro de cada voz mira los últimos 64 cuadros (640 ms) de esa voz; solo mira hacia atrás, así que sí serviría en tiempo real. Loss 5.73 (−0.06), con el mismo viento que la GRU.",
+    v: ["original", "structured_v9_t32_no_gate", "structured_v10_m2_lstm", "structured_v10_m2_bilstm", "structured_v10_m2_attn"],
+    panel: ["structured_v9_t32_no_gate-nonoise", "structured_v10_m2_lstm-nonoise", "structured_v10_m2_bilstm-nonoise", "structured_v10_m2_attn-nonoise"] },
+  { id: "contacto", page: 3, title: "Los «agudos cortos» de M2 + timbre 32 + adv", tag: "Armónicos · Noche 15–16 nov",
+    note: "Los agudos cortos que oíste en los armónicos salen de la corrección de la GRU: cuando una nota se apaga (unos 60 ms antes de la siguiente pulsación), baja los armónicos graves pero sube los agudos (del 30 al 60) durante 20–30 ms. En el 60 % de esos momentos el original también tiene un evento agudo (contra 10 % en momentos al azar): el dedo o la uña tocando la cuerda para apagarla o preparar la siguiente pulsación. El adversarial lo imitaba con lo único que tenía: los armónicos. Arreglo, con la misma receta adversarial: un ruido de contacto por voz y una penalización a las subidas rápidas de los armónicos agudos fuera del ataque. Agudos cortos en los cinco fragmentos: 6 vs 42, con la misma loss (5.87). El ruido de contacto casi no se usó: lo que funcionó fue la penalización. El viento sube un poco (−19.9 vs −21.1 dB).",
+    v: ["original", "e6-structured_v9_t32_no_gate_noise_strongD", "e6-structured_v9_t32_no_gate_noise_strongD_contact_rise"],
+    panel: ["e6-structured_v9_t32_no_gate_noise_strongD-nonoise", "e6-structured_v9_t32_no_gate_noise_strongD_contact_rise-nonoise"] },
+  { id: "cuerdas", page: 3, title: "Una voz por cuerda, desde la tablatura", tag: "Cuerdas · Noche 15–16 nov",
+    note: "Antes, las notas se repartían en 6 voces con una heurística, sin saber la cuerda. Ahora la tablatura (MusicXML) se alinea al MIDI compás por compás (los intérpretes repiten secciones que la partitura no marca) y el 99 % de las notas sabe su cuerda y su traste. Cada voz es una cuerda, y la red sabe qué cuerda y qué traste suena. La inarmonicidad se midió por cuerda en 797 notas limpias: las entorchadas (4.ª, 5.ª y 6.ª) son 3–4 veces menos rígidas que lo que decía la ley única por altura, y en cada cuerda sube con el traste como dice la física (×2 cada 6 trastes). Con la ley única, los armónicos agudos de los bajos sonaban hasta medio semitono altos. Loss 5.67 vs 5.79: la mejora más grande de la noche, cuatro veces la variación entre semillas. Viento −22.9 vs −21.3 dB; agudos cortos en los armónicos: 4 vs 10. Atención entre cuerdas (tu idea 3): después de la GRU, una capa de self-attention entre las 6 cuerdas en cada cuadro, para que cada cuerda vea lo que hacen las otras. Loss 5.64, la más baja hasta ahora, pero empata con solo cuerdas (5.67; la diferencia está dentro de la variación entre semillas): saber la cuerda pesa mucho más que mirar a las vecinas. Cuerdas con la self-attention en el tiempo en vez de la GRU: 5.71, peor que cuerdas con GRU (5.67): las dos mejoras no se suman; sabiendo la cuerda, la memoria de la GRU alcanza. Lo mismo con la LSTM bidireccional (última columna): 5.68, empate. Con otra semilla, cuerdas da 5.72 (5.67 la primera): la mejora de las cuerdas se repite (en promedio −0.09), y entre semillas las corridas varían hasta 0.05.",
+    v: ["original", "structured_v9_t32_no_gate", "structured_v10_m2_strings", "structured_v10_m2_strings_xvoice", "structured_v10_m2_strings_attn", "structured_v10_m2_strings_bilstm"],
+    panel: ["structured_v9_t32_no_gate-nonoise", "structured_v10_m2_strings-nonoise", "structured_v10_m2_strings_xvoice-nonoise", "structured_v10_m2_strings_attn-nonoise", "structured_v10_m2_strings_bilstm-nonoise"] },
+  { id: "candidatos-adv", page: 3, title: "Candidatos con adversarial", tag: "Cuerdas · Noche 15–16 nov",
+    note: "La misma receta adversarial (3000 pasos, discriminator complejo) sobre tres bases: tu favorito (M1 + timbre 32), M2 + timbre 32 y M2 + timbre 32 + cuerdas. Loss: 5.93, 5.87 y 5.72: con cuerdas, el mejor adversarial hasta ahora. Pero el adversarial vuelve a traer los «agudos cortos» a los armónicos (23 en los cinco fragmentos; sin adversarial, 4). Con la penalización que los quitó en M2 + timbre 32 + adv (última columna): 8 agudos cortos en vez de 23, con la misma loss (5.73). Es el candidato más fuerte de la noche.",
+    v: ["original", "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v9_t32_no_gate_noise_strongD", "e6-structured_v10_m2_strings_noise_strongD", "e6-structured_v10_m2_strings_noise_strongD_rise"],
+    panel: ["e6-structured_v9_base_t32_noise_strongD-nonoise", "e6-structured_v9_t32_no_gate_noise_strongD-nonoise", "e6-structured_v10_m2_strings_noise_strongD-nonoise", "e6-structured_v10_m2_strings_noise_strongD_rise-nonoise"] },
+  { id: "candidatos-finales", page: 4, title: "Candidatos finales, junto a tu favorito", tag: "Modelo final · Noche 16–17 nov",
+    note: "Todos llevan la receta de tu favorito (adversarial de 3000 pasos, discriminator complejo) más la penalización de los agudos cortos, sobre M1 + timbre 32 + ataque por nota + fondo medido. Solo cambia la red que sigue cada voz en el tiempo. Loss: tu favorito 5.93; con GRU (el control) 5.92; con atención 5.88; con atención que anticipa 5.87; además entre voces 5.81, la mejor. Viento: −19.0 dB en tu favorito; −23.4, −25.3, −24.5 y −20.5 dB en los nuevos. El tambor desaparece en los nuevos: el ruido pone menos del 16 % del ataque (en tu favorito, el 99–100 %), y el ataque lo pone «Ataque (ráfaga)». La excepción es la atención entre voces: con el adversarial, su ruido vuelve a subir en el ataque sobre 4 kHz (+8.6 dB después de cada pulsación, hasta el 38 % del ataque), y tiene el viento más alto de los nuevos. Su loss es la mejor, pero ese ruido es justo lo que no te gustaba. Atención que anticipa + contacto (última columna): loss 5.83, viento −24.3 dB, sin tambor (el ruido pone el 0–2 % del ataque y queda muy por debajo del fondo de la sala). La parte de contacto queda prendida, más fuerte en 277 y 306, y el adversarial no le devuelve el ataque al ruido: ese trabajo lo hace el contacto. Dos agudos cortos en los armónicos, los dos en 306. Atención que anticipa + grabación en todo (última columna; cada guitarra tiene su propio decaimiento, tiempo de ataque, apagado al final de la nota, EQ fino del cuerpo y rigidez): loss 5.82, sin tambor (−0.1 / +1.5 dB), ningún agudo corto, pero el viento sube a −21.3 dB. Aprendió un ataque más rápido que los 2 ms fijos en todas las guitaras (0.5–1.5 ms), un apagado distinto en cada grabación (4–16 ms) y un sostenido de los bajos que cambia ±20 % entre guitarras. Agudos cortos en los armónicos: ninguno en ningún modelo de M1. El detector también contaba los bordes del fragmento (en 0 y 9 s), y ya no los cuenta. Para decidir: 306, 276 y 176, donde la atención te gustó en M2, y 277, los rasgueos, donde ganó la LSTM bidireccional: la atención que anticipa está pensada para ese caso. Clic en el nombre de un modelo para oír sus partes.",
+    v: ["original", "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v10_m1_burst_floor_noise_strongD_rise", "e6-structured_v11_m1_attn_noise_strongD_rise", "e6-structured_v11_m1_attn_ahead_noise_strongD_rise", "e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise", "e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise", "e6-structured_v11_m1_attn_ahead_rec_noise_strongD_rise"],
+    panel: ["e6-structured_v9_base_t32_noise_strongD-nonoise", "e6-structured_v10_m1_burst_floor_noise_strongD_rise-nonoise", "e6-structured_v11_m1_attn_noise_strongD_rise-nonoise", "e6-structured_v11_m1_attn_ahead_noise_strongD_rise-nonoise", "e6-structured_v11_m1_attn_ahead_xvoice_noise_strongD_rise-nonoise", "e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise-nonoise", "e6-structured_v11_m1_attn_ahead_rec_noise_strongD_rise-nonoise"] },
+  { id: "red-m1", page: 4, title: "La red sobre M1, sin adversarial", tag: "Modelo final · Noche 16–17 nov",
+    note: "La base de cada candidato, antes del adversarial. GRU: loss 5.81. Atención (cada cuadro mira los últimos 640 ms de su voz): 5.80, un empate. Atención que anticipa (también ve 160 ms hacia adelante, como la LSTM bidireccional; solo sirve fuera de tiempo real): 5.76. Además entre voces (en cada instante cada voz ve lo que hacen las otras, pensado para los rasgueos): 5.71, la primera atención que le gana a la GRU por más que la variación entre semillas (0.05). Contacto: una parte propia para los eventos agudos y rápidos (el dedo o la uña tocando la cuerda), entrenada desde cero. Se queda prendida, más fuerte en 306 y 277, y el ruido casi se apaga (pone el 0 % del ataque y queda 21–25 dB bajo el fondo de la sala): entre el ataque por nota, el contacto y el fondo medido, al ruido no le queda nada que hacer. Loss 5.73, empate con la atención que anticipa (5.76). Viento: −25.7, −24.2, −26.8, −23.7 y −26.9 dB. Clic en el nombre de un modelo para oír sus partes: «Contacto» es la parte nueva.",
+    v: ["original", "structured_v10_m1_burst_floor", "structured_v11_m1_attn", "structured_v11_m1_attn_ahead", "structured_v11_m1_attn_ahead_xvoice", "structured_v11_m1_attn_ahead_contact"],
+    panel: ["structured_v10_m1_burst_floor-nonoise", "structured_v11_m1_attn-nonoise", "structured_v11_m1_attn_ahead-nonoise", "structured_v11_m1_attn_ahead_xvoice-nonoise", "structured_v11_m1_attn_ahead_contact-nonoise"] },
+  { id: "grabacion-en-todo", page: 5, title: "La grabación en todas las partes", tag: "Guitarras · Noche 16–17 nov",
+    note: "Cada grabación de GAPS es otra guitarra, otro micrófono y otra sala. Antes, varias partes eran iguales para todas: el decaimiento de cada parcial, la respuesta del cuerpo, la rigidez, el tiempo de ataque (2 ms) y el apagado al final de la nota (5 ms). «Grabación en todo»: todas esas partes leen la grabación. Sobre M1 con atención que anticipa: loss 5.72 vs 5.76, un empate, con un poco menos de ruido en el ataque. Lo que aprendió: en todas las guitaras un ataque más rápido que los 2 ms fijos (0.5–1.5 ms); un apagado distinto en cada grabación (4–16 ms); un sostenido de los bajos que cambia ±20 % entre guitarras (los agudos, ±5 %); y un EQ fino del cuerpo casi igual para todas. Con un embedding de grabación de 32 dimensiones en vez de 16 (con 20 grabaciones, 16 no alcanza para darle a cada una valores independientes): 5.75, otro empate, y un poco más de ruido en el ataque. El tamaño del embedding no era el límite. En M2 (tu pregunta: ¿falló M2 porque el doble decaimiento, el batido y el clic eran iguales para todas las guitarras?): loss 5.75 vs 5.77, un empate, y los agudos cortos siguen en los mismos momentos de 277 y 306 (7 vs 10). No era eso: M2 sigue detrás de M1 (viento −19.4 dB vs −24 a −27 en M1). Clic en el nombre de un modelo para oír sus partes.",
+    v: ["original", "structured_v11_m1_attn_ahead", "structured_v11_m1_attn_ahead_rec", "structured_v11_m1_attn_ahead_rec32", "structured_v10_m2_burst", "structured_v11_m2_rec"],
+    panel: ["structured_v11_m1_attn_ahead-nonoise", "structured_v11_m1_attn_ahead_rec-nonoise", "structured_v11_m1_attn_ahead_rec32-nonoise", "structured_v10_m2_burst-nonoise", "structured_v11_m2_rec-nonoise"] },
+  { id: "cuerdas-sinteticas", page: 5, title: "¿Por qué las cuerdas suenan sintéticas?", tag: "Cuerdas · Noche 16–17 nov",
+    note: "Te sonaban sintéticas, «como un teclado MIDI barato», sobre todo los bajos. Cuatro cambios sobre M1 + timbre 32 + ataque por nota + fondo medido + cuerdas (5.70), cada uno solo, sin adversarial. Rigidez antigua (la ley única por altura, con los bordones más inarmónicos): 5.75. Rigidez por guitarra (medida en cada grabación: dentro de una grabación cada cuerda es muy consistente, pero entre grabaciones cambia hasta 8 veces): 5.69. Decaimiento por cuerda (el decaimiento de cada parcial también sabe la cuerda, el traste y la guitarra): 5.72. Voces de antes (la red sabe la cuerda y el traste, pero las notas se reparten en voces como antes, no una por cuerda): 5.73. Los cuatro empatan entre sí (la variación entre semillas es 0.05): la loss no ve lo que oyes, así que el oído decide. Primera columna: el mismo modelo sin cuerdas, como referencia. Escucha sobre todo los bajos en 276, 277 y 306. Clic en el nombre de un modelo para oír sus partes.",
+    v: ["original", "structured_v10_m1_burst_floor", "structured_v10_m1_burst_floor_strings", "structured_v11_m1_strings_oldB", "structured_v11_m1_strings_guitarB", "structured_v11_m1_strings_decay", "structured_v11_m1_strings_oldvoices"],
+    panel: ["structured_v10_m1_burst_floor-nonoise", "structured_v10_m1_burst_floor_strings-nonoise", "structured_v11_m1_strings_oldB-nonoise", "structured_v11_m1_strings_guitarB-nonoise", "structured_v11_m1_strings_decay-nonoise", "structured_v11_m1_strings_oldvoices-nonoise"] },
+  { id: "ddsp-final", page: 6, title: "El DDSP final", tag: "DDSP final · Noche 17–18 nov",
+    note: "El DDSP final, antes del vocoder, armado con tus veredictos del experimento 11: atención que anticipa + contacto + adv (T4adv, tu favorito), cuerdas de la tablatura sobre M1, la grabación en todas las partes con un embedding de 32, y la rigidez de cada guitarra sacada del embedding, no medida. Dos versiones, cada una con su adversarial: rigidez compartida (una tabla por cuerda, igual para todas las guitarras) y rigidez aprendida (cada guitarra corrige la rigidez de cada cuerda desde su embedding). Loss sin adversarial 5.69 vs 5.71 y con adversarial 5.81 vs 5.82: empates (T4adv: 5.83). La aprendida con adversarial tiene menos viento (−23.9 vs −20.6 dB) y ningún agudo corto (T4adv tenía 2): es el DDSP final, el que entra al vocoder. Lo que aprendió: cada guitarra corrige su rigidez entre ×0.64 y ×1.49; la variación entre guitarras es igual de grande que la medida en las grabaciones y se parece algo a ella (r = 0.28), así que el embedding encontró parte de las diferencias reales por sí solo. Última columna: la aprendida sin adversarial. Clic en el nombre de un modelo para oír sus partes.",
+    v: ["original", "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise", "e6-structured_v12_final_noise_strongD_rise", "e6-structured_v12_final_learnedB_noise_strongD_rise", "structured_v12_final_learnedB"],
+    panel: ["e6-structured_v9_base_t32_noise_strongD-nonoise", "e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise-nonoise", "e6-structured_v12_final_noise_strongD_rise-nonoise", "e6-structured_v12_final_learnedB_noise_strongD_rise-nonoise", "structured_v12_final_learnedB-nonoise"] },
+  { id: "vocoder-techo", page: 6, title: "El vocoder sin entrenar", tag: "Vocoder · Noche 17–18 nov",
+    note: "Primer paso del vocoder: BigVGAN-v2 de 24 kHz tal como viene (entrenado con voz, música y sonidos, nunca con este DDSP). La grabación real convertida a mel y de vuelta a audio da loss 4.24 en las 85 ventanas de prueba: es el techo de un vocoder de mel en esta medida (ningún DDSP ha bajado de 5.4). El DDSP final por el mismo vocoder: 6.11, peor que el DDSP solo (5.82). Sin entrenar, el vocoder solo redibuja lo que recibe; no puede arreglar lo que nunca vio. Enseñarle a arreglar es la fase 3. Después se afinó con guitarra real: siguiente sección. Clic en el nombre de una versión con vocoder para oír lo que entró, lo que añadió y lo que quitó.",
+    v: ["original", "voc-bigvgan24-original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-bigvgan24-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-44k", page: 6, title: "Banda completa: 44.1 kHz", tag: "Vocoder · Noche 17–18 nov",
+    note: "Lo mismo a 44.1 kHz con dos vocoders preentrenados: BigVGAN-v2 de 44 kHz y DisCoder (un vocoder hecho para música). Primera columna: la grabación real en banda completa; escucha lo que hay por encima de 12 kHz, que el DDSP (24 kHz) no tiene. Loss en las 85 ventanas, llevada a 24 kHz para comparar: real por BigVGAN 44 kHz 4.40 y por DisCoder 4.46 (a 24 kHz, BigVGAN da 4.24). El DDSP final por BigVGAN 44 kHz 6.03 y por DisCoder 6.11: los dos tienen que inventar la banda alta sin haber oído guitarra. Es para la fase 5 (salida a 44.1 kHz); por ahora todo se entrena a 24 kHz. Clic en el nombre de una versión con vocoder para oír lo que entró, lo que añadió y lo que quitó.",
+    v: ["original44k", "voc-bigvgan44-original48", "voc-discoder-original44k", "voc-bigvgan44-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-discoder-e6-structured_v12_final_learnedB_noise_strongD_rise"] },,
+  { id: "vocoder-afinado", page: 6, title: "El vocoder afinado con guitarra real", tag: "Vocoder · Noche 17–18 nov",
+    note: "Fase 2: BigVGAN-v2 de 24 kHz afinado 8000 pasos (unas 3 h) con las 13.7 h de guitarra real de GAPS, sin ver nunca un DDSP. La grabación real por el vocoder afinado da 4.08 (sin afinar, 4.24): el techo bajó. El DDSP final por el vocoder afinado da 5.89 (sin afinar, 6.11; el DDSP solo, 5.82). Solo con oír guitarra real, el vocoder casi deja de empeorar al DDSP (lo que añade a la loss pasa de +0.29 a +0.07), pero todavía no lo mejora: nunca aprendió qué le falta a un DDSP. Ese es el trabajo de la fase 3, que parte de este vocoder. Clic en el nombre de una versión con vocoder para oír lo que entró, lo que añadió y lo que quitó.",
+    v: ["original", "voc-bigvgan24-original", "voc-p2_real-original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-bigvgan24-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p2_real-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "mel-reparado", page: 6, title: "Reparar el mel antes del vocoder: difusión y flujo", tag: "Vocoder · Noche 17–18 nov",
+    note: "Fase 3, V3 y V3b: en vez de cambiar el vocoder, una red corrige el mel del DDSP para que se parezca al mel real, y el vocoder afinado lo convierte en audio. Difusión superficial: al mel del DDSP se le añade ruido hasta el paso 20 de 100 y la red lo quita, aprendiendo a dejarlo como el mel real. Flujo rectificado: la red lleva el mel del DDSP en línea recta hacia el mel real. Loss en las 85 ventanas (el mel sin reparar, con la misma medida: 5.88): difusión 6.08, flujo 5.87, un empate. Las dos redes aprendieron la corrección promedio, y el promedio es liso: el mel de la difusión conserva el 48% del detalle de cuadro a cuadro del mel real y el del flujo el 27% (el del DDSP, 90%). Por eso pueden sonar más apagadas aunque la loss empate. La loss compara con una grabación concreta y castiga el detalle realista pero distinto, así que aquí decide el oído. (Un primer intento que predecía el ruido, como DiffSinger, empeoraba el mel en cada paso: 7.7 en el mejor caso.) Lo siguiente es entrenar el propio vocoder con el DDSP de entrada (V1), con pérdida adversarial, que premia la textura. Clic en el nombre de una versión con vocoder para oír lo que entró, lo que añadió y lo que quitó.",
+    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p2_real-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p2_real-v3_x0res-d20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p2_real-v3b_flow-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-v1", page: 6, title: "El vocoder entrenado con el DDSP (V1)", tag: "Vocoder · Noche 17–18 nov",
+    note: "Fase 3, V1: el vocoder afinado se entrena 6000 pasos más (unas 2 h) con pares: entra el mel del DDSP final de una ventana y tiene que salir la grabación real de esa misma ventana (pérdida de mel + adversarial, la receta de BigVGAN). Así aprende qué le falta a un DDSP. Loss en las 85 ventanas: 5.89 al empezar (el vocoder afinado sin más), 5.81 a los 2000 pasos, 5.82 a los 4000 y 5.80 a los 6000. Es el primer vocoder que no empeora al DDSP (el DDSP solo: 5.82), pero por la loss es un empate. La loss de entrenamiento siguió bajando mientras la de prueba se quedó quieta: con solo 0.69 h de pares (20 grabaciones), el vocoder empieza a memorizarlas. Los ataques de V1 caen donde los de la grabación real: en 277 los del DDSP están corridos 3 ms y V1 los pone en su sitio. Lo que sigue en la cola: las otras dos formas de conectarlos con los mismos pares (V2: la onda del DDSP entra en cada etapa del vocoder; S: cada parte del DDSP como un mel aparte), y luego el DDSP entrenado con 100 grabaciones (unas 5 h de pares) y V1 otra vez con esos pares. Clic en el nombre de una versión con vocoder para oír lo que entró, lo que añadió y lo que quitó.",
+    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p2_real-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-v2", page: 6, title: "La onda del DDSP dentro del vocoder (V2)", tag: "Vocoder · Mañana 18 nov",
+    note: "Fase 3, V2: como V1 (mismo punto de partida, mismos pares, 6000 pasos), pero además la onda del DDSP entra en cada etapa del vocoder, como la fuente en NSF-HiFiGAN. Con solo el mel, el vocoder tiene que inventar la fase y el detalle fino; con la onda puede copiarlos del DDSP y dedicarse a corregir lo que suena mal. Las entradas nuevas empiezan en cero, así que al principio es exactamente el vocoder afinado (5.89). Loss en las 85 ventanas: 5.79 a los 2000 pasos, 5.79 a los 4000 y 5.76 a los 6000, y todavía bajando. Es el primer vocoder que mejora al DDSP solo (5.82) por más de 0.05; contra V1 (5.80) es un empate. Compáralo con V1 en los ataques y en el brillo. Clic en el nombre de una versión con vocoder para oír lo que entró, lo que añadió y lo que quitó.",
+    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "medir-realismo", page: 6, title: "Medir el realismo: la loss contra KAD", tag: "Vocoder · Mañana 18 nov",
+    note: "La loss (multi-escala espectral) compara cada ventana con su grabación nota por nota: premia un promedio liso y castiga el detalle realista pero distinto, y en un estudio de guitarra DDSP (Jonason et al.) ordenó los sistemas al revés que los oyentes. KAD (Kernel Audio Distance) compara cómo suenan en conjunto las 85 ventanas con las 85 reales, a través de dos redes que escuchan: PANNs (cómo suena en general) y EnCodec (el detalle acústico fino). Menor = más real; con intervalos de confianza de 1000 remuestreos. Aquí no coinciden. Mel reparado con flujo: la loss dice empate con el DDSP (5.87 vs 5.82); KAD dice que es lo menos real de todo (7.33 vs 3.21 en PANNs). El vocoder preentrenado: la loss dice peor (6.11), PANNs dice mucho más real (1.78), EnCodec un poco menos (0.26 vs 0.18): suena más a guitarra en general pero cambia el detalle fino. V2 contra V1: la loss dice empate (5.76 vs 5.80); PANNs dice que V2 es más real (1.35 vs 2.33, diferencia −0.98, intervalo −1.57 a −0.53) y llega al techo del vocoder con audio real (1.46); EnCodec, empate. Entre los DDSP pasa lo mismo: por la loss tu favorito (M1 + timbre 32 + adv) es el peor (5.93, contra 5.83 de T4adv y 5.82 del DDSP final), y por PANNs es el más real: 1.54, contra 1.99 de T4adv y 3.22 del DDSP final (sin adversarial, 7.22). Por PANNs, el DDSP que entra al vocoder es menos real que tu favorito (diferencia −1.68, intervalo −2.61 a −0.92); EnCodec los ve iguales (0.17–0.21). V2 sobre el DDSP final (1.35) apenas alcanza a tu favorito solo. Desde hoy el ganador se elige por KAD; tu oído sigue siendo el juez final. Cada tabla de modelos muestra ahora loss y KAD.",
+    v: ["original", "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-bigvgan24-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p2_real-v3b_flow-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-s", page: 7, title: "Cada parte del DDSP al vocoder (S)", tag: "Vocoder · Tarde 18 nov",
+    note: "Fase 3, S: como V1, pero además del mel de la mezcla entra el mel de cada parte del DDSP por separado (cuerdas, cuerpo, ataque, contacto, fondo y ruido), para que el vocoder sepa qué es cada cosa. El primer intento divergió (las partes en silencio daban un mel constante muy bajo); corregida la escala de esa entrada, este segundo intento entrenó normal. Loss en las 85 ventanas: 5.80 a los 2000 pasos, 5.81 a los 4000 y 5.76 a los 6000, empatada con V2 (5.76) como la mejor. Pero KAD: PANNs 2.28, igual que V1 (2.33) y peor que V2 (1.35; diferencia +0.93, intervalo +0.48 a +1.48); EnCodec 0.45, lo menos real del grupo (V2 0.18, V1 0.12, el DDSP solo 0.18; S − V2 +0.27, intervalo +0.13 a +0.40). Las dos medidas dicen que S cambia el detalle fino de una forma que no suena a guitarra real, así que el ganador sigue siendo V2. Escucha si S y V2 se distinguen en el detalle fino: brillo, ataques, zumbidos. Clic en el nombre de una versión con vocoder para oír lo que entró, lo que añadió y lo que quitó.",
+    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-s_stems20b-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-armonicos", page: 7, title: "Solo las cuerdas al vocoder (fase 4)", tag: "Vocoder · Tarde 18 nov",
+    note: "Fase 4: el ganador (V2) entrenado igual (mismo punto de partida, mismos pares, 6000 pasos), pero recibiendo solo la parte armónica del DDSP, las cuerdas, como si el DDSP fuera uno simple que solo genera armónicos. El cuerpo, el ataque, el contacto, el fondo y el ruido los tiene que poner el vocoder. La pregunta: ¿hace falta el DDSP completo o bastan los armónicos? Loss: 6.22 a los 2000 pasos, 6.19 a los 4000 y 6.17 a los 6000, contra 5.76 de V2 con el DDSP completo. Pero KAD dice empate con V2: PANNs 1.18 contra 1.35 (diferencia −0.18, intervalo −0.66 a +0.19) y EnCodec 0.15 contra 0.18 (−0.03, intervalo −0.14 a +0.07). Es decir, para estas medidas el vocoder inventa el cuerpo, los ataques y el ruido de forma tan convincente como las partes del DDSP; la loss lo castiga porque lo inventado no coincide nota a nota con la grabación. Si a tu oído también empatan, el DDSP podría ser mucho más simple. Clic en «Solo las cuerdas del DDSP → V2»: «entrada» es la parte de cuerdas sola y «añadido» es lo que el vocoder inventó en lugar del cuerpo, los ataques y el ruido.",
+    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p4_v2_strings20-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-44k-afinado", page: 7, title: "El vocoder de 44.1 kHz afinado con guitarra real (fase 5)", tag: "Vocoder · Tarde 18 nov",
+    note: "Fase 5, primer paso: BigVGAN-v2 de 44 kHz afinado 8000 pasos (unas 3 h) con las grabaciones reales de GAPS a 44.1 kHz, como la fase 2 a 24 kHz. Al revés que en la fase 2, la loss empeoró: la grabación real por el vocoder pasa de 4.38 (preentrenado) a 4.50 a los 2000 pasos, 4.45 a los 6000 y 4.49 al final (a 24 kHz el afinado había mejorado de 4.24 a 4.08). El DDSP final por este vocoder: 6.00 (por el de 44 kHz preentrenado 6.03, por el de 24 kHz afinado 5.89). KAD (también a 24 kHz): la grabación real por el de 44 kHz afinado da PANNs 2.16 y EnCodec 0.25, contra 2.38 y 0.07 del de 44 kHz preentrenado y 1.46 y 0.03 del de 24 kHz afinado. El afinado no ayudó: por PANNs empata con el preentrenado y por EnCodec es claramente peor (+0.19, intervalo +0.16 a +0.21). Con el DDSP: PANNs 2.15, igual que el de 44 kHz preentrenado (2.15), contra 1.82 del de 24 kHz afinado; EnCodec 0.46, contra 0.38 y 0.22. Hasta 12 kHz, los vocoders de 44 kHz suenan menos reales que los de 24 kHz. Ojo: la loss y KAD se miden a 24 kHz, así que ninguna oye lo que pasa por encima de 12 kHz, justo lo que añade este vocoder; eso solo lo puede juzgar tu oído. Encima de este vocoder se está entrenando V2 a 44.1 kHz (listo hacia las 23:40).",
+    v: ["original44k", "voc-bigvgan44-original48", "voc-p5_real44-original", "original", "voc-p2_real-original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-bigvgan44-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-p5_real44-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-favorito", page: 7, title: "V2 sobre tu favorito anterior", tag: "Vocoder · Noche 18–19 nov",
+    note: "Pediste entrenar V2 con los pares de M1 + timbre 32 + adv, el DDSP más real según KAD (PANNs 1.54 contra 3.22 del DDSP final), aunque a tu oído el final suena mejor. Misma receta que V2 (mismo punto de partida, 6000 pasos). Loss: 5.99 al empezar, 5.89, 5.87 y 5.79 (V2 sobre el DDSP final: 5.89 → 5.76). KAD: PANNs 1.64 contra 1.35 de V2 sobre el final (diferencia +0.29, intervalo −0.11 a +0.69: empate) y EnCodec 0.34 contra 0.18 (+0.15, intervalo +0.01 a +0.29: algo peor). El vocoder casi no mejora a tu favorito anterior (1.54 → 1.64 en PANNs), mientras que al DDSP final lo lleva de 3.22 a 1.35: importa qué tan bien se complementan el DDSP y el vocoder, no qué tan real suena el DDSP solo. Tu oído tenía razón: el DDSP final es la mejor entrada para el vocoder.",
+    v: ["original", "e6-structured_v9_base_t32_noise_strongD", "voc-v2_fav20-e6-structured_v9_base_t32_noise_strongD", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-100", page: 7, title: "100 grabaciones: el DDSP y V1", tag: "Vocoder · Noche 18–19 nov",
+    note: "Tu pregunta: ¿gana el vocoder con 7 veces más pares DDSP → grabación? Primero, el DDSP final entrenado con 100 grabaciones (las 20 de siempre más 80 de GAPS), evaluado en las mismas 85 ventanas: loss 5.65 sin adversarial y 5.72 con adversarial (con 20 grabaciones: 5.71 y 5.82). KAD: PANNs 3.26, igual que con 20 (3.22); EnCodec 0.12 contra 0.18. Luego V1 entrenado con sus pares (unas 5 h en vez de 0.69 h): loss 5.81 → 5.75 (V1 con 20: 5.89 → 5.80). Pero KAD dice que suena menos real: PANNs 3.38 contra 2.33 (diferencia +1.04, intervalo +0.24 a +1.96) y EnCodec 0.52 contra 0.12 (+0.39, intervalo +0.21 a +0.57). Una posible razón: con 80 guitarras y salas más, el vocoder aprende un sonido promedio en vez del de cada grabación. Por ahora, los pares de 20 grabaciones son mejores.",
+    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "e6-structured_v12_final_learnedB_data100_noise_strongD_rise", "voc-v1_mix20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v1_mix100-e6-structured_v12_final_learnedB_data100_noise_strongD_rise"] },
+  { id: "ddsp-cadena", page: 7, title: "¿Qué cambio hizo menos real al DDSP final?", tag: "DDSP · 19 nov",
+    note: "Tu pregunta: el DDSP final (PANNs 3.22) es menos real que T4adv (1.99) y que tu favorito anterior (1.54); ¿qué lo empeoró? Todos los modelos con adversarial que hay entre uno y otro, PANNs contra las mismas 85 ventanas: tu favorito anterior 1.54; M1 (+ ataque por nota) 2.17; M1 + cuerdas 1.39 (las cuerdas mejoran: −0.78, intervalo −1.56 a −0.16); M1 + fondo medido 2.18, y con cuerdas 1.45; atención 1.94; atención que anticipa 1.46; + atención entre voces 1.45; + la grabación en todo 1.83 (+0.37, intervalo −0.11 a +0.84: no está claro); + contacto (T4adv) 1.99 (+0.54, intervalo +0.11 a +0.99: el contacto empeora); el final (T4adv + cuerdas + grabación en todo + rigidez aprendida) 3.22, +1.23 sobre T4adv (intervalo +0.60 a +2.00); el final con 100 grabaciones 3.26. Para separar las piezas entrené dos DDSP más, los dos con adversarial (al final de la lista): «atención que anticipa + cuerdas» (sin contacto ni grabación en todo) da 2.68: sobre la atención que anticipa las cuerdas empeoran (+1.23, intervalo +0.59 a +1.96), al revés que sobre M1. Y «final sin contacto» (el final entrenado desde cero sin esa parte) da 1.98: 1.24 menos que el final (intervalo −1.97 a −0.65), tan real como T4adv. Así que tu sospecha era correcta: el contacto es lo que más empeora al final. Quitárselo al modelo ya entrenado lo empeoraba (8.70) porque el resto contaba con él; entrenado sin contacto desde el principio, el resto se acomoda. Loss: 5.83 y 5.81 (el final 5.82). EnCodec no ve diferencias claras (0.15 a 0.21). Y según la sección «V2 sobre tu favorito anterior», un DDSP más real no da por sí solo un vocoder más real.",
+    v: ["original", "e6-structured_v9_base_t32_noise_strongD", "e6-structured_v10_m1_burst_strings_noise_strongD", "e6-structured_v11_m1_attn_ahead_noise_strongD_rise", "e6-structured_v11_m1_attn_ahead_contact_noise_strongD_rise", "e6-structured_v12_final_learnedB_noise_strongD_rise", "e6-structured_v13_ahead_strings_noise_strongD_rise", "e6-structured_v13_final_nocontact_noise_strongD_rise"] },
+  { id: "ddsp-100-5x", page: 8, title: "100 grabaciones con 5× entrenamiento: el DDSP solo", tag: "DDSP · 20 nov",
+    note: "El primer DDSP de 100 grabaciones tuvo 12000 pasos + 3000 adversariales, menos entrenamiento por grabación que el de 20 (4000 + 3000): unas 1.7 veces menos en la primera fase y 5 veces menos en la adversarial. Este tiene el mismo entrenamiento por grabación que el de 20: 20000 + 15000 pasos (unas 7 h). Mismo modelo y mismos datos. KAD (PANNs, más bajo = más real): 1.23, contra 3.22 del DDSP final de 20 y 3.26 del primero de 100 (diferencia con el final −1.99, intervalo −3.02 a −1.14). Contra los clips reales de prueba aparte: 3.42 contra 6.57 y 7.45. Es tan real como V2 sobre el DDSP final (1.35), sin vocoder. EnCodec lo ve algo menos real (0.20 contra 0.18; contra los clips de prueba +0.38, intervalo +0.13 a +0.67). Loss: 5.62 sin adversarial (el primero de 100: 5.65; el final de 20: 5.71) y 5.82 con adversarial (5.72 y 5.82). El ruido de fondo en los momentos más quietos sube 2 dB (−21.9 dB contra −23.9 del final). No sé qué fase dio la mejora, porque se alargaron las dos. Escucha si siguen los errores que oíste en el primero de 100: en 276, una nota desafinada a mitad del fragmento y un pitido agudo hacia el final; en 023, un tramo desafinado. Clic en el nombre de un modelo para oír cada parte.",
+    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "e6-structured_v12_final_learnedB_data100_noise_strongD_rise", "e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise"] },
+  { id: "vocoder-100-5x", page: 8, title: "V2 sobre el DDSP de 100 grabaciones 5×, con y sin embedding", tag: "Vocoder · 20–21 nov",
+    note: "V2 (mel + onda del DDSP) entrenado con los pares del DDSP 5×: 30000 pasos cada uno (unas 10.6 h), el mismo entrenamiento por grabación que 6000 con 20. Uno sin embedding y otro con el embedding de grabación del DDSP, el ganador en 20 grabaciones. KAD (PANNs): con embedding 1.20, sin embedding 1.73 (el embedding mejora: −0.53, intervalo −1.07 a −0.07). Contra V2 de 20 grabaciones (1.35): con embedding −0.15 (intervalo −0.54 a +0.22), sin embedding +0.38 (−0.11 a +0.98), los dos empatados. Ojo: el DDSP 5× solo ya da 1.23, así que sin embedding el vocoder lo empeora y con embedding casi no lo cambia según PANNs. EnCodec ve a los dos menos reales que V2 de 20: 0.36 y 0.31 contra 0.18. Loss: 5.66 con embedding, 5.72 sin (este último se descontroló a mitad de entrenamiento, 7.55 a los 20000 pasos, y se recuperó). Escucha si el vocoder añade algo sobre el DDSP 5× solo. Clic en el nombre de una versión con vocoder para oír lo que entró, lo que añadió y lo que quitó.",
+    v: ["original", "e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise", "voc-v2_x5-e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise", "voc-v2_recddspx5-e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-100-emb", page: 8, title: "V2 + embedding sobre el primer DDSP de 100 grabaciones", tag: "Vocoder · 21–22 nov",
+    note: "V2 con el embedding de grabación del DDSP, entrenado 30000 pasos con los pares del primer DDSP de 100 grabaciones (12000 + 3000 pasos, el de los errores que oíste). KAD (PANNs): 1.08, el número más bajo hasta ahora, contra 1.35 de V2 de 20 (diferencia −0.27, intervalo −0.72 a +0.08: empate) y 3.38 de V1-100 (−2.30, intervalo −3.37 a −1.45). El DDSP que entra da 3.26 solo, así que aquí el vocoder sí hace mucho. EnCodec: 0.20, igual que V2 de 20 (0.18). Contra los clips reales de prueba aparte empata en PANNs (3.47 contra 3.12) y es peor en EnCodec (+0.63, intervalo +0.19 a +1.11). Loss 5.65. Escucha si el vocoder tapa los errores del DDSP de entrada (276 y 023).",
+    v: ["original", "e6-structured_v12_final_learnedB_data100_noise_strongD_rise", "voc-v1_mix100-e6-structured_v12_final_learnedB_data100_noise_strongD_rise", "voc-v2_recddsp100-e6-structured_v12_final_learnedB_data100_noise_strongD_rise"] },
+  { id: "vocoder-embedding-20", page: 8, title: "El vocoder sabe de qué grabación viene (20 grabaciones)", tag: "Vocoder · Noche 19–20 nov",
+    note: "Tu idea: darle al vocoder un embedding de grabación, como el del DDSP. Dos versiones de V2 con los pares del DDSP final (6000 pasos, mismo punto de partida): una usa el embedding que ya aprendió el DDSP (congelado) con una capa pequeña que aprende a usarlo; la otra, una tabla nueva que el vocoder aprende desde cero. Al empezar, las dos son idénticas a V2 (el embedding entra multiplicado por cero y el vocoder aprende cuánto usarlo). KAD (PANNs): embedding del DDSP 1.24, tabla nueva 1.31, V2 sin embedding 1.35; las dos empatan con V2 (−0.11, intervalo −0.38 a +0.14; −0.04, intervalo −0.29 a +0.17). Contra los clips reales de prueba, la tabla nueva es peor (+0.36, intervalo +0.02 a +0.75) y la del DDSP empata. EnCodec: empate (0.22, 0.22, 0.18). Loss: 5.72 y 5.74 contra 5.76. Ganó el embedding del DDSP, que se usó en las secciones de arriba. Con 20 grabaciones casi no cambia nada; con 100 sí ayuda (sección «V2 sobre el DDSP de 100 grabaciones 5×»).",
+    v: ["original", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_recddsp20-e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_rectable20-e6-structured_v12_final_learnedB_noise_strongD_rise"] },
+  { id: "vocoder-sin-contacto", page: 8, title: "V2 sobre «Final sin contacto»", tag: "Vocoder · Noche 19–20 nov",
+    note: "Pediste entrenar V2 con los pares de «Final sin contacto» (el DDSP final entrenado desde cero sin contacto, PANNs 1.98 solo, contra 3.22 del final). Misma receta que V2 (6000 pasos). KAD (PANNs): 1.76 contra 1.35 de V2 sobre el final (diferencia +0.41, intervalo −0.01 a +0.90: casi peor). EnCodec: 0.38 contra 0.18 (+0.20, intervalo +0.07 a +0.32: peor). Loss 5.76, igual. Como con tu favorito anterior, un DDSP más real solo no da un vocoder más real; KAD coincide con tu oído, que prefería el final.",
+    v: ["original", "e6-structured_v13_final_nocontact_noise_strongD_rise", "voc-v2_nocontact20-e6-structured_v13_final_nocontact_noise_strongD_rise", "e6-structured_v12_final_learnedB_noise_strongD_rise", "voc-v2_inject20-e6-structured_v12_final_learnedB_noise_strongD_rise"] }
+];
+// One artifact version holds at most 511 files, so the sections are split over pages built from this same file
+// (analysis/make_listen_pages.py sets PAGE_NO); each page shows the sections with its number (default 1).
+const PAGE_NO = 8;
+const PAGES = { 1: { n: "Experimentos 1–18", url: "https://claude.ai/artifact/8AJSUqLvQbAw55TdxwdRcm" },
+  2: { n: "Ataque y ruido (noche 15–16 nov)", url: "https://claude.ai/artifact/CharViVv9YEoxmrz9mNHuv" },
+  3: { n: "Redes, cuerdas y contacto (noche 15–16 nov)", url: "https://claude.ai/artifact/XT2s6ociQR3JRjnnbYRhN3" },
+  4: { n: "Modelo final (noche 16–17 nov)", url: "https://claude.ai/artifact/SmuPfsweBXG75LvPGFBetH" },
+  5: { n: "Grabación y cuerdas (noche 16–17 nov)", url: "https://claude.ai/artifact/37Z5fVpAbbxZUzh2UmfWvE" },
+  6: { n: "DDSP final y vocoder (noche 17–18 nov)", url: "https://claude.ai/artifact/6du45ZyZdAEwrmTRSJWDrM" },
+  7: { n: "Vocoder: S, solo cuerdas y 44.1 kHz (18 nov)", url: "https://claude.ai/artifact/Xn6aRm7e9LBrMGokQNDeM3" },
+  8: { n: "100 grabaciones y embedding (19–22 nov)", url: "https://claude.ai/artifact/TqUHf3qeUmGeSpuSN1gQs8" } };
+const SECTIONS = ALL_SECTIONS.filter((S) => (S.page || 1) === PAGE_NO);
+const fmtLoss = (m) => m.ref ? "—" : m.pending ? "en entrenamiento" : m.loss.toFixed(2) + (m.findings ? " †" : "");
+const fmtKad = (m) => m.kad ? m.kad[0].toFixed(2) + " · " + m.kad[1].toFixed(2) : "—";
+const fmtWind = (m) => m.pending || m.wind === "na" ? "—" : m.wind === null ? "sin ruido" : m.wind.toFixed(1).replace("-", "−") + " dB";
+const REL = { rec: "desde cero", cont: "continúa", voc: "por el vocoder" };
+const parts = (file) => { // a file is a trained model, possibly rendered differently
+  for (const [suffix, variant] of Object.entries(VARIANTS)) if (file.endsWith(suffix)) return { key: file.slice(0, -suffix.length), variant };
+  return { key: file, variant: null };
+};
+const nameOf = (file) => { if (file === "original") return "Original"; const { key, variant } = parts(file); return MODELS[key].name + (variant ? " · " + variant : ""); };
+const ORDER = Object.keys(MODELS);
+
+function modelRow(k, here) {
+  const m = MODELS[k], p = m.parent ? MODELS[m.parent] : null;
+  return `<tr${here ? "" : ' class="away"'}><th scope="row">${m.name}${m.fav ? ' <span class="tagm">favorito</span>' : ""}</th><td>${p ? `${p.name} <span class="rel">${REL[m.rel]}</span>` : "—"}</td><td>${m.change}</td><td class="num">${fmtLoss(m)}</td><td class="num">${fmtKad(m)}</td><td class="num">${fmtWind(m)}</td></tr>`;
+}
+
+function timeline(S) {
+  const here = new Set(), all = new Set(), variants = [];
+  S.v.forEach((f) => { if (f === "original") return; const { key, variant } = parts(f); if (variant) variants.push(f); else here.add(key); let k = key; while (k) { all.add(k); k = MODELS[k].parent; } });
+  const rows = ORDER.filter((k) => all.has(k)).map((k) => modelRow(k, here.has(k))).join("");
+  const vs = variants.length ? `<p class="catnote">Variantes de generación, no son modelos nuevos: ${variants.map(nameOf).join("; ")}.</p>` : "";
+  return `<details class="cat"><summary>Modelos de esta sección</summary><div class="catbody"><div class="catscroll"><table class="cat"><thead><tr><th scope="col">Modelo</th><th scope="col">Viene de</th><th scope="col">Qué cambió</th><th scope="col" class="num">Loss</th><th scope="col" class="num">KAD</th><th scope="col" class="num">Viento</th></tr></thead><tbody>${rows}</tbody></table></div><p class="catnote">De más viejo a más nuevo. En gris, los antecesores que no se escuchan en esta sección. KAD: qué tan lejos suena del original en general, no nota por nota (Kernel Audio Distance ×100, sobre las mismas 85 ventanas; menor = más real). Dos números: PANNs (cómo suena en general) · EnCodec (el detalle acústico fino). La loss compara con una grabación concreta y premia un promedio liso, así que para el vocoder decide KAD; diferencias de menos de ~0.5 (PANNs) o ~0.1 (EnCodec) pueden ser azar. Medida solo en los modelos de la página 6.</p>${vs}</div></details>`;
+}
+
+function treeOf(parent) {
+  const kids = ORDER.filter((k) => MODELS[k].parent === parent);
+  if (!kids.length) return "";
+  return `<ul>${kids.map((k) => { const m = MODELS[k]; return `<li class="${m.rel || "root"}"><span class="tn">${m.name}</span>${m.fav ? ' <span class="tagm">favorito</span>' : ""}${m.rel ? ` <span class="rel">${REL[m.rel]}</span>` : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}${m.kad ? " · KAD " + fmtKad(m) : ""}</span><div class="tc">${m.change}</div>${treeOf(k)}</li>`; }).join("")}</ul>`;
+}
+
+function buildCatalog() {
+  $("tree").innerHTML = treeOf(null);
+  const liveHref = PAGE_NO === 1 ? `#${LIVE_SECTION}` : PAGES[1].url;
+  $("live").innerHTML = ORDER.filter((k) => MODELS[k].fav || MODELS[k].live).map((k) => { const m = MODELS[k]; return `<li><a href="${liveHref}">${m.name}</a>${m.fav ? ' <span class="tagm">favorito</span>' : ""} <span class="tv">${fmtLoss(m)}${m.pending ? "" : " · " + fmtWind(m)}${m.kad ? " · KAD " + fmtKad(m) : ""}</span></li>`; }).join("");
+  const others = Object.entries(PAGES).filter(([n, p]) => +n !== PAGE_NO && p.url);
+  $("pages").innerHTML = others.length ? "Otras páginas: " + others.map(([, p]) => `<a href="${p.url}" target="_blank" rel="noopener">${p.n}</a>`).join(" · ") : "";
+}
+
+const ICON_PLAY = '<svg class="ico" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z" fill="currentColor"/></svg>';
+const ICON_PAUSE = '<svg class="ico" viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0H3.5V12H0ZM6.5 0H10V12H6.5Z" fill="currentColor"/></svg>';
+const $ = (id) => document.getElementById(id);
+const cache = new Map();
+let cur = null; // {s, r, c, btn, audio}
+
+function audioFor(rid, file) {
+  const key = rid + "/" + file;
+  if (!cache.has(key)) { const a = new Audio("audio/" + key + ".mp4"); a.preload = "auto"; cache.set(key, a); }
+  return cache.get(key);
+}
+
+const PART_NAMES = { strings: "Armónicos", sympathetic: "Simpática", burst: "Ataque (ráfaga)", click: "Clic",
+  contact: "Contacto", body: "Cuerpo", squeak: "Roce", reverb: "Sala", floor: "Piso de ruido", noise: "Ruido residual",
+  entrada: "Lo que entró", anadido: "Lo que añadió", quitado: "Lo que quitó" };
+const PART_ORDER = Object.keys(PART_NAMES);
+const OFF_DB = -80;
+const ALL_FILES = new Set(SECTIONS.flatMap((S) => S.v.concat(S.panel || []))); // panel: files shown only in the parts panel
+const fmtDb = (x) => (Math.round(x)).toString().replace("-", "−");
+
+function cellBtn(grid, r, c, file, name, ctx, extra = "") {
+  return `<button type="button" class="cell${extra}" data-grid="${grid}" data-r="${r}" data-c="${c}" data-file="${file}" data-name="${name}" data-ctx="${ctx}" aria-label="${RECS[r][1]} · ${name}"><span class="fill"></span><span class="lbl">${ICON_PLAY}</span></button>`;
+}
+
+function colHead(s, f) {
+  if (f === "original") return `<th scope="col">Original</th>`;
+  const { key, variant } = parts(f), label = `${MODELS[key].name}${variant ? `<span class="var">${variant}</span>` : ""}`;
+  if (!STEMS[key]) return `<th scope="col">${label}</th>`;
+  return `<th scope="col"><button type="button" class="colhead" data-s="${s}" data-key="${key}" aria-expanded="false" aria-controls="stems-${s}">${label}<span class="hint">partes</span></button></th>`;
+}
+
+// Browser storage only for this viewer's conveniences (blind on/off, the shuffle, notes); the page works without it.
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (_) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (_) {} },
+};
+let BLIND = store.get("blind") === "1";
+const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+const isRef = (f) => f === "original" || !!(MODELS[parts(f).key] || {}).ref; // the real recording stays named and first
+const permKey = (S) => `blind-perm-${PAGE_NO}-${S.id}`, notesKey = (S) => `blind-notes-${PAGE_NO}-${S.id}`;
+
+function blindOrder(S) { // references first, the rest shuffled; the shuffle is kept per section so letters stay put on reload
+  const refs = S.v.filter(isRef), rest = S.v.filter((f) => !isRef(f));
+  let perm = null;
+  try { perm = JSON.parse(store.get(permKey(S))); } catch (_) {}
+  if (!Array.isArray(perm) || perm.slice().sort().join("|") !== rest.slice().sort().join("|")) {
+    perm = rest.slice();
+    for (let i = perm.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [perm[i], perm[j]] = [perm[j], perm[i]]; }
+    store.set(permKey(S), JSON.stringify(perm));
+  }
+  return { cols: refs.concat(perm), perm, letters: Object.fromEntries(perm.map((f, i) => [f, String.fromCharCode(65 + i)])) };
+}
+
+function blindTools(S, s, perm, letters) {
+  const reveal = perm.map((f) => { const m = MODELS[parts(f).key]; return `<li><b>${letters[f]}</b> = ${nameOf(f)} <span class="tv">· loss ${fmtLoss(m)} · KAD ${fmtKad(m)}</span></li>`; }).join("");
+  return `<div class="blind-tools"><label for="notes-${s}">Tu orden o tus notas, antes de revelar (se guardan en este navegador)</label>
+    <input type="text" id="notes-${s}" data-notes="${s}" value="${esc(store.get(notesKey(S)) || "")}" placeholder="p. ej. B > A > C; A tiene más sala" autocomplete="off">
+    <div class="row"><button type="button" class="pill" data-reveal="${s}" aria-expanded="false" aria-controls="reveal-${s}">Revelar</button>
+    <button type="button" class="pill" data-reshuffle="${s}">Barajar de nuevo</button></div>
+    <ol class="reveal" id="reveal-${s}" hidden>${reveal}</ol></div>`;
+}
+
+function build() {
+  const toc = $("toc"), root = $("sections");
+  toc.innerHTML = ""; root.innerHTML = "";
+  document.body.classList.toggle("blind", BLIND);
+  $("blind").setAttribute("aria-pressed", String(BLIND));
+  SECTIONS.forEach((S, s) => {
+    const a = document.createElement("a"); a.href = "#" + S.id; a.textContent = S.title; toc.append(a);
+    const sec = document.createElement("section"); sec.id = S.id;
+    const B = BLIND ? blindOrder(S) : null, cols = B ? B.cols : S.v;
+    const label = (f) => (B && B.letters[f] ? "Versión " + B.letters[f] : nameOf(f));
+    const note = B ? "Modo ciego: las versiones están barajadas y sin nombre. Escúchalas, escribe tu orden y después pulsa «Revelar»." : S.note;
+    let html = `<div class="sec-head"><p class="sec-num">${String(s + 1).padStart(2, "0")} · ${S.tag}</p><h2>${S.title}</h2><p class="note">${note}</p></div>`;
+    if (!B) {
+      if (S.heard) html += `<p class="heard"><b>Lo que escuché:</b> ${S.heard}</p>`;
+      html += timeline(S);
+      if (S.v.some((f) => f !== "original" && STEMS[parts(f).key])) html += `<p class="note stems-tip">Clic en el nombre de un modelo para escuchar cada una de sus partes por separado.</p>`;
+    }
+    const head = (f) => (B ? (B.letters[f] ? `<th scope="col"><span class="letter">${B.letters[f]}</span></th>` : `<th scope="col">${nameOf(f)}</th>`) : colHead(s, f));
+    html += `<div class="grid-scroll"><table class="clips"><thead><tr><th class="rec" scope="col">Grabación</th>${cols.map(head).join("")}</tr></thead><tbody>`;
+    RECS.forEach(([rid, short], r) => {
+      html += `<tr><td class="rec">${short}</td>${cols.map((f, c) => `<td>${cellBtn("s" + s, r, c, f, label(f), S.title, isRef(f) ? " orig" : "")}</td>`).join("")}</tr>`;
+    });
+    html += `</tbody></table></div>`;
+    html += B ? blindTools(S, s, B.perm, B.letters) : `<div class="stems" id="stems-${s}" hidden></div>`;
+    sec.innerHTML = html;
+    root.append(sec);
+  });
+}
+
+function rebuild() {
+  stopCur();
+  const y = window.scrollY;
+  build();
+  window.scrollTo(0, y);
+}
+
+$("sections").addEventListener("click", (e) => {
+  const h = e.target.closest("button.colhead"); if (h) { toggleStems(+h.dataset.s, h.dataset.key); return; }
+  const x = e.target.closest("button.stems-close"); if (x) { closeStems(+x.dataset.s, true); return; }
+  const rv = e.target.closest("button[data-reveal]");
+  if (rv) { const o = $("reveal-" + rv.dataset.reveal), show = o.hidden; o.hidden = !show; rv.setAttribute("aria-expanded", String(show)); rv.textContent = show ? "Ocultar" : "Revelar"; return; }
+  const rs = e.target.closest("button[data-reshuffle]");
+  if (rs) { const S = SECTIONS[+rs.dataset.reshuffle]; store.del(permKey(S)); store.del(notesKey(S)); rebuild(); return; }
+  const b = e.target.closest("button.cell"); if (b && !b.disabled) select(b, true);
+});
+$("sections").addEventListener("input", (e) => {
+  const n = e.target.closest("input[data-notes]"); if (n) store.set(notesKey(SECTIONS[+n.dataset.notes]), n.value);
+});
+$("blind").addEventListener("click", () => { BLIND = !BLIND; store.set("blind", BLIND ? "1" : "0"); rebuild(); });
+
+function closeStems(s, focusHead) {
+  const panel = $("stems-" + s), key = panel.dataset.key;
+  if (cur && panel.contains(cur.btn)) stopCur();
+  panel.hidden = true; panel.innerHTML = ""; delete panel.dataset.key;
+  document.querySelectorAll(`button.colhead[data-s="${s}"]`).forEach((b) => b.setAttribute("aria-expanded", "false"));
+  if (focusHead && key) { const h = document.querySelector(`button.colhead[data-s="${s}"][data-key="${key}"]`); if (h) h.focus(); }
+}
+
+function toggleStems(s, key) {
+  const panel = $("stems-" + s);
+  if (panel.dataset.key === key) { closeStems(s, false); return; }
+  closeStems(s, false);
+  const S = SECTIONS[s], name = MODELS[key].name, st = STEMS[key];
+  const present = PART_ORDER.filter((p) => RECS.some(([rid]) => st[rid] && p in st[rid]));
+  const cols = [{ file: key, head: "Mezcla", sub: "" }];
+  if (ALL_FILES.has(key + "-nonoise")) cols.push({ file: key + "-nonoise", head: "Sin ruido", sub: "" });
+  present.forEach((p) => {
+    const lv = RECS.map(([rid]) => st[rid] && st[rid][p]).filter((x) => x !== undefined);
+    const on = lv.filter((x) => x >= OFF_DB);
+    const sub = !on.length ? "apagado" : (Math.max(...on) - Math.min(...on) < 1 ? `${fmtDb(on[0])} dB` : `${fmtDb(Math.max(...on))} a ${fmtDb(Math.min(...on))} dB`);
+    cols.push({ part: p, head: PART_NAMES[p], sub });
+  });
+  const ctx = `${S.title} · partes de ${name}`;
+  let html = `<div class="stems-head"><div><h3>Partes de ${name}</h3><p class="note">${"entrada" in (st[RECS[0][0]] || {}) ? "Lo que entró al vocoder, lo que añadió y lo que quitó, medidos en el espectrograma (el vocoder conserva el tiempo pero no la fase de la onda, así que restar las ondas no sirve): lo añadido es donde la salida suena más fuerte que la entrada; lo quitado, donde suena más débil. No suman exactamente la mezcla." : "Cada parte suena sola; sumadas dan la mezcla."} Cada una está subida al volumen de la mezcla para que se oiga; debajo del nombre, su nivel real respecto a la mezcla (en las cinco grabaciones). Sin ruido: la mezcla con el ruido residual apagado. Apagado: el entrenamiento dejó esa parte por debajo de −80 dB; no hay nada que oír.</p></div><button type="button" class="stems-close" data-s="${s}" aria-label="Cerrar partes de ${name}">Cerrar</button></div>`;
+  html += `<div class="grid-scroll"><table class="clips"><thead><tr><th class="rec" scope="col">Grabación</th>${cols.map((c) => `<th scope="col">${c.head}${c.sub ? `<span class="sub">${c.sub}</span>` : ""}</th>`).join("")}</tr></thead><tbody>`;
+  RECS.forEach(([rid, short], r) => {
+    html += `<tr><td class="rec">${short}</td>${cols.map((c, j) => {
+      if (!c.part) return `<td>${cellBtn("p" + s, r, j, c.file, nameOf(c.file), S.title, " mixcell")}</td>`;
+      const lv = st[rid] && st[rid][c.part];
+      if (lv === undefined) return `<td><button type="button" class="cell off" disabled data-grid="p${s}" data-r="${r}" data-c="${j}" aria-label="${short} · ${PART_NAMES[c.part]}: no suena en este fragmento">—</button></td>`;
+      if (lv < OFF_DB) return `<td><button type="button" class="cell off" disabled data-grid="p${s}" data-r="${r}" data-c="${j}" aria-label="${short} · ${PART_NAMES[c.part]}: apagado">apagado</button></td>`;
+      return `<td>${cellBtn("p" + s, r, j, `stems/${key}/${c.part}`, `${name} · ${PART_NAMES[c.part]} (real ${fmtDb(lv)} dB)`, ctx)}</td>`;
+    }).join("")}</tr>`;
+  });
+  panel.innerHTML = html + "</tbody></table></div>";
+  panel.dataset.key = key; panel.hidden = false;
+  document.querySelector(`button.colhead[data-s="${s}"][data-key="${key}"]`).setAttribute("aria-expanded", "true");
+  panel.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function btnAt(grid, r, c) { return document.querySelector(`button.cell[data-grid="${grid}"][data-r="${r}"][data-c="${c}"]`); }
+
+function stopCur() {
+  if (!cur) return;
+  cur.audio.pause(); cur.btn.classList.remove("on", "playing"); setIcon(cur.btn, false);
+  cur.btn.querySelector(".fill").style.width = "0";
+  cur = null;
+  $("nowt").textContent = "Elige una versión para escuchar"; $("pp").disabled = true; $("seek").disabled = true; setIcon($("pp"), false);
+}
+
+function select(btn, fromClick) {
+  const r = +btn.dataset.r, [rid, short] = RECS[r];
+  const a = audioFor(rid, btn.dataset.file);
+  if (cur && cur.btn === btn) { // same button: toggle
+    if (fromClick) { a.paused ? a.play() : a.pause(); }
+    return;
+  }
+  if (cur) { cur.audio.pause(); cur.btn.classList.remove("on", "playing"); setIcon(cur.btn, false); cur.btn.querySelector(".fill").style.width = "0"; }
+  cur = { btn, audio: a };
+  btn.classList.add("on");
+  a.loop = false;
+  try { a.currentTime = 0; } catch (_) {}
+  a.play().catch(() => {});
+  document.querySelectorAll(`button.cell[data-grid="${btn.dataset.grid}"][data-r="${r}"][data-file]`).forEach((b) => audioFor(rid, b.dataset.file)); // preload the rest of the row
+  $("nowt").innerHTML = `<b>${short}</b> · ${btn.dataset.ctx} · ${btn.dataset.name}`;
+  $("pp").disabled = false; $("seek").disabled = false;
+}
+
+// Only touch the icon when the state changes: replacing it every frame swallows clicks (press and release land on different elements).
+function setIcon(btn, playing) {
+  if (btn.dataset.icon === String(playing)) return;
+  btn.dataset.icon = String(playing);
+  (btn.querySelector(".lbl") || btn).innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
+}
+
+function tick() {
+  if (cur) {
+    const a = cur.audio, d = a.duration || 9, t = a.currentTime || 0;
+    cur.btn.querySelector(".fill").style.width = (100 * t / d) + "%";
+    const playing = !a.paused;
+    cur.btn.classList.toggle("playing", playing); setIcon(cur.btn, playing);
+    setIcon($("pp"), playing); $("pp").setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+    const sk = $("seek"); sk.max = d; if (!sk.matches(":active")) sk.value = t;
+    $("time").textContent = `${t.toFixed(1)} / ${d.toFixed(1)} s`;
+  }
+  requestAnimationFrame(tick);
+}
+
+setIcon($("pp"), false);
+$("pp").addEventListener("click", () => { if (cur) cur.audio.paused ? cur.audio.play() : cur.audio.pause(); });
+$("seek").addEventListener("input", (e) => { if (cur) cur.audio.currentTime = +e.target.value; });
+document.addEventListener("keydown", (e) => {
+  if (!cur || e.target.matches("input[type=range], input[type=checkbox], input[type=text], summary, button.colhead, button.stems-close, button.pill")) return;
+  const moves = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] };
+  if (e.key === " " && !e.target.closest("button")) { e.preventDefault(); cur.audio.paused ? cur.audio.play() : cur.audio.pause(); return; }
+  if (!(e.key in moves)) return;
+  e.preventDefault();
+  const [dr, dc] = moves[e.key], g = cur.btn.dataset.grid;
+  let r = +cur.btn.dataset.r, c = +cur.btn.dataset.c, b;
+  do { r += dr; c += dc; b = btnAt(g, r, c); } while (b && b.disabled);
+  if (b) { select(b, false); b.focus({ preventScroll: true }); }
+});
+buildCatalog();
+build();
+requestAnimationFrame(tick);
+</script>

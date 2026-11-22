@@ -378,3 +378,26 @@ renders by part; scratch scripts, not kept):
      20000 + 15000 adversarial steps), its pairs and KAD.
   3. V2 on those pairs with the picked embedding (`v2_rec<pick>x5`) and without (`v2_x5`), 30000 steps each.
   4. V2 + the picked embedding on the first 100-recording DDSP's pairs (`v2_rec<pick>100`), 30000 steps.
+
+## Results of the embedding queue and the 100-recording DDSP at 5x (2026-11-20 to 22; page 8)
+
+PANNs KAD on the 85 held-out windows (lower = more real; brackets = paired 95% bootstrap CI of the difference).
+- Embedding type on the 20-recording pairs (6000 steps): DDSP's own (frozen) 1.24, fresh table 1.31, V2 without 1.35;
+  both tie with V2 (-0.11 [-0.38, +0.14]; -0.04 [-0.29, +0.17]). Against the separate real test clips the table is
+  worse (+0.36 [+0.02, +0.75]), the DDSP's own ties. EnCodec ties. Picked: the DDSP's own.
+- V2 on the no-contact DDSP's pairs: 1.76 vs 1.35 (+0.41 [-0.01, +0.90]); EnCodec worse (0.38 vs 0.18). A more real
+  DDSP alone (1.98 vs 3.22) again does not give a more real vocoder.
+- **The 100-recording DDSP with the 20-recording training per recording (20000 + 15000 adversarial steps): 1.23**, vs
+  3.22 (final, 20 recordings) and 3.26 (first 100-recording run, 12000 + 3000): -1.99 [-3.02, -1.14]. Against the
+  real test clips 3.42 vs 6.57 and 7.45. As real as V2 on the final DDSP, without a vocoder. EnCodec slightly worse
+  (0.20 vs 0.18; vs the test clips +0.38 [+0.13, +0.67]). Loss 5.62 before adversarial, 5.82 after; catch-all noise
+  in the quietest frames -21.9 dB (final -23.9). Both phases were lengthened, so which one did it is unknown.
+  The earlier conclusion that 100 recordings did not help was a training-length artefact: E9's "plateau from step
+  8000" was read off the held-out loss, which kept improving only slowly while realism was still far off.
+- V2 on the 5x pairs, 30000 steps: with the DDSP's embedding 1.20, without 1.73 (embedding helps: -0.53
+  [-1.07, -0.07]; the run without was unstable, held-out loss 7.55 at step 20000, back to 5.72). Both tie with V2 on
+  20 (1.35). Without the embedding the vocoder makes the 5x DDSP less real (1.73 vs 1.23); with it, about unchanged.
+  EnCodec: 0.36 and 0.31 vs 0.18.
+- V2 + the DDSP's embedding on the first 100-recording DDSP's pairs, 30000 steps: 1.08, the lowest so far (vs V2 on 20
+  -0.27 [-0.72, +0.08]; vs V1-100 -2.30 [-3.37, -1.45]); EnCodec 0.20. Against the test clips: PANNs ties (3.47 vs
+  3.12), EnCodec worse (+0.63 [+0.19, +1.11]).

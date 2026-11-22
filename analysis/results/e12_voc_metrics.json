@@ -66,5 +66,29 @@
  "voc-v2_fav20-e6-structured_v9_base_t32_noise_strongD": {
   "mean": 5.792,
   "note": "v2_fav20 eval at step 6000"
+ },
+ "voc-v2_recddsp20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 5.719,
+  "note": "v2_recddsp20 eval at the last step"
+ },
+ "voc-v2_rectable20-e6-structured_v12_final_learnedB_noise_strongD_rise": {
+  "mean": 5.742,
+  "note": "v2_rectable20 eval at the last step"
+ },
+ "voc-v2_nocontact20-e6-structured_v13_final_nocontact_noise_strongD_rise": {
+  "mean": 5.761,
+  "note": "v2_nocontact20 eval at the last step"
+ },
+ "voc-v2_x5-e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise": {
+  "mean": 5.724,
+  "note": "v2_x5 eval at the last step"
+ },
+ "voc-v2_recddspx5-e6-structured_v12_final_learnedB_data100x5_noise_strongD_rise": {
+  "mean": 5.661,
+  "note": "v2_recddspx5 eval at the last step"
+ },
+ "voc-v2_recddsp100-e6-structured_v12_final_learnedB_data100_noise_strongD_rise": {
+  "mean": 5.646,
+  "note": "v2_recddsp100 eval at the last step"
  }
 }
