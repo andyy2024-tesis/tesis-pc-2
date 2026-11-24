@@ -18,7 +18,7 @@ L = "e6-structured_v12_final_learnedB"
 # (group, label, version key in e12_kad.json, kind) in display order; kind: ddsp | voc | ref
 ROWS = [
     ("Sintetizador solo", "Final + adv (20 grabaciones)", f"model-{L}_noise_strongD_rise", "ddsp"),
-    ("Sintetizador solo", "M1 + timbre 32 + adv (favorito anterior)", "model-e6-structured_v9_base_t32_noise_strongD", "ddsp"),
+    ("Sintetizador solo", "M1 + timbre 32 + adv (antes preferido)", "model-e6-structured_v9_base_t32_noise_strongD", "ddsp"),
     ("Sintetizador solo", "Final · 100 grabaciones + adv", f"model-{L}_data100_noise_strongD_rise", "ddsp"),
     ("Sintetizador solo", "Final · 100 grabaciones · 5× + adv", f"model-{L}_data100x5_noise_strongD_rise", "ddsp"),
     ("Vocoder sobre Final + adv", "BigVGAN preentrenado", "voc-p0_pretrained", "voc"),
