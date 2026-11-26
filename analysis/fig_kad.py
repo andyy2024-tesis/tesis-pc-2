@@ -46,7 +46,7 @@ def main():
     a = ap.parse_args()
     v = json.loads((REPO / "analysis/results/e12_kad.json").read_text())["panns-wavegram-logmel vs real"]["versions"]
 
-    plt.rcParams.update({"font.family": "serif", "font.size": 9, "axes.edgecolor": MUTED, "axes.labelcolor": TEXT,
+    plt.rcParams.update({"font.family": "serif", "font.size": 6.5, "axes.edgecolor": MUTED, "axes.labelcolor": TEXT,
                          "xtick.color": MUTED, "ytick.color": TEXT})
     # one row per version, an empty row before each group header
     ys, labels, y, prev = [], [], 0, None
@@ -61,19 +61,20 @@ def main():
         ys.append(y)
         labels.append(lab)
         y += 1
-    fig, ax = plt.subplots(figsize=(6.3, 5.6))
+    fig, ax = plt.subplots(figsize=(3.35, 4.7))  # one column of the two-column article
     for yy, (g, lab, key, kind) in zip(ys, ROWS):
         k, (lo, hi) = v[key]["kad"], v[key]["ci"]
-        ax.plot([lo, hi], [yy, yy], color=COLOR[kind], lw=1.5, solid_capstyle="round", zorder=2)
-        ax.plot([k], [yy], "o", ms=6.5, color=COLOR[kind], mec="white", mew=1.2, zorder=3)
-        ax.text(hi + 0.15, yy, f"{k:.2f}", va="center", ha="left", fontsize=8, color=MUTED)
+        ax.plot([lo, hi], [yy, yy], color=COLOR[kind], lw=1.2, solid_capstyle="round", zorder=2)
+        ax.plot([k], [yy], "o", ms=4.5, color=COLOR[kind], mec="white", mew=0.9, zorder=3)
+        ax.text(hi + 0.15, yy, f"{k:.2f}", va="center", ha="left", fontsize=6, color=MUTED)
     for yy, g in heads:
-        ax.text(-0.02, yy, g, transform=ax.get_yaxis_transform(), ha="right", va="center", fontsize=9,
+        ax.text(-0.02, yy, g, transform=ax.get_yaxis_transform(), ha="right", va="center", fontsize=6.5,
                 fontweight="bold", color=TEXT)
     ax.set_yticks(ys, labels)
     ax.invert_yaxis()
-    ax.set_xlim(0, 9.4)
-    ax.set_xlabel("KAD × 100, PANNs (menor es más real)")
+    ax.set_xlim(0, 8.6)
+    ax.set_xticks([0, 2, 4, 6, 8])
+    ax.set_xlabel("KAD × 100, PANNs\n(menor = más real)", fontsize=6.5)
     ax.xaxis.grid(True, color=GRID, lw=0.8)
     ax.set_axisbelow(True)
     for s in ("top", "right", "left"):
@@ -82,9 +83,9 @@ def main():
     out = Path(a.out).expanduser()
     out.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
-    fig.savefig(out / "kad-versiones.pdf")
+    fig.savefig(out / "kad-versiones.pdf", bbox_inches="tight")
     if a.png:
-        fig.savefig(a.png, dpi=150)
+        fig.savefig(a.png, dpi=150, bbox_inches="tight")
     print(out / "kad-versiones.pdf")
 
 

@@ -33,7 +33,8 @@ sys.path.insert(0, str(REPO / "analysis"))
 S1, S2, S3, S4 = "#2a78d6", "#eb6834", "#1baf7a", "#eda100"
 TEXT, MUTED, GRID, GRAY = "#0b0b0b", "#52514e", "#e4e3df", "#8a8984"
 SEQ = LinearSegmentedColormap.from_list("seq", ["#ffffff", "#cfe0f6", "#6fa3e3", "#2a78d6", "#123f7a", "#06172e"])
-W = 6.3  # text width in inches
+W = 6.3  # full-width figures (figure*), drawn at 6.3 in and scaled to the 6.9 in text width
+C = 3.35  # one column
 
 plt.rcParams.update({"font.family": "serif", "font.size": 9, "axes.edgecolor": MUTED, "axes.labelcolor": TEXT,
                      "xtick.color": MUTED, "ytick.color": MUTED, "axes.titlesize": 9, "legend.frameon": False})
@@ -142,23 +143,25 @@ def fig_perdida():
               ("100 grabaciones\n(5×)", "Final · 100 grabaciones · 5× entrenamiento", None)]
     x = np.arange(len(stages))
     ys = np.array([loss(s[1]) for s in stages])
-    fig, ax = plt.subplots(figsize=(W, 3.5))
+    fig, ax = plt.subplots(figsize=(C, 3.1))
     ax.fill_between(x, ys - 0.025, ys + 0.025, color=S1, alpha=0.15, lw=0, label="variación entre semillas (±0.025)")
-    ax.plot(x, ys, "-o", color=S1, lw=2, ms=6, mec="white", mew=1, label="Estructurado")
+    ax.plot(x, ys, "-o", color=S1, lw=1.6, ms=4.5, mec="white", mew=0.8, label="Estructurado")
     dx = [i for i, s in enumerate(stages) if s[2]]
-    ax.plot(dx, [loss(stages[i][2]) for i in dx], "s", color=S2, ms=6.5, mec="white", mew=1, label="DDSP (misma red)")
+    ax.plot(dx, [loss(stages[i][2]) for i in dx], "s", color=S2, ms=5, mec="white", mew=0.8, label="DDSP (misma red)")
     for i in dx:
-        ax.annotate(stages[i][2].split()[0], (i, loss(stages[i][2])), xytext=(6, 2), textcoords="offset points",
-                    fontsize=7.5, color=MUTED)
+        ax.annotate(stages[i][2].split()[0], (i, loss(stages[i][2])), xytext=(5, 2), textcoords="offset points",
+                    fontsize=6.5, color=MUTED)
     for i, yv in enumerate(ys):
-        ax.annotate(f"{yv:.2f}", (i, yv), xytext=(0, -13), textcoords="offset points", ha="center", fontsize=7,
+        ax.annotate(f"{yv:.2f}", (i, yv), xytext=(0, -11), textcoords="offset points", ha="center", fontsize=5.8,
                     color=MUTED)
-    ax.set_xticks(x, [s[0].replace("\n", " ") for s in stages], fontsize=7, rotation=30, ha="right",
-                  rotation_mode="anchor")
-    ax.set_ylabel("Pérdida espectral\n(media, 85 ventanas)")
-    ax.set_ylim(5.5, 6.45)
+    short = ["Ronda 1", "Cuerpo", "Tablas", "Info. audio", "Fenómenos", "Timbre", "Ataque y fondo", "Cuerdas",
+             "Final", "100 grab. (5×)"]  # stage names, short for one column (the caption gives them in full)
+    ax.set_xticks(x, short, fontsize=6.5, rotation=40, ha="right", rotation_mode="anchor")
+    ax.tick_params(axis="y", labelsize=7)
+    ax.set_ylabel("Pérdida espectral\n(media, 85 ventanas)", fontsize=7.5)
+    ax.set_ylim(5.5, 6.5)
     clean(ax)
-    ax.legend(loc="upper right", fontsize=7.5)
+    ax.legend(loc="upper right", fontsize=6.3)
     fig.tight_layout()
     return fig
 
@@ -166,24 +169,26 @@ def fig_perdida():
 # ---------------------------------------------------------------------------------------------------------------
 def fig_viento():
     d = json.loads((RES / "wind_map.json").read_text())["structured_v5_body_audio"]["time"]
-    cls = [("pre_40_12ms", "12–40 ms\nantes"), ("attack_0_10ms", "0–10 ms\ndespués"), ("attack_10_30ms", "10–30 ms"),
-           ("attack_30_60ms", "30–60 ms"), ("attack_60_150ms", "60–150 ms"), ("held", "Nota\nsostenida"),
-           ("ringing", "Tras el final\nescrito")]
+    cls = [("pre_40_12ms", "−40 a\n−12"), ("attack_0_10ms", "0 a\n10"), ("attack_10_30ms", "10 a\n30"),
+           ("attack_30_60ms", "30 a\n60"), ("attack_60_150ms", "60 a\n150"), ("held", "Nota\nsosten."),
+           ("ringing", "Tras el\nfinal")]
     x = np.arange(len(cls))
     noise = [100 * d[k]["share_of_noise"] for k, _ in cls]
     orig = [100 * d[k]["share_of_orig"] for k, _ in cls]
-    fig, ax = plt.subplots(figsize=(W, 2.9))
+    fig, ax = plt.subplots(figsize=(C, 2.5))
     w = 0.38
     ax.bar(x - w / 2 - 0.01, orig, w, color=GRAY, label="Energía del original")
     ax.bar(x + w / 2 + 0.01, noise, w, color=S2, label="Energía del ruido residual")
     for i, k in enumerate(cls):
         c = d[k[0]]["share_of_noise"] / d[k[0]]["share_of_orig"]
         ax.annotate(f"×{c:.1f}", (x[i] + w / 2, noise[i]), xytext=(0, 3), textcoords="offset points", ha="center",
-                    fontsize=7, color=TEXT if c > 1.5 else MUTED, fontweight="bold" if c > 1.5 else "normal")
-    ax.set_xticks(x, [c[1] for c in cls], fontsize=7.5)
-    ax.set_ylabel("Parte de la energía (%)")
+                    fontsize=6, color=TEXT if c > 1.5 else MUTED, fontweight="bold" if c > 1.5 else "normal")
+    ax.set_xticks(x, [c[1] for c in cls], fontsize=6.3)
+    ax.set_xlabel("Respecto de cada pulsación (ms)", fontsize=7)
+    ax.tick_params(axis="y", labelsize=7)
+    ax.set_ylabel("Parte de la energía (%)", fontsize=7.5)
     clean(ax)
-    ax.legend(loc="upper left", fontsize=7.5)
+    ax.legend(loc="upper left", fontsize=6.5)
     fig.tight_layout()
     return fig
 
@@ -230,22 +235,25 @@ def fig_rigidez():
     lear = np.array([sh[ids.index(i), int(s) - 1] for i, s in zip(g.id, g.string)])
     r = np.corrcoef(meas, lear)[0, 1]
     few = g.n.values < 3
-    fig, ax = plt.subplots(figsize=(4.2, 3.6))
+    fig, ax = plt.subplots(figsize=(C, 3.0))
     lim = 1.0
     ax.plot([-lim, lim], [-lim, lim], color=GRID, lw=1.2, zorder=1)
     ax.axhspan(0.5, lim, color="#f1f0ec", zorder=0)
     ax.axhspan(-lim, -0.5, color="#f1f0ec", zorder=0)
-    ax.plot(meas[~few], lear[~few], "o", ms=5, color=S1, mec="white", mew=0.8, zorder=3, label="3 notas o más")
-    ax.plot(meas[few], lear[few], "o", ms=5, mfc="none", mec=S1, mew=1, zorder=3, label="menos de 3 notas")
+    ax.plot(meas[~few], lear[~few], "o", ms=4, color=S1, mec="white", mew=0.8, zorder=3, label="3 notas o más")
+    ax.plot(meas[few], lear[few], "o", ms=4, mfc="none", mec=S1, mew=1, zorder=3, label="menos de 3 notas")
     ax.set_xlim(-lim, lim)
     ax.set_ylim(-0.6, 0.6)
-    ax.set_xlabel(r"Rigidez medida: $\log B$ al aire $-$ tabla de la cuerda")
-    ax.set_ylabel(r"Desplazamiento aprendido de $\log B$")
-    ax.text(0.03, 0.97, f"r = {r:.2f} ({len(meas)} pares guitarra–cuerda)", transform=ax.transAxes, va="top",
-            fontsize=8, color=TEXT)
-    ax.text(0.97, 0.03, "zona gris: fuera del límite\ndel desplazamiento (±0.5)", transform=ax.transAxes, ha="right",
-            va="bottom", fontsize=6.8, color=MUTED)
-    ax.legend(loc="lower left", bbox_to_anchor=(0, 0.06), fontsize=7)
+    ax.set_xlabel(r"Rigidez medida: $\log B$ al aire $-$ tabla de la cuerda", fontsize=7.5)
+    ax.set_ylabel(r"Desplazamiento aprendido de $\log B$", fontsize=7.5)
+    ax.tick_params(labelsize=7)
+    ax.text(0.03, 0.97, f"r = {r:.2f} ({len(meas)} pares)", transform=ax.transAxes, va="top",
+            fontsize=6.5, color=TEXT)
+    ax.text(0.97, 0.97, "gris: fuera del límite (±0.5)", transform=ax.transAxes, ha="right",
+            va="top", fontsize=5.8, color=MUTED)
+    ax.legend(loc="lower left", bbox_to_anchor=(0, -0.02), fontsize=5.8, ncol=2, handletextpad=0.3,
+              columnspacing=1.0, borderaxespad=0.2)
+    ax.set_xticks([-1, -0.5, 0, 0.5, 1])
     clean(ax, grid="both")
     fig.tight_layout()
     print(f"rigidez: r = {r:.3f}, sd learned {lear.std():.3f}, measured {meas.std():.3f}")
