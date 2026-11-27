@@ -65,47 +65,77 @@ def fig_arquitectura():
         ax.add_patch(FancyArrowPatch(p, q, arrowstyle="-|>", mutation_scale=7, lw=0.8, color=color,
                                      connectionstyle=f"arc3,rad={rad}", shrinkA=1, shrinkB=1))
 
+    def line(pts, color=MUTED, head=True):
+        """Right-angle route through pts; arrowhead on the last segment only."""
+        xs, ys = zip(*pts)
+        ax.plot(xs[:-1] if head else xs, ys[:-1] if head else ys, color=color, lw=0.8, solid_capstyle="butt")
+        if head:
+            arrow(pts[-2], pts[-1], color=color)
+
+    def dot(x, y, color=MUTED):
+        ax.plot([x], [y], "o", ms=2.6, color=color, zorder=5)
+
     ax.text(0, 99, "a) Sintetizador estructurado (modelo final)", fontsize=9, fontweight="bold", color=TEXT, va="top")
-    ins = [("Notas de la partitura\n(altura, inicio, fin,\ncuerda y traste)", 83.5, 9.5),
-           ("Pistas del audio\n(volumen y afinación\ncada 10 ms)", 71.5, 9.5), ("Timbre del ataque\n(32 parciales)", 61, 7.5),
-           ("Vector de la\ngrabación (32)", 50.5, 7.5)]
+    # inputs (left): two buses, one per network; a dot marks where an input splits to both
+    ins = [("Pistas del audio\n(volumen y afinación\ncada 10 ms)", 83.5, 9.5),
+           ("Notas de la partitura\n(altura, inicio, fin,\ncuerda y traste)", 71.5, 9.5),
+           ("Timbre del ataque\n(32 parciales)", 61, 7.5), ("Vector de la\ngrabación (32)", 50, 7.5)]
     for t, y, h in ins:
         box(0.5, y, 20.5, h, t, "in", fs=6.1)
-    box(26, 76, 21, 8.5, "MLP de entrada\n(por cuerda)", "net", fs=6.4)
-    box(26, 61.5, 21, 10.5, "Atención que anticipa\n(64 cuadros atrás,\n16 adelante)", "net", fs=6.3)
-    box(26, 49.5, 21, 8.5, "MLP de nota\n(una vez por nota)", "net", fs=6.4)
-    for y in (88.25, 76.25, 64.75):
-        arrow((21.3, y), (26, 80.25))
-    for y in (64.75, 54.25):
-        arrow((21.3, y), (26, 53.75))
-    arrow((21.3, 86), (26, 55.5), rad=0.3)
-    arrow((36.5, 76), (36.5, 72))
+    NX, NW = 27.5, 19
+    box(NX, 76, NW, 8.5, "MLP de entrada\n(por cuerda)", "net", fs=6.4)
+    box(NX, 61.5, NW, 10.5, "Atención que anticipa\n(64 cuadros atrás,\n16 adelante)", "net", fs=6.0)
+    box(NX, 49.5, NW, 8.5, "MLP de nota\n(una vez por nota)", "net", fs=6.4)
+    yi = [88.25, 76.25, 64.75, 53.75]          # input centers
+    BE, BN = 23.2, 25.2                       # bus to MLP de entrada / to MLP de nota
+    ax.plot([21.3, BE], [yi[0], yi[0]], color=MUTED, lw=0.8)
+    for y in yi[1:]:
+        ax.plot([21.3, BN], [y, y], color=MUTED, lw=0.8)
+    ax.plot([BE, BE], [yi[2], yi[0]], color=MUTED, lw=0.8)
+    ax.plot([BN, BN], [yi[3], yi[1]], color=MUTED, lw=0.8)
+    for y in yi[1:3]:
+        dot(BE, y); dot(BN, y)
+    arrow((BE, 80.25), (NX, 80.25)); dot(BE, 80.25)
+    arrow((BN, 53.75), (NX, 53.75))
+    arrow((NX + NW / 2, 76), (NX + NW / 2, 72))
+    # networks -> parts: MLP de nota (gray bus) and attention (blue bus)
     parts = ["Cuerdas: parciales de cuerda rígida,\ndecaimiento físico y corrección δ",
              "Respuesta del cuerpo a cada pulsación", "Ataque propio de cada nota (33 bandas)",
              "Contacto (16 bandas por grabación)", "Piso de ruido de la sala", "Ruido residual (se apaga al generar)"]
     ys = [86, 78.6, 71.2, 63.8, 56.4, 49]
+    PX = 52.5
     for t, y in zip(parts, ys):
-        box(52.5, y, 34, 6, t, "part", fs=6.0)
-    arrow((47.3, 69.5), (52.5, 89), rad=-0.15)          # correction
-    arrow((47.3, 66.8), (52.5, 66.8))                   # contact level
-    arrow((47.3, 64), (52.5, 52), rad=0.15)             # noise filter
-    for y in (88, 81.6, 74.2):                      # template, body level, attack per note
-        arrow((47.3, 55.5), (52.5, y), rad=-0.12)
-    box(90.5, 65, 5, 6, "Σ", "out", fs=11)
+        box(PX, y, 34, 6, t, "part", fs=5.9)
+    XN, XA = 48.6, 50.6
+    ax.plot([NX + NW + 0.3, XN], [53.75, 53.75], color=MUTED, lw=0.8)
+    ax.plot([XN, XN], [53.75, 90.5], color=MUTED, lw=0.8)
+    for y in (90.5, 81.6, 74.2):              # template + decay, body level, attack per note
+        arrow((XN, y), (PX, y)); dot(XN, y)
+    ax.plot([NX + NW + 0.3, XA], [66.75, 66.75], color=S1, lw=0.8)
+    ax.plot([XA, XA], [52, 87.5], color=S1, lw=0.8)
+    for y in (87.5, 66.8, 52):                # correction δ, contact level, noise filter
+        arrow((XA, y), (PX, y), color=S1); dot(XA, y, S1)
+    # parts -> Σ through one bus, label to the right, clear of the lines
+    XS = 88.4
     for y in ys:
-        arrow((86.8, y + 3), (90.5, 68))
-    ax.text(93, 63.5, "audio del\nsintetizador", ha="center", va="top", fontsize=6.6, color=TEXT)
-    ax.text(52.5 + 17, 46.5, "El vector de la grabación llega también al decaimiento, al cuerpo, al ataque,\n"
+        ax.plot([86.8, XS], [y + 3, y + 3], color=MUTED, lw=0.8)
+    ax.plot([XS, XS], [ys[-1] + 3, ys[0] + 3], color=MUTED, lw=0.8)
+    box(90.6, 65, 5, 6, "Σ", "out", fs=11)
+    arrow((XS, 68), (90.6, 68)); dot(XS, 68)
+    ax.text(89.4, 63.2, "audio del\nsintetizador", ha="left", va="top", fontsize=6.2, color=TEXT)
+    ax.text(PX + 23, 46.5, "El vector de la grabación llega también al decaimiento, al cuerpo, al ataque,\n"
             "al fundido final y a la rigidez de cada cuerda (grabación en todo).", ha="center", va="top", fontsize=6.2,
             color=MUTED, style="italic")
+    ax.text(0.5, 46.5, "Líneas grises: desde el MLP de nota;\nazules: desde la atención.", ha="left", va="top",
+            fontsize=5.8, color=MUTED)
 
     ax.text(0, 36, "b) Vocoder V2 (BigVGAN-v2 ajustado)", fontsize=9, fontweight="bold", color=TEXT, va="top")
     box(0.5, 14.5, 15, 8, "Audio del\nsintetizador", "in", fs=6.6)
     box(0.5, -1.5, 15, 7, "Vector de la\ngrabación", "in", fs=6.6)
     box(20.5, 20, 14.5, 7, "Espectrograma\nmel", "in", fs=6.1)
     box(20.5, 7, 14.5, 7, "Forma de onda", "in", fs=6.1)
-    arrow((15.8, 20.5), (20.5, 23.5))
-    arrow((15.8, 16.5), (20.5, 10.5))
+    line([(15.8, 20.5), (18.2, 20.5), (18.2, 23.5), (20.5, 23.5)])
+    line([(15.8, 16.5), (18.2, 16.5), (18.2, 10.5), (20.5, 10.5)], head=True)
     st = [(40, 10.5, "Capa de\nentrada"), (52, 10.5, "Sobre-\nmuestreo 1"), (64, 10.5, "Sobre-\nmuestreo 2"),
           (76.5, 4, "…"), (82.5, 9, "Salida")]
     for x, w, t in st:
@@ -115,12 +145,17 @@ def fig_arquitectura():
         arrow((x1 + w1, 23.5), (x2, 23.5))
     ax.text(97, 23.5, "audio", ha="center", va="center", fontsize=7, color=TEXT)
     arrow((91.8, 23.5), (94.5, 23.5))
-    for x, w, _ in st[1:3]:  # the waveform enters every upsampling stage
-        arrow((35.3, 10.5), (x + w / 2, 19), rad=0.12, color=S2)
+    # waveform (orange) and recording vector (blue): one horizontal line each, risers into the stages
+    rx_o = [x + w / 2 + 1.8 for x, w, _ in st[1:3]]
+    ax.plot([35.3, rx_o[-1]], [10.5, 10.5], color=S2, lw=0.8)
+    for x in rx_o:
+        arrow((x, 10.5), (x, 18.6), color=S2); dot(x, 10.5, S2)
+    rx_b = [x + w / 2 - 1.8 for x, w, _ in st[:3]]
+    ax.plot([15.8, rx_b[-1]], [2, 2], color=S1, lw=0.8)
+    for x in rx_b:
+        arrow((x, 2), (x, 18.6), color=S1); dot(x, 2, S1)
     ax.text(77, 12.5, "la forma de onda entra en cada\netapa de sobremuestreo\n(convoluciones con paso,\nempiezan en cero)",
             fontsize=6.1, color=S2, ha="left", va="center")
-    for x, w, _ in st[:3]:
-        arrow((15.8, 2), (x + w / 2, 19), rad=0.18, color=S1)
     ax.text(40, -2.5, "escala y desplazamiento por canal (empiezan en cero)", fontsize=6.1, color=S1, ha="left")
     return fig
 
